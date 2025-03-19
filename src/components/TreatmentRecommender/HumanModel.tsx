@@ -37,17 +37,15 @@ const HumanModel: React.FC<HumanModelProps> = ({ onSelectArea, isFemale }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div 
-      className="relative w-full max-w-md mx-auto h-[70vh] flex items-center justify-center"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="relative w-full max-w-md mx-auto h-[70vh] flex flex-col items-center justify-center">
       {/* Human image */}
       <motion.div 
         className="relative w-[240px] h-[500px]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         <div className="relative w-full h-full">
           {/* Use the uploaded silhouette images */}
@@ -58,29 +56,26 @@ const HumanModel: React.FC<HumanModelProps> = ({ onSelectArea, isFemale }) => {
           />
 
           {/* Hotspots - positioned absolutely - adjusted positions */}
-          <Hotspot top="10%" left="50%" label="Face" onClick={() => onSelectArea('face')} />
-          <Hotspot top="28%" left="28%" label="Arms" onClick={() => onSelectArea('arms')} />
-          <Hotspot top="28%" left="72%" label="Arms" onClick={() => onSelectArea('arms')} />
-          <Hotspot top="38%" left="50%" label="Abdomen" onClick={() => onSelectArea('abdomen')} />
-          <Hotspot top="52%" left="35%" label="Thighs" onClick={() => onSelectArea('thighs')} />
-          <Hotspot top="52%" left="65%" label="Thighs" onClick={() => onSelectArea('thighs')} />
-          <Hotspot top="72%" left="38%" label="Legs" onClick={() => onSelectArea('legs')} />
-          <Hotspot top="72%" left="62%" label="Legs" onClick={() => onSelectArea('legs')} />
+          <Hotspot top="10%" left="48%" label="Face" onClick={() => onSelectArea('face')} />
+          <Hotspot top="28%" left="25%" label="Arms" onClick={() => onSelectArea('arms')} />
+          <Hotspot top="28%" left="70%" label="Arms" onClick={() => onSelectArea('arms')} />
+          <Hotspot top="38%" left="48%" label="Abdomen" onClick={() => onSelectArea('abdomen')} />
+          <Hotspot top="52%" left="32%" label="Thighs" onClick={() => onSelectArea('thighs')} />
+          <Hotspot top="52%" left="62%" label="Thighs" onClick={() => onSelectArea('thighs')} />
+          <Hotspot top="72%" left="35%" label="Legs" onClick={() => onSelectArea('legs')} />
+          <Hotspot top="72%" left="60%" label="Legs" onClick={() => onSelectArea('legs')} />
         </div>
       </motion.div>
 
-      {/* Instruction overlay */}
+      {/* Instruction text below the graphic */}
       <motion.div 
-        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        className="mt-6 w-full"
         initial={{ opacity: 0 }}
-        animate={{ 
-          opacity: isHovered ? 0 : 0.9,
-          scale: isHovered ? 0.9 : 1 
-        }}
+        animate={{ opacity: isHovered ? 0 : 1 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="glass-panel rounded-xl px-8 py-6 text-center max-w-xs">
-          <h3 className="text-spa-dark font-display text-xl mb-2">Click on an area</h3>
+        <div className="glass-panel rounded-xl px-8 py-4 text-center max-w-xs mx-auto">
+          <h3 className="text-spa-dark font-display text-lg mb-1">Click on an area</h3>
           <p className="text-spa-accent text-sm">Select a body region to view treatment options</p>
         </div>
       </motion.div>

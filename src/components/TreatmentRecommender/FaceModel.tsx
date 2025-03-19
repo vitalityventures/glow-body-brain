@@ -37,7 +37,7 @@ const FaceModel: React.FC<FaceModelProps> = ({ onSelectArea, onBack }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="relative w-full max-w-md mx-auto h-[70vh] flex items-center justify-center">
+    <div className="relative w-full max-w-md mx-auto h-[70vh] flex flex-col items-center justify-center">
       <motion.button
         className="absolute top-4 left-4 flex items-center text-spa-accent hover:text-spa-dark transition-colors z-20"
         onClick={onBack}
@@ -69,29 +69,26 @@ const FaceModel: React.FC<FaceModelProps> = ({ onSelectArea, onBack }) => {
         </motion.div>
 
         {/* Hotspots - positioned absolutely - refined positions */}
-        <Hotspot top="18%" left="50%" label="Forehead" onClick={() => onSelectArea('forehead')} />
-        <Hotspot top="32%" left="32%" label="Eyes" onClick={() => onSelectArea('eyes')} />
-        <Hotspot top="32%" left="68%" label="Eyes" onClick={() => onSelectArea('eyes')} />
-        <Hotspot top="45%" left="50%" label="Nose" onClick={() => onSelectArea('nose')} />
-        <Hotspot top="48%" left="28%" label="Cheeks" onClick={() => onSelectArea('cheeks')} />
-        <Hotspot top="48%" left="72%" label="Cheeks" onClick={() => onSelectArea('cheeks')} />
-        <Hotspot top="62%" left="50%" label="Mouth & Lips" onClick={() => onSelectArea('mouth')} />
-        <Hotspot top="74%" left="50%" label="Jaw & Chin" onClick={() => onSelectArea('jaw')} />
-        <Hotspot top="88%" left="50%" label="Neck" onClick={() => onSelectArea('neck')} />
+        <Hotspot top="18%" left="48%" label="Forehead" onClick={() => onSelectArea('forehead')} />
+        <Hotspot top="32%" left="30%" label="Eyes" onClick={() => onSelectArea('eyes')} />
+        <Hotspot top="32%" left="65%" label="Eyes" onClick={() => onSelectArea('eyes')} />
+        <Hotspot top="45%" left="48%" label="Nose" onClick={() => onSelectArea('nose')} />
+        <Hotspot top="48%" left="25%" label="Cheeks" onClick={() => onSelectArea('cheeks')} />
+        <Hotspot top="48%" left="70%" label="Cheeks" onClick={() => onSelectArea('cheeks')} />
+        <Hotspot top="62%" left="48%" label="Mouth & Lips" onClick={() => onSelectArea('mouth')} />
+        <Hotspot top="74%" left="48%" label="Jaw & Chin" onClick={() => onSelectArea('jaw')} />
+        <Hotspot top="88%" left="48%" label="Neck" onClick={() => onSelectArea('neck')} />
       </div>
 
-      {/* Instruction overlay */}
+      {/* Instruction text below the graphic */}
       <motion.div 
-        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        className="mt-6 w-full"
         initial={{ opacity: 0 }}
-        animate={{ 
-          opacity: isHovered ? 0 : 0.9,
-          scale: isHovered ? 0.9 : 1 
-        }}
+        animate={{ opacity: isHovered ? 0 : 1 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="glass-panel rounded-xl px-8 py-6 text-center max-w-xs">
-          <h3 className="text-spa-dark font-display text-xl mb-2">Select facial area</h3>
+        <div className="glass-panel rounded-xl px-8 py-4 text-center max-w-xs mx-auto">
+          <h3 className="text-spa-dark font-display text-lg mb-1">Select facial area</h3>
           <p className="text-spa-accent text-sm">Click on a specific facial region to view treatment options</p>
         </div>
       </motion.div>
