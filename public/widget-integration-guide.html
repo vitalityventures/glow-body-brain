@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -206,14 +205,84 @@ cd [your-project-name]</code></pre>
   </div>
   
   <div class="step">
-    <h2>Complete Example</h2>
-    <p>Here's a complete example of a minimal HTML page with the widget integrated:</p>
+    <h2>Step 5: Customize Widget for Different Clients</h2>
+    <p>The Treatment Recommender widget can be customized for each client using the <code>configureSiteSettings</code> function:</p>
+    <ol>
+      <li><strong>Customize branding, content, and navigation</strong> - Each client can have their own title, subtitle, contact information, and more:
+        <pre><code>&lt;script&gt;
+  // First, configure EmailJS
+  window.TreatmentRecommender.configureEmailService({
+    serviceId: 'YOUR_EMAILJS_SERVICE_ID',
+    templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
+    userId: 'YOUR_EMAILJS_USER_ID',
+    recipientEmail: 'client@example.com'
+  });
+  
+  // Then, customize the widget for this specific client
+  window.TreatmentRecommender.configureSiteSettings({
+    // Branding
+    title: "CLIENT NAME BEAUTY CLINIC",
+    subtitle: "Custom subtitle for this specific client",
+    
+    // Footer content
+    aboutUsText: "Custom about us text for this client's beauty clinic.",
+    contactInfo: {
+      email: "contact@clientdomain.com",
+      phone: "(555) 555-5555",
+      address: "123 Client Street, City, State",
+    },
+    
+    // Control which navigation items to show
+    navigation: {
+      showAbout: true,
+      showTreatments: true,
+      showIntegrationGuide: false, // Hide integration guide for client sites
+    },
+    
+    // Copyright name
+    copyrightName: "Client Name Beauty Clinic",
+  });
+  
+  // Render the widget
+  ReactDOM.render(
+    React.createElement(window.TreatmentRecommender.default),
+    document.getElementById('treatment-recommender-container')
+  );
+&lt;/script&gt;</code></pre>
+      </li>
+      <li><strong>Properties you can customize:</strong>
+        <ul>
+          <li><code>title</code>: The main heading displayed in the header (client name or brand)</li>
+          <li><code>subtitle</code>: Secondary text explaining the purpose of the tool</li>
+          <li><code>aboutUsText</code>: Paragraph text for the footer "About Us" section</li>
+          <li><code>contactInfo</code>: Client's email, phone, and address information</li>
+          <li><code>navigation</code>: Control which navigation links are visible</li>
+          <li><code>copyrightName</code>: Name used in the copyright footer</li>
+        </ul>
+      </li>
+      <li><strong>Notes for service providers:</strong>
+        <ul>
+          <li>You can set up the EmailJS account for your clients as part of your service</li>
+          <li>Configure their widget settings during installation to match their branding</li>
+          <li>Hide the Integration Guide navigation for client-facing deployments</li>
+          <li>For complete white-labeling, make sure to update all text fields to match client branding</li>
+        </ul>
+      </li>
+    </ol>
+    <div class="tip">
+      <strong>Tip for agencies and service providers:</strong> Create a configuration template file for each client where you store their custom settings. This makes it easy to update or redeploy the widget when needed.
+    </div>
+  </div>
+  
+  <div class="step">
+    <h2>Complete Example with Custom Settings</h2>
+    <p>Here's a complete example of a minimal HTML page with the widget integrated and customized for a specific client:</p>
     <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
 &lt;head&gt;
   &lt;meta charset="UTF-8"&gt;
   &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-  &lt;title&gt;My Beauty Clinic&lt;/title&gt;
+  &lt;title&gt;Acme Beauty Clinic&lt;/title&gt;
   
   &lt;!-- React Dependencies --&gt;
   &lt;script src="https://unpkg.com/react@18/umd/react.production.min.js"&gt;&lt;/script&gt;
@@ -237,7 +306,7 @@ cd [your-project-name]</code></pre>
   &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
-  &lt;h1&gt;My Beauty Clinic&lt;/h1&gt;
+  &lt;h1&gt;Acme Beauty Clinic&lt;/h1&gt;
   
   &lt;div id="treatment-recommender-container"&gt;&lt;/div&gt;
   
@@ -247,7 +316,25 @@ cd [your-project-name]</code></pre>
       serviceId: 'YOUR_EMAILJS_SERVICE_ID',
       templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
       userId: 'YOUR_EMAILJS_USER_ID',
-      recipientEmail: 'admin@yourdomain.com'
+      recipientEmail: 'contact@acmebeauty.com'
+    });
+    
+    // Customize widget for Acme Beauty Clinic
+    window.TreatmentRecommender.configureSiteSettings({
+      title: "ACME BEAUTY",
+      subtitle: "Find your perfect treatment at Acme Beauty Clinic",
+      aboutUsText: "Acme Beauty Clinic has been providing top-quality aesthetic treatments for over 15 years.",
+      contactInfo: {
+        email: "contact@acmebeauty.com",
+        phone: "(555) 987-6543",
+        address: "789 Beauty Blvd, Suite 200, Los Angeles, CA",
+      },
+      navigation: {
+        showAbout: true,
+        showTreatments: true,
+        showIntegrationGuide: false,  // Hide this for client sites
+      },
+      copyrightName: "Acme Beauty Clinic",
     });
     
     // Render the widget

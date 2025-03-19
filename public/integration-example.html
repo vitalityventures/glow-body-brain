@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,7 +68,33 @@
   </div>
   
   <div class="step">
-    <h2>Step 4: Add the Treatment Recommender to Your Page</h2>
+    <h2>Step 4: Customize the Widget (Optional)</h2>
+    <p>Customize the widget appearance and content for each client:</p>
+    <pre><code>
+&lt;script&gt;
+  // Customize for this specific client
+  window.TreatmentRecommender.configureSiteSettings({
+    title: "CLIENT NAME BEAUTY",
+    subtitle: "Find your perfect treatment",
+    aboutUsText: "Client's custom about text here.",
+    contactInfo: {
+      email: "contact@clientdomain.com",
+      phone: "(555) 555-5555",
+      address: "123 Client Street, City",
+    },
+    navigation: {
+      showAbout: true,
+      showTreatments: true,
+      showIntegrationGuide: false, // Hide for client sites
+    },
+    copyrightName: "Client Name Beauty",
+  });
+&lt;/script&gt;
+    </code></pre>
+  </div>
+  
+  <div class="step">
+    <h2>Step 5: Add the Treatment Recommender to Your Page</h2>
     <p>Insert the recommender widget in your desired location:</p>
     <pre><code>
 &lt;div id="treatment-recommender-container"&gt;&lt;/div&gt;
@@ -92,7 +117,7 @@
 &lt;head&gt;
   &lt;meta charset="UTF-8"&gt;
   &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-  &lt;title&gt;My Treatment Recommender&lt;/title&gt;
+  &lt;title&gt;Client Beauty Clinic&lt;/title&gt;
   
   &lt;!-- React Dependencies --&gt;
   &lt;script src="https://unpkg.com/react@18/umd/react.production.min.js"&gt;&lt;/script&gt;
@@ -100,12 +125,10 @@
   
   &lt;!-- Treatment Recommender Widget --&gt;
   &lt;script src="path/to/treatment-recommender.js"&gt;&lt;/script&gt;
-  
-  &lt;!-- Include the CSS styles --&gt;
   &lt;link rel="stylesheet" href="path/to/treatment-recommender.css"&gt;
 &lt;/head&gt;
 &lt;body&gt;
-  &lt;h1&gt;My Beauty Clinic&lt;/h1&gt;
+  &lt;h1&gt;Client Beauty Clinic&lt;/h1&gt;
   
   &lt;div id="treatment-recommender-container"&gt;&lt;/div&gt;
   
@@ -115,7 +138,25 @@
       serviceId: 'YOUR_EMAILJS_SERVICE_ID',
       templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
       userId: 'YOUR_EMAILJS_USER_ID',
-      recipientEmail: 'admin@yourdomain.com'
+      recipientEmail: 'contact@clientdomain.com'
+    });
+    
+    // Customize for this specific client
+    window.TreatmentRecommender.configureSiteSettings({
+      title: "CLIENT BEAUTY",
+      subtitle: "Discover your perfect treatment at Client Beauty Clinic",
+      aboutUsText: "Client Beauty Clinic offers premium aesthetic services.",
+      contactInfo: {
+        email: "contact@clientdomain.com",
+        phone: "(555) 987-6543",
+        address: "123 Beauty Street, City, State",
+      },
+      navigation: {
+        showAbout: true,
+        showTreatments: true,
+        showIntegrationGuide: false,
+      },
+      copyrightName: "Client Beauty Clinic",
     });
     
     // Render the widget
@@ -130,8 +171,8 @@
   </div>
   
   <p>
-    <strong>Note:</strong> For production use, you'll need to build this React application
-    and include the compiled JavaScript and CSS files in your website.
+    <strong>Note:</strong> For agencies and service providers, you can create a custom configuration for each client,
+    including setting up EmailJS on their behalf. Just make sure each client has their own unique EmailJS account for email quota management.
   </p>
 </body>
 </html>
