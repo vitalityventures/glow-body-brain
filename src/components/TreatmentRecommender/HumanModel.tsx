@@ -56,20 +56,31 @@ const HumanModel: React.FC<HumanModelProps> = ({ onSelectArea, isFemale }) => {
           />
 
           {/* Hotspots - positioned absolutely - adjusted positions */}
-          <Hotspot top="10%" left="48%" label="Face" onClick={() => onSelectArea('face')} />
+          <Hotspot top="8%" left="48%" label="Face" onClick={() => onSelectArea('face')} />
           <Hotspot top="28%" left="25%" label="Arms" onClick={() => onSelectArea('arms')} />
           <Hotspot top="28%" left="70%" label="Arms" onClick={() => onSelectArea('arms')} />
           <Hotspot top="38%" left="48%" label="Abdomen" onClick={() => onSelectArea('abdomen')} />
           <Hotspot top="52%" left="32%" label="Thighs" onClick={() => onSelectArea('thighs')} />
           <Hotspot top="52%" left="62%" label="Thighs" onClick={() => onSelectArea('thighs')} />
-          <Hotspot top="72%" left="35%" label="Legs" onClick={() => onSelectArea('legs')} />
-          <Hotspot top="72%" left="60%" label="Legs" onClick={() => onSelectArea('legs')} />
+          <Hotspot top="72%" left="33%" label="Legs" onClick={() => onSelectArea('legs')} />
+          <Hotspot top="72%" left="58%" label="Legs" onClick={() => onSelectArea('legs')} />
         </div>
       </motion.div>
 
+      {/* Switch model button above the instruction text */}
+      <motion.button
+        className="text-spa-accent hover:text-spa-dark transition-colors mt-4 mb-2 text-sm"
+        onClick={() => setIsFemale(!isFemale)}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        Switch to {isFemale ? 'male' : 'female'} model
+      </motion.button>
+
       {/* Instruction text below the graphic */}
       <motion.div 
-        className="mt-6 w-full"
+        className="w-full"
         initial={{ opacity: 0 }}
         animate={{ opacity: isHovered ? 0 : 1 }}
         transition={{ duration: 0.3 }}
