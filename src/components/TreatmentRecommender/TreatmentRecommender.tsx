@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import HumanModel from './HumanModel';
@@ -8,7 +9,7 @@ import TreatmentPlanSidebar from './TreatmentPlanSidebar';
 import { toast } from "sonner";
 import { Drawer, DrawerContent, DrawerTrigger } from '../../components/ui/drawer';
 import { ShoppingBag } from 'lucide-react';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../../components/ui/resizable';
 import siteConfig from '../../config/siteConfig';
 
 // Treatment area concerns data

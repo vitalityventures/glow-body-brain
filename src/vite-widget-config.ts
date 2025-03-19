@@ -6,6 +6,11 @@ import { resolve } from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, '.'),
+    },
+  },
   build: {
     lib: {
       entry: resolve(__dirname, 'exports/TreatmentRecommenderExport.tsx'),
