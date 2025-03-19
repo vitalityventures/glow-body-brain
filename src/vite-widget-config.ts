@@ -8,7 +8,6 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      // Point '@' to the src directory with absolute path
       '@': resolve(__dirname, './'),
     },
   },
