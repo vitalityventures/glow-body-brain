@@ -86,4 +86,43 @@ const TreatmentRecommenderWidget = () => {
   );
 };
 
+// Sample initialization script for documentation purposes
+const initializeWidgetScript = `
+<!-- Include React and ReactDOM -->
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+
+<!-- Include the widget script -->
+<script src="path/to/treatment-recommender.umd.js"></script>
+<link rel="stylesheet" href="path/to/treatment-recommender.css">
+
+<!-- Create a container for the widget -->
+<div id="treatment-recommender-container"></div>
+
+<script>
+  // Configure widget settings (optional)
+  TreatmentRecommender.configureSiteSettings({
+    title: "YOUR BRAND NAME",
+    subtitle: "Your custom subtitle here",
+    copyrightName: "Your Brand"
+  });
+  
+  // Configure email service (required for form submissions)
+  TreatmentRecommender.configureEmailService({
+    serviceId: "your_emailjs_service_id",
+    templateId: "your_emailjs_template_id",
+    userId: "your_emailjs_user_id"
+  });
+  
+  // Render the widget
+  const container = document.getElementById('treatment-recommender-container');
+  ReactDOM.createRoot(container).render(
+    React.createElement(TreatmentRecommender.default)
+  );
+</script>
+`;
+
+// For documentation purposes only - not actually executed
+console.info("Widget initialization example:", initializeWidgetScript);
+
 export default TreatmentRecommenderWidget;

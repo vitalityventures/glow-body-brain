@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, './'),
+      '@': resolve(__dirname, 'src'),
     },
   },
   build: {
@@ -26,7 +26,11 @@ export default defineConfig({
           react: 'React',
           'react-dom': 'ReactDOM',
         },
+        // Ensure the CSS is properly extracted
+        assetFileNames: 'assets/[name][extname]',
       },
     },
+    // Generate sourcemaps for easier debugging
+    sourcemap: true,
   },
 });
