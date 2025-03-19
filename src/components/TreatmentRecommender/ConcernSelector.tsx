@@ -1,12 +1,7 @@
-
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
-
-interface ConcernOption {
-  id: string;
-  label: string;
-}
+import { ConcernOption } from './types';
 
 interface ConcernSelectorProps {
   area: string;
