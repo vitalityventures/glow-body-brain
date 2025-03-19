@@ -34,8 +34,6 @@ interface HumanModelProps {
 }
 
 const HumanModel: React.FC<HumanModelProps> = ({ onSelectArea, isFemale }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <div className="relative w-full max-w-md mx-auto h-[70vh] flex flex-col items-center justify-center">
       {/* Human image */}
@@ -44,8 +42,6 @@ const HumanModel: React.FC<HumanModelProps> = ({ onSelectArea, isFemale }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         <div className="relative w-full h-full">
           {/* Use the uploaded silhouette images */}
@@ -67,9 +63,9 @@ const HumanModel: React.FC<HumanModelProps> = ({ onSelectArea, isFemale }) => {
         </div>
       </motion.div>
 
-      {/* Switch model button above the instruction text */}
+      {/* Switch model button */}
       <motion.button
-        className="text-spa-accent hover:text-spa-dark transition-colors mt-4 mb-2 text-sm"
+        className="text-spa-accent hover:text-spa-dark transition-colors mt-4 text-sm"
         onClick={() => onSelectArea('switch-model')}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -77,19 +73,6 @@ const HumanModel: React.FC<HumanModelProps> = ({ onSelectArea, isFemale }) => {
       >
         Switch to {isFemale ? 'male' : 'female'} model
       </motion.button>
-
-      {/* Instruction text below the graphic */}
-      <motion.div 
-        className="w-full"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isHovered ? 0 : 1 }}
-        transition={{ duration: 0.3 }}
-      >
-        <div className="glass-panel rounded-xl px-8 py-4 text-center max-w-xs mx-auto">
-          <h3 className="text-spa-dark font-display text-lg mb-1">Click on an area</h3>
-          <p className="text-spa-accent text-sm">Select a body region to view treatment options</p>
-        </div>
-      </motion.div>
     </div>
   );
 };

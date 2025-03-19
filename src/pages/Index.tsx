@@ -25,7 +25,7 @@ const Index = () => {
       
       <footer className="bg-white py-6 mt-10">
         <div className="max-w-6xl mx-auto px-6 text-center text-spa-accent text-sm">
-          <p>&copy; {new Date().getFullYear()} Aesthetic Surgery. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Treatment Recommender. All rights reserved.</p>
           <p className="mt-1">All virtual submissions are confidential.</p>
         </div>
       </footer>

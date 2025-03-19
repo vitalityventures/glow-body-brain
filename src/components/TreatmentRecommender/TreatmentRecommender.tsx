@@ -8,6 +8,7 @@ import TreatmentPlanSidebar from './TreatmentPlanSidebar';
 import { toast } from "sonner";
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { ShoppingBag } from 'lucide-react';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 // Treatment area concerns data
 const AREA_CONCERNS = {
@@ -92,7 +93,7 @@ const AREA_CONCERNS = {
 };
 
 // Stages of the treatment recommender flow
-type Stage = 'HUMAN_MODEL' | 'FACE_MODEL' | 'CONCERN_SELECTOR' | 'RESULTS_FORM';
+type Stage = 'FACE_MODEL' | 'CONCERN_SELECTOR' | 'RESULTS_FORM';
 
 // Interface for treatment plan items
 interface TreatmentPlanItem {
@@ -102,7 +103,7 @@ interface TreatmentPlanItem {
 }
 
 const TreatmentRecommender: React.FC = () => {
-  const [stage, setStage] = useState<Stage>('HUMAN_MODEL');
+  const [stage, setStage] = useState<Stage>('FACE_MODEL');
   const [selectedArea, setSelectedArea] = useState<string>('');
   const [isFemale, setIsFemale] = useState<boolean>(true);
   const [selectedConcerns, setSelectedConcerns] = useState<{ [key: string]: string[] }>({});
@@ -183,17 +184,15 @@ const TreatmentRecommender: React.FC = () => {
 
   const handleBack = () => {
     if (stage === 'FACE_MODEL') {
-      setStage('HUMAN_MODEL');
+      // No back action needed since model is always visible
     } else if (stage === 'CONCERN_SELECTOR') {
       if (selectedArea === 'forehead' || selectedArea === 'eyes' || selectedArea === 'nose' || 
           selectedArea === 'cheeks' || selectedArea === 'mouth' || selectedArea === 'jaw' || 
           selectedArea === 'neck') {
         setStage('FACE_MODEL');
-      } else {
-        setStage('HUMAN_MODEL');
       }
     } else if (stage === 'RESULTS_FORM') {
-      setStage('HUMAN_MODEL');
+      setStage('FACE_MODEL');
     }
   };
 
@@ -250,7 +249,7 @@ const TreatmentRecommender: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-spa-light">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="py-8 px-4 md:px-8">
           <motion.h1 
             className="text-4xl md:text-5xl text-center font-display text-spa-dark mb-2"
@@ -299,81 +298,103 @@ const TreatmentRecommender: React.FC = () => {
             </Drawer>
           </div>
 
+          {/* Main content with resizable panels */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <AnimatePresence mode="wait">
-                {stage === 'HUMAN_MODEL' && (
-                  <motion.div
-                    key="human-model"
-                    variants={pageVariants}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="flex flex-col items-center">
-                      <HumanModel onSelectArea={handleSelectArea} isFemale={isFemale} />
+            <div className="lg:col-span-3">
+              {stage === 'RESULTS_FORM' ? (
+                <motion.div
+                  key="results-form"
+                  variants={pageVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  transition={{ duration: 0.3 }}
+                >
+                  <ResultsForm
+                    treatmentPlan={treatmentPlan}
+                    onBack={handleBack}
+                    onSubmit={handleSubmit}
+                  />
+                </motion.div>
+              ) : (
+                <ResizablePanelGroup
+                  direction="horizontal"
+                  className="min-h-[70vh] border rounded-lg bg-white shadow-sm"
+                >
+                  {/* Left panel - Always visible human/face model */}
+                  <ResizablePanel defaultSize={40} minSize={30}>
+                    <div className="h-full p-4 flex flex-col justify-center items-center">
+                      {selectedArea === 'face' || 
+                        selectedArea === 'forehead' || 
+                        selectedArea === 'eyes' || 
+                        selectedArea === 'nose' || 
+                        selectedArea === 'cheeks' || 
+                        selectedArea === 'mouth' || 
+                        selectedArea === 'jaw' || 
+                        selectedArea === 'neck' ? (
+                        <FaceModel onSelectArea={handleSelectFacialArea} onBack={() => handleSelectArea('body')} />
+                      ) : (
+                        <HumanModel onSelectArea={handleSelectArea} isFemale={isFemale} />
+                      )}
                     </div>
-                  </motion.div>
-                )}
-
-                {stage === 'FACE_MODEL' && (
-                  <motion.div
-                    key="face-model"
-                    variants={pageVariants}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    transition={{ duration: 0.3 }}
-                  >
-                    <FaceModel onSelectArea={handleSelectFacialArea} onBack={handleBack} />
-                  </motion.div>
-                )}
-
-                {stage === 'CONCERN_SELECTOR' && (
-                  <motion.div
-                    key="concern-selector"
-                    variants={pageVariants}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    transition={{ duration: 0.3 }}
-                  >
-                    <ConcernSelector
-                      area={selectedArea}
-                      concerns={AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS] || []}
-                      selectedConcerns={treatmentPlan
-                        .filter(item => item.area === selectedArea)
-                        .map(item => item.concernId)}
-                      onSelectConcern={handleSelectConcern}
-                      onBack={handleBack}
-                      onContinue={handleContinue}
-                    />
-                  </motion.div>
-                )}
-
-                {stage === 'RESULTS_FORM' && (
-                  <motion.div
-                    key="results-form"
-                    variants={pageVariants}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    transition={{ duration: 0.3 }}
-                    className="lg:col-span-3"
-                  >
-                    <ResultsForm
-                      treatmentPlan={treatmentPlan}
-                      onBack={handleBack}
-                      onSubmit={handleSubmit}
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                  </ResizablePanel>
+                  
+                  <ResizableHandle withHandle />
+                  
+                  {/* Right panel - Dynamic content (concerns) */}
+                  <ResizablePanel defaultSize={60}>
+                    <div className="h-full p-6 overflow-y-auto">
+                      {stage === 'CONCERN_SELECTOR' && (
+                        <motion.div
+                          key="concern-selector"
+                          variants={pageVariants}
+                          initial="initial"
+                          animate="animate"
+                          exit="exit"
+                          transition={{ duration: 0.3 }}
+                        >
+                          <ConcernSelector
+                            area={selectedArea}
+                            concerns={AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS] || []}
+                            selectedConcerns={treatmentPlan
+                              .filter(item => item.area === selectedArea)
+                              .map(item => item.concernId)}
+                            onSelectConcern={handleSelectConcern}
+                            onBack={handleBack}
+                            onContinue={handleContinue}
+                          />
+                        </motion.div>
+                      )}
+                      
+                      {stage === 'FACE_MODEL' && selectedArea === 'face' && (
+                        <div className="flex h-full items-center justify-center">
+                          <div className="glass-panel rounded-xl px-8 py-6 text-center max-w-sm mx-auto">
+                            <h3 className="text-spa-dark font-display text-xl mb-3">Select a Facial Region</h3>
+                            <p className="text-spa-accent">
+                              Click on specific areas of the face on the left panel to view treatment options for those regions.
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {(!selectedArea || (stage === 'FACE_MODEL' && selectedArea !== 'face')) && (
+                        <div className="flex h-full items-center justify-center">
+                          <div className="glass-panel rounded-xl px-8 py-6 text-center max-w-sm mx-auto">
+                            <h3 className="text-spa-dark font-display text-xl mb-3">Select a Body Region</h3>
+                            <p className="text-spa-accent">
+                              Click on specific areas of the body on the left panel to view treatment options for those regions.
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </ResizablePanel>
+                </ResizablePanelGroup>
+              )}
             </div>
 
-            {/* Treatment Plan Sidebar - Now visible on all screens except mobile */}
-            <div className="hidden lg:block sticky top-4 self-start max-h-[calc(100vh-2rem)] overflow-auto">
+            {/* Treatment Plan Sidebar - visible on desktop */}
+            <div className="hidden lg:block lg:col-span-3 mt-8">
               <TreatmentPlanSidebar
                 planItems={treatmentPlan}
                 onRemoveItem={handleRemoveTreatmentItem}

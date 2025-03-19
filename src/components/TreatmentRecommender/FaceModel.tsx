@@ -79,19 +79,6 @@ const FaceModel: React.FC<FaceModelProps> = ({ onSelectArea, onBack }) => {
         <Hotspot top="74%" left="48%" label="Jaw & Chin" onClick={() => onSelectArea('jaw')} />
         <Hotspot top="88%" left="48%" label="Neck" onClick={() => onSelectArea('neck')} />
       </div>
-
-      {/* Instruction text below the graphic */}
-      <motion.div 
-        className="mt-6 w-full"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isHovered ? 0 : 1 }}
-        transition={{ duration: 0.3 }}
-      >
-        <div className="glass-panel rounded-xl px-8 py-4 text-center max-w-xs mx-auto">
-          <h3 className="text-spa-dark font-display text-lg mb-1">Select facial area</h3>
-          <p className="text-spa-accent text-sm">Click on a specific facial region to view treatment options</p>
-        </div>
-      </motion.div>
     </div>
   );
 };
