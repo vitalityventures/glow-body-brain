@@ -6,7 +6,7 @@ import ConcernSelector from './ConcernSelector';
 import ResultsForm from './ResultsForm';
 import TreatmentPlanSidebar from './TreatmentPlanSidebar';
 import { toast } from "sonner";
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerTrigger } from '../../components/ui/drawer';
 import { ShoppingBag } from 'lucide-react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import siteConfig from '../../config/siteConfig';
