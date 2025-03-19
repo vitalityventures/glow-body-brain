@@ -54,63 +54,19 @@ const FaceModel: React.FC<FaceModelProps> = ({ onSelectArea, onBack }) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Face outline */}
-        <motion.svg 
-          viewBox="0 0 300 400" 
+        {/* Use the face image you provided instead of SVG */}
+        <motion.div
           className="w-full h-full"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          {/* Face outline - more elegant and refined */}
-          <path 
-            d="M150,40 
-               C190,40 220,70 230,110
-               C240,150 240,190 230,230
-               C220,270 200,300 170,320
-               C160,325 155,330 150,340
-               C145,330 140,325 130,320
-               C100,300 80,270 70,230
-               C60,190 60,150 70,110
-               C80,70 110,40 150,40 Z"
-            fill="#F5D0B1"
-            stroke="#888"
-            strokeWidth="1"
+          <img
+            src="/face-silhouette.png"
+            alt="Face silhouette"
+            className="w-full h-full object-contain"
           />
-          
-          {/* Eyebrows */}
-          <path d="M110,120 C120,115 130,115 140,118" 
-            fill="none" stroke="#555" strokeWidth="1" />
-          <path d="M160,118 C170,115 180,115 190,120" 
-            fill="none" stroke="#555" strokeWidth="1" />
-          
-          {/* Eyes */}
-          <ellipse cx="125" cy="135" rx="12" ry="6" 
-            fill="white" stroke="#555" strokeWidth="1" />
-          <ellipse cx="175" cy="135" rx="12" ry="6" 
-            fill="white" stroke="#555" strokeWidth="1" />
-          
-          {/* Pupils */}
-          <circle cx="125" cy="135" r="3" fill="#555" />
-          <circle cx="175" cy="135" r="3" fill="#555" />
-          
-          {/* Nose */}
-          <path d="M150,140 
-                   C153,160 156,180 160,190
-                   C155,195 145,195 140,190
-                   C144,180 147,160 150,140"
-                fill="none" stroke="#888" strokeWidth="1" />
-          
-          {/* Lips */}
-          <path d="M130,220 C140,225 160,225 170,220" 
-                fill="none" stroke="#888" strokeWidth="1" />
-          <path d="M130,220 C140,215 160,215 170,220" 
-                fill="none" stroke="#888" strokeWidth="1" />
-          
-          {/* Neck */}
-          <path d="M120,340 C130,360 170,360 180,340" 
-                fill="#F5D0B1" stroke="#888" strokeWidth="1" />
-        </motion.svg>
+        </motion.div>
 
         {/* Hotspots - positioned absolutely */}
         <Hotspot top="15%" left="50%" label="Forehead" onClick={() => onSelectArea('forehead')} />
