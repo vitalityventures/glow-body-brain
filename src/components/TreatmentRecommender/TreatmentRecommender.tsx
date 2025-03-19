@@ -6,6 +6,8 @@ import ConcernSelector from './ConcernSelector';
 import ResultsForm from './ResultsForm';
 import TreatmentPlanSidebar from './TreatmentPlanSidebar';
 import { toast } from "sonner";
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import { ShoppingBag } from 'lucide-react';
 
 // Treatment area concerns data
 const AREA_CONCERNS = {
@@ -268,6 +270,35 @@ const TreatmentRecommender: React.FC = () => {
             Discover personalized aesthetic treatments tailored to your unique concerns
           </motion.p>
 
+          {/* Mobile Treatment Plan Button */}
+          <div className="fixed bottom-4 right-4 lg:hidden z-20">
+            <Drawer>
+              <DrawerTrigger asChild>
+                <button 
+                  className="bg-spa-dark text-white p-3 rounded-full shadow-lg flex items-center justify-center"
+                  aria-label="Open treatment plan"
+                >
+                  <ShoppingBag className="h-6 w-6" />
+                  {treatmentPlan.length > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
+                      {treatmentPlan.length}
+                    </span>
+                  )}
+                </button>
+              </DrawerTrigger>
+              <DrawerContent className="max-h-[90vh]">
+                <div className="px-4 py-6 max-h-[calc(90vh-40px)] overflow-auto">
+                  <TreatmentPlanSidebar
+                    planItems={treatmentPlan}
+                    onRemoveItem={handleRemoveTreatmentItem}
+                    onClearAll={handleClearTreatmentPlan}
+                    onFinish={handleFinishTreatment}
+                  />
+                </div>
+              </DrawerContent>
+            </Drawer>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               <AnimatePresence mode="wait">
@@ -341,17 +372,15 @@ const TreatmentRecommender: React.FC = () => {
               </AnimatePresence>
             </div>
 
-            {/* Treatment Plan Sidebar - Only show on non-results stages */}
-            {stage !== 'RESULTS_FORM' && (
-              <div className="hidden lg:block">
-                <TreatmentPlanSidebar
-                  planItems={treatmentPlan}
-                  onRemoveItem={handleRemoveTreatmentItem}
-                  onClearAll={handleClearTreatmentPlan}
-                  onFinish={handleFinishTreatment}
-                />
-              </div>
-            )}
+            {/* Treatment Plan Sidebar - Now visible on all screens except mobile */}
+            <div className="hidden lg:block sticky top-4 self-start max-h-[calc(100vh-2rem)] overflow-auto">
+              <TreatmentPlanSidebar
+                planItems={treatmentPlan}
+                onRemoveItem={handleRemoveTreatmentItem}
+                onClearAll={handleClearTreatmentPlan}
+                onFinish={handleFinishTreatment}
+              />
+            </div>
           </div>
         </div>
       </div>
