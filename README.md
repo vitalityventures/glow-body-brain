@@ -1,39 +1,46 @@
 
 # Treatment Recommender Widget
 
-## Project info
+## Overview
 
-**URL**: https://lovable.dev/projects/0281a25a-37e0-4d4d-863b-9b4ba3c6f634
+This widget allows your clients to select their skin or body concerns and receive personalized treatment recommendations. The widget captures client information and sends it to your specified email address using EmailJS.
 
-## Integration Guide
+## Getting Started with GitHub
 
-This application can be integrated into any website as a widget. Here's how to do it:
+### Step 1: Clone the Repository
 
-### Step 1: Build the Application
-
-Clone the repository and build the application:
-
-```sh
+```bash
 # Clone the repository
-git clone <YOUR_GIT_URL>
+git clone https://github.com/vitalityventures/treatmentrecommender.git
 
 # Navigate to the project directory
-cd <YOUR_PROJECT_NAME>
+cd treatmentrecommender
+```
 
+### Step 2: Install Dependencies and Build
+
+```bash
 # Install dependencies
 npm install
 
-# Build the project
-npm run build
+# Build the widget
+npx vite build --config src/vite-widget-config.ts
 ```
 
-### Step 2: Set Up EmailJS
+This will generate the widget files in the `dist` folder:
+- `treatment-recommender.js`
+- `treatment-recommender.css`
+- and other related assets
+
+## Integration Guide
+
+### Step 1: Set Up EmailJS
 
 1. Create an account at [EmailJS](https://www.emailjs.com/)
 2. Create an email service and template
 3. Note your Service ID, Template ID, and User ID
 
-### Step 3: Add the Widget to Your Website
+### Step 2: Add the Widget to Your Website
 
 Include the compiled JavaScript and CSS in your HTML:
 
@@ -54,8 +61,7 @@ Include the compiled JavaScript and CSS in your HTML:
   window.TreatmentRecommender.configureEmailService({
     serviceId: 'YOUR_EMAILJS_SERVICE_ID',
     templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
-    userId: 'YOUR_EMAILJS_USER_ID',
-    recipientEmail: 'admin@yourdomain.com'
+    userId: 'YOUR_EMAILJS_USER_ID'
   });
   
   // Render the widget
@@ -66,43 +72,28 @@ Include the compiled JavaScript and CSS in your HTML:
 </script>
 ```
 
-For a complete example, see the `public/integration-example.html` file in the project.
+### EmailJS Template Example
 
-## How can I edit this code?
+Your EmailJS template should include parameters for:
+- firstName
+- lastName
+- email
+- phone
+- newsletter
+- treatmentPlan
+- timestamp
 
-There are several ways of editing your application.
+## Development
 
-**Use Lovable**
+To run the development server:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/0281a25a-37e0-4d4d-863b-9b4ba3c6f634) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
 npm run dev
 ```
 
-## What technologies are used for this project?
+This will start a development server at http://localhost:8080
 
-This project is built with:
+## Technologies Used
 
 - Vite
 - TypeScript
@@ -111,11 +102,3 @@ This project is built with:
 - Tailwind CSS
 - Framer Motion
 - EmailJS (for email functionality)
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/0281a25a-37e0-4d4d-863b-9b4ba3c6f634) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
