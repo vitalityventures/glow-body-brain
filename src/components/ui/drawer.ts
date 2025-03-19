@@ -1,3 +1,14 @@
 
-// Re-export drawer components from the properly implemented drawer.tsx file
-export * from './drawer.tsx';
+// Re-export drawer components from the drawer.tsx file
+export { 
+  Drawer,
+  DrawerPortal,
+  DrawerOverlay,
+  DrawerTrigger,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerFooter,
+  DrawerTitle,
+  DrawerDescription
+} from "./drawer.tsx";
