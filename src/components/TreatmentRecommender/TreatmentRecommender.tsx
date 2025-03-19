@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import HumanModel from './HumanModel';
@@ -6,8 +7,8 @@ import ConcernSelector from './ConcernSelector';
 import ResultsForm from './ResultsForm';
 import TreatmentPlanSidebar from './TreatmentPlanSidebar';
 import { toast } from "sonner";
-import { Drawer, DrawerContent, DrawerTrigger } from '../../components/ui/drawer';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../../components/ui/resizable';
+import { Drawer, DrawerContent, DrawerTrigger } from '../ui/drawer';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/resizable';
 import siteConfig from '../../config/siteConfig';
 import { ShoppingBag } from 'lucide-react';
 
