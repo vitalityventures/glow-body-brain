@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Send, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { sendTreatmentPlanEmail } from '../../utils/EmailService';
+import { toast } from 'sonner';
 
 interface TreatmentPlanItem {
   area: string;
@@ -33,25 +35,80 @@ const ResultsForm: React.FC<ResultsFormProps> = ({
   const [newsletter, setNewsletter] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateEmail = (email: string): boolean => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const formatPhoneNumber = (input: string): string => {
+    // Remove all non-numeric characters
+    const numbers = input.replace(/\D/g, '');
+    
+    // Format as (XXX) XXX-XXXX
+    if (numbers.length <= 3) {
+      return numbers;
+    } else if (numbers.length <= 6) {
+      return `(${numbers.slice(0, 3)}) ${numbers.slice(3)}`;
+    } else {
+      return `(${numbers.slice(0, 3)}) ${numbers.slice(3, 6)}-${numbers.slice(6, 10)}`;
+    }
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedNumber = formatPhoneNumber(e.target.value);
+    setPhone(formattedNumber);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName || !lastName || !email || !phone) return;
+    setEmailError(null);
+    
+    if (!firstName || !lastName || !email || !phone) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+    
+    if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    }
     
     setIsLoading(true);
     
-    // Simulate submission delay
-    setTimeout(() => {
-      onSubmit({
+    try {
+      // Send email with treatment plan data
+      const emailSent = await sendTreatmentPlanEmail({
         firstName,
         lastName,
         email,
         phone,
-        newsletter
+        newsletter,
+        treatmentPlan
       });
+      
+      if (emailSent) {
+        // Call the original onSubmit handler to maintain existing functionality
+        onSubmit({
+          firstName,
+          lastName,
+          email,
+          phone,
+          newsletter
+        });
+        
+        setIsSubmitted(true);
+        toast.success("Your treatment plan has been sent to your email!");
+      } else {
+        toast.error("There was an error sending your treatment plan. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error in form submission:", error);
+      toast.error("An unexpected error occurred. Please try again later.");
+    } finally {
       setIsLoading(false);
-      setIsSubmitted(true);
-    }, 1500);
+    }
   };
 
   const formatAreaName = (name: string) => {

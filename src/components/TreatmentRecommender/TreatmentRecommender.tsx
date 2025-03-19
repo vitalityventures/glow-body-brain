@@ -233,7 +233,7 @@ const TreatmentRecommender: React.FC = () => {
     console.log('Submitting treatment plan:', treatmentPlan);
     console.log('Form data:', formData);
     
-    toast.success("Thank you! Your personalized treatment plan will be emailed to you shortly.");
+    toast.success(`Thank you ${formData.firstName}! Your personalized treatment plan will be emailed to you shortly.`);
   };
 
   // Animation variants for page transitions
