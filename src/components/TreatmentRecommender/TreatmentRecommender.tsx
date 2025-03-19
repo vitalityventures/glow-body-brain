@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import HumanModel from './HumanModel';
@@ -25,7 +24,7 @@ const AREA_CONCERNS = {
     { id: 'sunspots', label: 'Sun Damage & Age Spots' },
   ],
   eyes: [
-    { id: 'crow-feet', label: 'Crow's Feet' },
+    { id: 'crow-feet', label: 'Crow\'s Feet' },
     { id: 'dark-circles', label: 'Dark Circles' },
     { id: 'eye-bags', label: 'Eye Bags & Puffiness' },
     { id: 'hollowing', label: 'Hollowing Under Eyes' },
