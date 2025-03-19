@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import HumanModel from './HumanModel';
@@ -7,9 +6,9 @@ import ConcernSelector from './ConcernSelector';
 import ResultsForm from './ResultsForm';
 import TreatmentPlanSidebar from './TreatmentPlanSidebar';
 import { toast } from "sonner";
-import { Drawer, DrawerContent, DrawerTrigger } from '../ui/drawer';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/resizable';
-import siteConfig from '../../config/siteConfig';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import siteConfig from '@/config/siteConfig';
 import { ShoppingBag } from 'lucide-react';
 
 // Treatment area concerns data
@@ -141,14 +140,12 @@ const TreatmentRecommender: React.FC = () => {
     );
     
     if (isAlreadySelected) {
-      // Remove from treatment plan
       setTreatmentPlan(prev => 
         prev.filter(item => !(item.area === selectedArea && item.concernId === concernId))
       );
       
       toast.info(`Removed "${concernItem.label}" from your treatment plan`);
     } else {
-      // Add to treatment plan
       setTreatmentPlan(prev => [
         ...prev,
         {
@@ -161,7 +158,6 @@ const TreatmentRecommender: React.FC = () => {
       toast.success(`Added "${concernItem.label}" to your treatment plan`);
     }
     
-    // Also update the selectedConcerns state for backward compatibility
     setSelectedConcerns(prev => {
       const currentConcerns = prev[selectedArea] || [];
       if (currentConcerns.includes(concernId)) {
@@ -186,7 +182,6 @@ const TreatmentRecommender: React.FC = () => {
 
   const handleBack = () => {
     if (stage === 'FACE_MODEL') {
-      // No back action needed since model is always visible
     } else if (stage === 'CONCERN_SELECTOR') {
       if (selectedArea === 'forehead' || selectedArea === 'eyes' || selectedArea === 'nose' || 
           selectedArea === 'cheeks' || selectedArea === 'mouth' || selectedArea === 'jaw' || 
@@ -209,7 +204,6 @@ const TreatmentRecommender: React.FC = () => {
       prev.filter(item => !(item.area === area && item.concernId === concernId))
     );
     
-    // Also update the selectedConcerns state
     setSelectedConcerns(prev => {
       const currentConcerns = prev[area] || [];
       return {
@@ -238,7 +232,6 @@ const TreatmentRecommender: React.FC = () => {
     toast.success(`Thank you ${formData.firstName}! Your personalized treatment plan will be emailed to you shortly.`);
   };
 
-  // Animation variants for page transitions
   const pageVariants = {
     initial: { opacity: 0, x: 100 },
     animate: { opacity: 1, x: 0 },
@@ -271,7 +264,6 @@ const TreatmentRecommender: React.FC = () => {
             {siteConfig.subtitle}
           </motion.p>
 
-          {/* Mobile Treatment Plan Button */}
           <div className="fixed bottom-4 right-4 lg:hidden z-20">
             <Drawer>
               <DrawerTrigger asChild>
@@ -300,7 +292,6 @@ const TreatmentRecommender: React.FC = () => {
             </Drawer>
           </div>
 
-          {/* Main content with resizable panels */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-3">
               {stage === 'RESULTS_FORM' ? (
@@ -323,7 +314,6 @@ const TreatmentRecommender: React.FC = () => {
                   direction="horizontal"
                   className="min-h-[70vh] border rounded-lg bg-white shadow-sm"
                 >
-                  {/* Left panel - Always visible human/face model */}
                   <ResizablePanel defaultSize={40} minSize={30}>
                     <div className="h-full p-4 flex flex-col justify-center items-center">
                       {selectedArea === 'face' || 
@@ -343,7 +333,6 @@ const TreatmentRecommender: React.FC = () => {
                   
                   <ResizableHandle withHandle />
                   
-                  {/* Right panel - Dynamic content (concerns) */}
                   <ResizablePanel defaultSize={60}>
                     <div className="h-full p-6 overflow-y-auto">
                       {stage === 'CONCERN_SELECTOR' && (
@@ -395,7 +384,6 @@ const TreatmentRecommender: React.FC = () => {
               )}
             </div>
 
-            {/* Treatment Plan Sidebar - visible on desktop */}
             <div className="hidden lg:block lg:col-span-3 mt-8">
               <TreatmentPlanSidebar
                 planItems={treatmentPlan}
