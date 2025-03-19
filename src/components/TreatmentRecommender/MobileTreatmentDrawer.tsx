@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ShoppingBag } from 'lucide-react';
-import { Drawer, DrawerContent, DrawerTrigger } from '../../components/ui/drawer.tsx';
+import { Drawer, DrawerContent, DrawerTrigger } from '../../components/ui/drawer';
 import TreatmentPlanSidebar from './TreatmentPlanSidebar';
 import { TreatmentPlanItem } from './types';
 
