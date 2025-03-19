@@ -3,6 +3,8 @@ import React from 'react';
 import TreatmentRecommender from '../components/TreatmentRecommender/TreatmentRecommender';
 import { Toaster } from 'sonner';
 import '../index.css'; // Make sure to include your styles
+import { SiteConfig } from '../config/siteConfig';
+import defaultSiteConfig from '../config/siteConfig';
 
 // Configuration for the EmailJS service
 export interface EmailServiceConfig {
@@ -40,6 +42,39 @@ export const getEmailServiceConfig = (): EmailServiceConfig | null => {
   }
   
   return null;
+};
+
+// Store the site configuration globally
+let siteConfig: SiteConfig = defaultSiteConfig;
+
+// Configure site settings for the widget
+export const configureSiteSettings = (config: Partial<SiteConfig>) => {
+  // Merge with default config
+  siteConfig = { ...defaultSiteConfig, ...config };
+  
+  // Update in localStorage for persistence
+  localStorage.setItem('siteConfig', JSON.stringify(siteConfig));
+  
+  console.log('Site configuration updated:', siteConfig);
+  
+  // Force refresh to apply changes
+  window.location.reload();
+};
+
+// Get current site config
+export const getSiteConfig = (): SiteConfig => {
+  // Try to load from localStorage
+  const savedConfig = localStorage.getItem('siteConfig');
+  if (savedConfig) {
+    try {
+      const parsedConfig = JSON.parse(savedConfig);
+      siteConfig = { ...defaultSiteConfig, ...parsedConfig };
+    } catch (e) {
+      console.error('Failed to parse site config from localStorage:', e);
+    }
+  }
+  
+  return siteConfig;
 };
 
 // Main export component that can be embedded in any website

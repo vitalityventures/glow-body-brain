@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import TreatmentRecommender from "../components/TreatmentRecommender/TreatmentRecommender";
 import { Toaster } from "sonner";
+import siteConfig from "../config/siteConfig";
 
 const Index = () => {
   return (
@@ -14,13 +15,19 @@ const Index = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
           >
-            TREATMENT RECOMMENDER
+            {siteConfig.title}
           </motion.h1>
           
           <nav className="hidden md:flex space-x-6">
-            <a href="#about" className="text-spa-accent hover:text-spa-dark transition-colors">About</a>
-            <a href="#treatments" className="text-spa-accent hover:text-spa-dark transition-colors">Treatments</a>
-            <a href="/integration-example.html" className="text-spa-accent hover:text-spa-dark transition-colors" target="_blank">Integration Guide</a>
+            {siteConfig.navigation.showAbout && (
+              <a href="#about" className="text-spa-accent hover:text-spa-dark transition-colors">About</a>
+            )}
+            {siteConfig.navigation.showTreatments && (
+              <a href="#treatments" className="text-spa-accent hover:text-spa-dark transition-colors">Treatments</a>
+            )}
+            {siteConfig.navigation.showIntegrationGuide && (
+              <a href="/integration-example.html" className="text-spa-accent hover:text-spa-dark transition-colors" target="_blank">Integration Guide</a>
+            )}
           </nav>
         </div>
       </header>
@@ -35,15 +42,15 @@ const Index = () => {
             <div>
               <h3 className="text-spa-dark font-display text-lg mb-4">About Us</h3>
               <p className="text-spa-accent">
-                Our treatment recommender provides personalized aesthetic treatment recommendations based on your unique concerns.
+                {siteConfig.aboutUsText}
               </p>
             </div>
             
             <div>
               <h3 className="text-spa-dark font-display text-lg mb-4">Contact Info</h3>
-              <p className="text-spa-accent mb-2">Email: info@treatmentrecommender.com</p>
-              <p className="text-spa-accent mb-2">Phone: (555) 123-4567</p>
-              <p className="text-spa-accent">Address: 123 Beauty Lane, Suite 100</p>
+              <p className="text-spa-accent mb-2">Email: {siteConfig.contactInfo.email}</p>
+              <p className="text-spa-accent mb-2">Phone: {siteConfig.contactInfo.phone}</p>
+              <p className="text-spa-accent">Address: {siteConfig.contactInfo.address}</p>
             </div>
             
             <div>
@@ -51,18 +58,20 @@ const Index = () => {
               <p className="text-spa-accent mb-2">
                 This treatment recommender can be embedded in any website!
               </p>
-              <a 
-                href="/integration-example.html" 
-                className="text-spa-accent underline hover:text-spa-dark transition-colors"
-                target="_blank"
-              >
-                View Integration Guide
-              </a>
+              {siteConfig.navigation.showIntegrationGuide && (
+                <a 
+                  href="/integration-example.html" 
+                  className="text-spa-accent underline hover:text-spa-dark transition-colors"
+                  target="_blank"
+                >
+                  View Integration Guide
+                </a>
+              )}
             </div>
           </div>
           
           <div className="border-t border-gray-200 mt-8 pt-8 text-center text-spa-accent text-sm">
-            <p>&copy; {new Date().getFullYear()} Treatment Recommender. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} {siteConfig.copyrightName}. All rights reserved.</p>
             <p className="mt-1">All virtual submissions are confidential.</p>
           </div>
         </div>

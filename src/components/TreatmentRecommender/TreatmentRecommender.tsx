@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { ShoppingBag } from 'lucide-react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import siteConfig from '../../config/siteConfig';
 
 // Treatment area concerns data
 const AREA_CONCERNS = {
@@ -266,7 +267,7 @@ const TreatmentRecommender: React.FC = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1, duration: 0.5 }}
           >
-            Discover personalized aesthetic treatments tailored to your unique concerns
+            {siteConfig.subtitle}
           </motion.p>
 
           {/* Mobile Treatment Plan Button */}
