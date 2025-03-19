@@ -1,3 +1,4 @@
+
 import React from 'react';
 import TreatmentRecommender from '../components/TreatmentRecommender/TreatmentRecommender';
 import { Toaster } from 'sonner';
