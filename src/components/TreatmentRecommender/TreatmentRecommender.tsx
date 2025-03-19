@@ -194,7 +194,7 @@ const TreatmentRecommender: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Treatment Recommender
+            Discover Your Ideal Treatment
           </motion.h1>
           
           <motion.p 

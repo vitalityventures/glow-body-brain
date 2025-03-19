@@ -13,7 +13,7 @@ const Index = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
           >
-            AESTHETIC SURGERY
+            TREATMENT RECOMMENDER
           </motion.h1>
         </div>
       </header>

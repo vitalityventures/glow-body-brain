@@ -70,7 +70,7 @@ const HumanModel: React.FC<HumanModelProps> = ({ onSelectArea, isFemale }) => {
       {/* Switch model button above the instruction text */}
       <motion.button
         className="text-spa-accent hover:text-spa-dark transition-colors mt-4 mb-2 text-sm"
-        onClick={() => setIsFemale(!isFemale)}
+        onClick={() => onSelectArea('switch-model')}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
