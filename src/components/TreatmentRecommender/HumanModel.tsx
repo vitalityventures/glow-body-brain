@@ -23,7 +23,7 @@ const Hotspot: React.FC<HotspotProps> = ({ top, left, label, onClick }) => {
       role="button"
       aria-label={`Select ${label} area`}
     >
-      <PlusCircle className="w-5 h-5 text-spa-accent" />
+      <PlusCircle className="w-4 h-4 text-spa-accent" />
     </motion.div>
   );
 };
@@ -57,15 +57,15 @@ const HumanModel: React.FC<HumanModelProps> = ({ onSelectArea, isFemale }) => {
             className="w-full h-full object-contain"
           />
 
-          {/* Hotspots - positioned absolutely */}
-          <Hotspot top="8%" left="50%" label="Face" onClick={() => onSelectArea('face')} />
-          <Hotspot top="30%" left="25%" label="Arms" onClick={() => onSelectArea('arms')} />
-          <Hotspot top="30%" left="75%" label="Arms" onClick={() => onSelectArea('arms')} />
-          <Hotspot top="40%" left="50%" label="Abdomen" onClick={() => onSelectArea('abdomen')} />
-          <Hotspot top="55%" left="35%" label="Thighs" onClick={() => onSelectArea('thighs')} />
-          <Hotspot top="55%" left="65%" label="Thighs" onClick={() => onSelectArea('thighs')} />
-          <Hotspot top="75%" left="40%" label="Legs" onClick={() => onSelectArea('legs')} />
-          <Hotspot top="75%" left="60%" label="Legs" onClick={() => onSelectArea('legs')} />
+          {/* Hotspots - positioned absolutely - adjusted positions */}
+          <Hotspot top="10%" left="50%" label="Face" onClick={() => onSelectArea('face')} />
+          <Hotspot top="28%" left="28%" label="Arms" onClick={() => onSelectArea('arms')} />
+          <Hotspot top="28%" left="72%" label="Arms" onClick={() => onSelectArea('arms')} />
+          <Hotspot top="38%" left="50%" label="Abdomen" onClick={() => onSelectArea('abdomen')} />
+          <Hotspot top="52%" left="35%" label="Thighs" onClick={() => onSelectArea('thighs')} />
+          <Hotspot top="52%" left="65%" label="Thighs" onClick={() => onSelectArea('thighs')} />
+          <Hotspot top="72%" left="38%" label="Legs" onClick={() => onSelectArea('legs')} />
+          <Hotspot top="72%" left="62%" label="Legs" onClick={() => onSelectArea('legs')} />
         </div>
       </motion.div>
 

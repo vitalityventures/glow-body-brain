@@ -23,7 +23,7 @@ const Hotspot: React.FC<HotspotProps> = ({ top, left, label, onClick }) => {
       role="button"
       aria-label={`Select ${label} area`}
     >
-      <PlusCircle className="w-5 h-5 text-spa-accent" />
+      <PlusCircle className="w-4 h-4 text-spa-accent" />
     </motion.div>
   );
 };
@@ -68,16 +68,16 @@ const FaceModel: React.FC<FaceModelProps> = ({ onSelectArea, onBack }) => {
           />
         </motion.div>
 
-        {/* Hotspots - positioned absolutely - adjusted for the new face image */}
-        <Hotspot top="15%" left="50%" label="Forehead" onClick={() => onSelectArea('forehead')} />
-        <Hotspot top="35%" left="30%" label="Eyes" onClick={() => onSelectArea('eyes')} />
-        <Hotspot top="35%" left="70%" label="Eyes" onClick={() => onSelectArea('eyes')} />
-        <Hotspot top="46%" left="50%" label="Nose" onClick={() => onSelectArea('nose')} />
-        <Hotspot top="50%" left="25%" label="Cheeks" onClick={() => onSelectArea('cheeks')} />
-        <Hotspot top="50%" left="75%" label="Cheeks" onClick={() => onSelectArea('cheeks')} />
-        <Hotspot top="60%" left="50%" label="Mouth & Lips" onClick={() => onSelectArea('mouth')} />
-        <Hotspot top="72%" left="50%" label="Jaw & Chin" onClick={() => onSelectArea('jaw')} />
-        <Hotspot top="85%" left="50%" label="Neck" onClick={() => onSelectArea('neck')} />
+        {/* Hotspots - positioned absolutely - refined positions */}
+        <Hotspot top="18%" left="50%" label="Forehead" onClick={() => onSelectArea('forehead')} />
+        <Hotspot top="32%" left="32%" label="Eyes" onClick={() => onSelectArea('eyes')} />
+        <Hotspot top="32%" left="68%" label="Eyes" onClick={() => onSelectArea('eyes')} />
+        <Hotspot top="45%" left="50%" label="Nose" onClick={() => onSelectArea('nose')} />
+        <Hotspot top="48%" left="28%" label="Cheeks" onClick={() => onSelectArea('cheeks')} />
+        <Hotspot top="48%" left="72%" label="Cheeks" onClick={() => onSelectArea('cheeks')} />
+        <Hotspot top="62%" left="50%" label="Mouth & Lips" onClick={() => onSelectArea('mouth')} />
+        <Hotspot top="74%" left="50%" label="Jaw & Chin" onClick={() => onSelectArea('jaw')} />
+        <Hotspot top="88%" left="50%" label="Neck" onClick={() => onSelectArea('neck')} />
       </div>
 
       {/* Instruction overlay */}

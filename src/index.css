@@ -106,7 +106,7 @@
   }
   
   .hotspot {
-    @apply w-8 h-8 rounded-full bg-white/80 border border-spa-accent/40 flex items-center justify-center cursor-pointer transition-all duration-300 shadow-md hover:shadow-lg;
+    @apply w-6 h-6 rounded-full bg-white/80 border border-spa-accent/40 flex items-center justify-center cursor-pointer transition-all duration-300 shadow-md hover:shadow-lg;
   }
   
   .hotspot:hover {
@@ -115,7 +115,7 @@
   
   .hotspot:before {
     content: '';
-    @apply absolute w-12 h-12 rounded-full bg-white/30 opacity-0 scale-0 transition-all duration-700;
+    @apply absolute w-10 h-10 rounded-full bg-white/30 opacity-0 scale-0 transition-all duration-700;
   }
   
   .hotspot:hover:before {
