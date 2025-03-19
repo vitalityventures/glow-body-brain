@@ -38,13 +38,18 @@
   <h1>How to Integrate the Treatment Recommender Widget</h1>
   
   <div class="step">
-    <h2>Step 1: Set Up EmailJS</h2>
+    <h2>Step 1: Set Up EmailJS for Your Med Spa</h2>
     <p>
-      Create an account at <a href="https://www.emailjs.com/" target="_blank">EmailJS</a> and set up a service and email template.
-      Your template should include parameters like: <code>{firstName}</code>, <code>{lastName}</code>, <code>{email}</code>, 
-      <code>{phone}</code>, <code>{newsletter}</code>, <code>{treatmentPlan}</code>, <code>{clientSiteInfo}</code>,
-      <code>{companyName}</code>, and <code>{clientSiteName}</code>.
+      Each med spa should create their own EmailJS account to comply with HIPAA and maintain control of patient data:
     </p>
+    <ol>
+      <li>Create an account at <a href="https://www.emailjs.com/" target="_blank">EmailJS</a> for your med spa</li>
+      <li>Set up a service connected to your med spa's email address</li>
+      <li>Create an email template with parameters: <code>{firstName}</code>, <code>{lastName}</code>, <code>{email}</code>, 
+      <code>{phone}</code>, <code>{newsletter}</code>, <code>{treatmentPlan}</code>, and <code>{timestamp}</code></li>
+      <li>Note your EmailJS Service ID, Template ID, and User ID for configuration</li>
+    </ol>
+    <p><strong>Important:</strong> For healthcare providers dealing with patient information, ensure your EmailJS setup complies with relevant privacy regulations like HIPAA.</p>
   </div>
   
   <div class="step">
@@ -55,43 +60,40 @@
   
   <div class="step">
     <h2>Step 3: Configure EmailJS</h2>
-    <p>Configure the EmailJS service with your company credentials and client information:</p>
+    <p>Configure the EmailJS service with your med spa's credentials:</p>
     <pre><code>
 &lt;script&gt;
-  // Set up EmailJS configuration
+  // Set up EmailJS configuration with your med spa's credentials
   window.TreatmentRecommender.configureEmailService({
     serviceId: 'YOUR_EMAILJS_SERVICE_ID',
     templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
-    userId: 'YOUR_EMAILJS_USER_ID',
-    recipientEmail: 'your-company@example.com',
-    companyName: 'Your Company Name',
-    clientSiteName: 'Client Beauty Clinic'
+    userId: 'YOUR_EMAILJS_USER_ID'
   });
 &lt;/script&gt;
     </code></pre>
   </div>
   
   <div class="step">
-    <h2>Step 4: Customize the Widget for Each Client</h2>
-    <p>Customize the widget appearance and content for each client:</p>
+    <h2>Step 4: Customize the Widget for Your Med Spa</h2>
+    <p>Customize the widget appearance and content for your med spa:</p>
     <pre><code>
 &lt;script&gt;
-  // Customize for this specific client
+  // Customize for your specific med spa
   window.TreatmentRecommender.configureSiteSettings({
-    title: "CLIENT NAME BEAUTY",
+    title: "YOUR MED SPA NAME",
     subtitle: "Find your perfect treatment",
-    aboutUsText: "Client's custom about text here.",
+    aboutUsText: "Your med spa's custom about text here.",
     contactInfo: {
-      email: "contact@clientdomain.com",
+      email: "contact@yourmedspa.com",
       phone: "(555) 555-5555",
-      address: "123 Client Street, City",
+      address: "123 Med Spa Street, City",
     },
     navigation: {
       showAbout: true,
       showTreatments: true,
       showIntegrationGuide: false, // Hide for client sites
     },
-    copyrightName: "Client Name Beauty",
+    copyrightName: "Your Med Spa Name",
   });
 &lt;/script&gt;
     </code></pre>
@@ -121,7 +123,7 @@
 &lt;head&gt;
   &lt;meta charset="UTF-8"&gt;
   &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-  &lt;title&gt;Client Beauty Clinic&lt;/title&gt;
+  &lt;title&gt;Your Med Spa&lt;/title&gt;
   
   &lt;!-- React Dependencies --&gt;
   &lt;script src="https://unpkg.com/react@18/umd/react.production.min.js"&gt;&lt;/script&gt;
@@ -132,37 +134,34 @@
   &lt;link rel="stylesheet" href="path/to/treatment-recommender.css"&gt;
 &lt;/head&gt;
 &lt;body&gt;
-  &lt;h1&gt;Client Beauty Clinic&lt;/h1&gt;
+  &lt;h1&gt;Your Med Spa&lt;/h1&gt;
   
   &lt;div id="treatment-recommender-container"&gt;&lt;/div&gt;
   
   &lt;script&gt;
-    // Configure EmailJS with your company info
+    // Configure EmailJS with your med spa's credentials
     window.TreatmentRecommender.configureEmailService({
       serviceId: 'YOUR_EMAILJS_SERVICE_ID',
       templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
-      userId: 'YOUR_EMAILJS_USER_ID',
-      recipientEmail: 'your-company@example.com',
-      companyName: 'Your Company Name',
-      clientSiteName: 'Client Beauty Clinic'
+      userId: 'YOUR_EMAILJS_USER_ID'
     });
     
-    // Customize for this specific client
+    // Customize for your specific med spa
     window.TreatmentRecommender.configureSiteSettings({
-      title: "CLIENT BEAUTY",
-      subtitle: "Discover your perfect treatment at Client Beauty Clinic",
-      aboutUsText: "Client Beauty Clinic offers premium aesthetic services.",
+      title: "YOUR MED SPA",
+      subtitle: "Discover your perfect treatment at Your Med Spa",
+      aboutUsText: "Your Med Spa offers premium aesthetic services.",
       contactInfo: {
-        email: "contact@clientdomain.com",
+        email: "contact@yourmedspa.com",
         phone: "(555) 987-6543",
-        address: "123 Beauty Street, City, State",
+        address: "123 Med Spa Street, City, State",
       },
       navigation: {
         showAbout: true,
         showTreatments: true,
         showIntegrationGuide: false,
       },
-      copyrightName: "Client Beauty Clinic",
+      copyrightName: "Your Med Spa",
     });
     
     // Render the widget
@@ -177,32 +176,35 @@
   </div>
   
   <div class="step">
-    <h2>Setting Up Your Company's Email Workflow</h2>
+    <h2>HIPAA Considerations</h2>
     <p>
-      <strong>For Agency/Company Use:</strong> This configuration allows you to centralize all client leads through your company email first.
+      <strong>For Med Spas:</strong> As a healthcare provider, you should take these additional steps:
     </p>
     <ol>
       <li>
-        <strong>Use Your Company's EmailJS Account:</strong> Create one account that you'll manage for all clients.
+        <strong>Use your own EmailJS account:</strong> Each med spa should manage their own EmailJS account and patient data.
       </li>
       <li>
-        <strong>Create an Email Template:</strong> Design a template that includes all treatment plan details and client information.
+        <strong>Review EmailJS security:</strong> Ensure EmailJS's security practices align with your HIPAA compliance needs.
       </li>
       <li>
-        <strong>Configure Auto-Forwarding:</strong> Set up your email system to automatically forward submissions to the appropriate client based on the <code>clientSiteName</code> field.
+        <strong>Consider Business Associate Agreement:</strong> You may need a BAA with EmailJS depending on your specific situation.
       </li>
       <li>
-        <strong>Template Variables:</strong> Make sure your EmailJS template includes all fields, including <code>{clientSiteInfo}</code>, <code>{companyName}</code>, and <code>{clientSiteName}</code>.
+        <strong>Secure data handling:</strong> Establish proper procedures for handling the treatment plan data once received.
+      </li>
+      <li>
+        <strong>Privacy policy:</strong> Update your website privacy policy to include information about the treatment recommender.
       </li>
     </ol>
     <p>
-      This approach gives you complete control over the lead flow while maintaining a custom experience for each client site.
+      Always consult with a healthcare compliance expert to ensure your implementation meets all necessary privacy requirements.
     </p>
   </div>
   
   <p>
-    <strong>Note:</strong> With this setup, your company will receive all form submissions first, which you can then forward to the respective clients.
-    This gives you oversight on all leads and allows you to provide additional value to your clients while maintaining the relationship.
+    <strong>Note:</strong> This setup ensures each med spa manages their own EmailJS configuration and patient data, 
+    which helps maintain proper data privacy controls.
   </p>
 </body>
 </html>

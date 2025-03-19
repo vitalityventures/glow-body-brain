@@ -34,12 +34,7 @@ export const sendTreatmentPlanEmail = async (data: EmailData): Promise<boolean> 
       `${item.area}: ${item.concernLabel}`
     ).join(', ');
     
-    // Build the client site information
-    const clientSiteInfo = config.clientSiteName ? 
-      `Client Site: ${config.clientSiteName}` : 
-      'Client Site: Not specified';
-    
-    // Send email using EmailJS
+    // Send email directly to the client's EmailJS account
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: {
@@ -56,10 +51,6 @@ export const sendTreatmentPlanEmail = async (data: EmailData): Promise<boolean> 
           phone: data.phone,
           newsletter: data.newsletter ? 'Yes' : 'No',
           treatmentPlan: formattedTreatmentPlan,
-          clientSiteInfo: clientSiteInfo,
-          to_email: config.recipientEmail || 'your-company-email@example.com',
-          companyName: config.companyName || 'Your Company Name',
-          clientSiteName: config.clientSiteName || '',
           timestamp: new Date().toLocaleString()
         }
       })

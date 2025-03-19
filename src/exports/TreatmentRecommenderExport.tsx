@@ -1,4 +1,3 @@
-
 import React from 'react';
 import TreatmentRecommender from '../components/TreatmentRecommender/TreatmentRecommender';
 import { Toaster } from 'sonner';
@@ -6,14 +5,11 @@ import '../index.css'; // Make sure to include your styles
 import { SiteConfig } from '../config/siteConfig';
 import defaultSiteConfig from '../config/siteConfig';
 
-// Configuration for the EmailJS service
+// Configuration for the client's EmailJS service
 export interface EmailServiceConfig {
   serviceId: string;
   templateId: string;
   userId: string;
-  recipientEmail?: string;
-  companyName?: string;
-  clientSiteName?: string;
 }
 
 // Set up the email configuration globally
