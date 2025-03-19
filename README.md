@@ -1,8 +1,72 @@
-# Welcome to your Lovable project
+
+# Treatment Recommender Widget
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/0281a25a-37e0-4d4d-863b-9b4ba3c6f634
+
+## Integration Guide
+
+This application can be integrated into any website as a widget. Here's how to do it:
+
+### Step 1: Build the Application
+
+Clone the repository and build the application:
+
+```sh
+# Clone the repository
+git clone <YOUR_GIT_URL>
+
+# Navigate to the project directory
+cd <YOUR_PROJECT_NAME>
+
+# Install dependencies
+npm install
+
+# Build the project
+npm run build
+```
+
+### Step 2: Set Up EmailJS
+
+1. Create an account at [EmailJS](https://www.emailjs.com/)
+2. Create an email service and template
+3. Note your Service ID, Template ID, and User ID
+
+### Step 3: Add the Widget to Your Website
+
+Include the compiled JavaScript and CSS in your HTML:
+
+```html
+<!-- Include React dependencies -->
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+<!-- Include the Treatment Recommender Widget -->
+<script src="path/to/treatment-recommender.js"></script>
+<link rel="stylesheet" href="path/to/treatment-recommender.css">
+
+<!-- Create a container for the widget -->
+<div id="treatment-recommender-container"></div>
+
+<script>
+  // Configure EmailJS
+  window.TreatmentRecommender.configureEmailService({
+    serviceId: 'YOUR_EMAILJS_SERVICE_ID',
+    templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
+    userId: 'YOUR_EMAILJS_USER_ID',
+    recipientEmail: 'admin@yourdomain.com'
+  });
+  
+  // Render the widget
+  ReactDOM.render(
+    React.createElement(window.TreatmentRecommender.default),
+    document.getElementById('treatment-recommender-container')
+  );
+</script>
+```
+
+For a complete example, see the `public/integration-example.html` file in the project.
 
 ## How can I edit this code?
 
@@ -36,29 +100,17 @@ npm i
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
 ## What technologies are used for this project?
 
-This project is built with .
+This project is built with:
 
 - Vite
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
+- Framer Motion
+- EmailJS (for email functionality)
 
 ## How can I deploy this project?
 

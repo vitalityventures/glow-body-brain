@@ -2,6 +2,7 @@
 /**
  * Email service utility for sending treatment plan data
  */
+import { getEmailServiceConfig } from '../exports/TreatmentRecommenderExport';
 
 interface EmailData {
   firstName: string;
@@ -18,21 +19,26 @@ interface EmailData {
 
 export const sendTreatmentPlanEmail = async (data: EmailData): Promise<boolean> => {
   try {
-    // For demonstration, we're logging the data
-    // In production, you would replace this with your actual email API call
+    // Get the email service configuration
+    const config = getEmailServiceConfig();
+    
+    if (!config) {
+      console.error('Email service not configured. Please call configureEmailService first.');
+      return false;
+    }
+    
     console.log('Sending email with data:', data);
     
-    // Simulate API call to email service
-    // Replace this with your preferred email service: EmailJS, SendGrid, Mailchimp, etc.
+    // Send email using EmailJS
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        service_id: 'YOUR_SERVICE_ID', // Replace with your EmailJS service ID
-        template_id: 'YOUR_TEMPLATE_ID', // Replace with your EmailJS template ID
-        user_id: 'YOUR_USER_ID', // Replace with your EmailJS user ID
+        service_id: config.serviceId,
+        template_id: config.templateId,
+        user_id: config.userId,
         template_params: {
           firstName: data.firstName,
           lastName: data.lastName,
@@ -42,17 +48,19 @@ export const sendTreatmentPlanEmail = async (data: EmailData): Promise<boolean> 
           treatmentPlan: data.treatmentPlan.map(item => 
             `${item.area}: ${item.concernLabel}`
           ).join(', '),
-          to_email: 'your-admin-email@example.com' // Replace with recipient email
+          to_email: config.recipientEmail || 'your-admin-email@example.com'
         }
       })
     });
     
-    // If using the above EmailJS implementation, uncomment this
-    // return response.status === 200;
-    
-    // For demo purposes, we'll simulate success
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    return true;
+    // Check if the email was sent successfully
+    if (response.status === 200) {
+      console.log('Email sent successfully!');
+      return true;
+    } else {
+      console.error('Failed to send email:', await response.text());
+      return false;
+    }
   } catch (error) {
     console.error('Error sending email:', error);
     return false;

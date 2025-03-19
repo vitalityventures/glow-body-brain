@@ -20,7 +20,7 @@ const Index = () => {
           <nav className="hidden md:flex space-x-6">
             <a href="#about" className="text-spa-accent hover:text-spa-dark transition-colors">About</a>
             <a href="#treatments" className="text-spa-accent hover:text-spa-dark transition-colors">Treatments</a>
-            <a href="#contact" className="text-spa-accent hover:text-spa-dark transition-colors">Contact</a>
+            <a href="/integration-example.html" className="text-spa-accent hover:text-spa-dark transition-colors" target="_blank">Integration Guide</a>
           </nav>
         </div>
       </header>
@@ -47,12 +47,17 @@ const Index = () => {
             </div>
             
             <div>
-              <h3 className="text-spa-dark font-display text-lg mb-4">Follow Us</h3>
-              <div className="flex space-x-4">
-                <a href="#" className="text-spa-accent hover:text-spa-dark transition-colors">Instagram</a>
-                <a href="#" className="text-spa-accent hover:text-spa-dark transition-colors">Facebook</a>
-                <a href="#" className="text-spa-accent hover:text-spa-dark transition-colors">Twitter</a>
-              </div>
+              <h3 className="text-spa-dark font-display text-lg mb-4">Integration</h3>
+              <p className="text-spa-accent mb-2">
+                This treatment recommender can be embedded in any website!
+              </p>
+              <a 
+                href="/integration-example.html" 
+                className="text-spa-accent underline hover:text-spa-dark transition-colors"
+                target="_blank"
+              >
+                View Integration Guide
+              </a>
             </div>
           </div>
           

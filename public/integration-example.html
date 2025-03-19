@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treatment Recommender Integration Example</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    pre {
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      overflow-x: auto;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    .step {
+      margin-bottom: 30px;
+    }
+    code {
+      background: #f0f0f0;
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <h1>How to Integrate the Treatment Recommender Widget</h1>
+  
+  <div class="step">
+    <h2>Step 1: Set Up EmailJS</h2>
+    <p>
+      Create an account at <a href="https://www.emailjs.com/" target="_blank">EmailJS</a> and set up a service and email template.
+      Your template should include parameters like: <code>{firstName}</code>, <code>{lastName}</code>, <code>{email}</code>, 
+      <code>{phone}</code>, <code>{newsletter}</code>, and <code>{treatmentPlan}</code>.
+    </p>
+  </div>
+  
+  <div class="step">
+    <h2>Step 2: Include the Treatment Recommender Script</h2>
+    <p>Add the compiled JavaScript to your HTML:</p>
+    <pre><code>&lt;script src="path/to/treatment-recommender.js"&gt;&lt;/script&gt;</code></pre>
+  </div>
+  
+  <div class="step">
+    <h2>Step 3: Configure EmailJS</h2>
+    <p>Configure the EmailJS service with your credentials:</p>
+    <pre><code>
+&lt;script&gt;
+  // Set up EmailJS configuration
+  window.TreatmentRecommender.configureEmailService({
+    serviceId: 'YOUR_EMAILJS_SERVICE_ID',
+    templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
+    userId: 'YOUR_EMAILJS_USER_ID',
+    recipientEmail: 'admin@yourdomain.com'
+  });
+&lt;/script&gt;
+    </code></pre>
+  </div>
+  
+  <div class="step">
+    <h2>Step 4: Add the Treatment Recommender to Your Page</h2>
+    <p>Insert the recommender widget in your desired location:</p>
+    <pre><code>
+&lt;div id="treatment-recommender-container"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  // Render the Treatment Recommender component
+  ReactDOM.render(
+    React.createElement(window.TreatmentRecommender.default),
+    document.getElementById('treatment-recommender-container')
+  );
+&lt;/script&gt;
+    </code></pre>
+  </div>
+  
+  <div class="step">
+    <h2>Full Example</h2>
+    <pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;My Treatment Recommender&lt;/title&gt;
+  
+  &lt;!-- React Dependencies --&gt;
+  &lt;script src="https://unpkg.com/react@18/umd/react.production.min.js"&gt;&lt;/script&gt;
+  &lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"&gt;&lt;/script&gt;
+  
+  &lt;!-- Treatment Recommender Widget --&gt;
+  &lt;script src="path/to/treatment-recommender.js"&gt;&lt;/script&gt;
+  
+  &lt;!-- Include the CSS styles --&gt;
+  &lt;link rel="stylesheet" href="path/to/treatment-recommender.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;My Beauty Clinic&lt;/h1&gt;
+  
+  &lt;div id="treatment-recommender-container"&gt;&lt;/div&gt;
+  
+  &lt;script&gt;
+    // Configure EmailJS
+    window.TreatmentRecommender.configureEmailService({
+      serviceId: 'YOUR_EMAILJS_SERVICE_ID',
+      templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
+      userId: 'YOUR_EMAILJS_USER_ID',
+      recipientEmail: 'admin@yourdomain.com'
+    });
+    
+    // Render the widget
+    ReactDOM.render(
+      React.createElement(window.TreatmentRecommender.default),
+      document.getElementById('treatment-recommender-container')
+    );
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </code></pre>
+  </div>
+  
+  <p>
+    <strong>Note:</strong> For production use, you'll need to build this React application
+    and include the compiled JavaScript and CSS files in your website.
+  </p>
+</body>
+</html>
