@@ -29,6 +29,16 @@ export const sendTreatmentPlanEmail = async (data: EmailData): Promise<boolean> 
     
     console.log('Sending email with data:', data);
     
+    // Format the treatment plan for better readability
+    const formattedTreatmentPlan = data.treatmentPlan.map(item => 
+      `${item.area}: ${item.concernLabel}`
+    ).join(', ');
+    
+    // Build the client site information
+    const clientSiteInfo = config.clientSiteName ? 
+      `Client Site: ${config.clientSiteName}` : 
+      'Client Site: Not specified';
+    
     // Send email using EmailJS
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
@@ -45,10 +55,12 @@ export const sendTreatmentPlanEmail = async (data: EmailData): Promise<boolean> 
           email: data.email,
           phone: data.phone,
           newsletter: data.newsletter ? 'Yes' : 'No',
-          treatmentPlan: data.treatmentPlan.map(item => 
-            `${item.area}: ${item.concernLabel}`
-          ).join(', '),
-          to_email: config.recipientEmail || 'your-admin-email@example.com'
+          treatmentPlan: formattedTreatmentPlan,
+          clientSiteInfo: clientSiteInfo,
+          to_email: config.recipientEmail || 'your-company-email@example.com',
+          companyName: config.companyName || 'Your Company Name',
+          clientSiteName: config.clientSiteName || '',
+          timestamp: new Date().toLocaleString()
         }
       })
     });

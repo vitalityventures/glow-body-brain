@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +42,8 @@
     <p>
       Create an account at <a href="https://www.emailjs.com/" target="_blank">EmailJS</a> and set up a service and email template.
       Your template should include parameters like: <code>{firstName}</code>, <code>{lastName}</code>, <code>{email}</code>, 
-      <code>{phone}</code>, <code>{newsletter}</code>, and <code>{treatmentPlan}</code>.
+      <code>{phone}</code>, <code>{newsletter}</code>, <code>{treatmentPlan}</code>, <code>{clientSiteInfo}</code>,
+      <code>{companyName}</code>, and <code>{clientSiteName}</code>.
     </p>
   </div>
   
@@ -53,7 +55,7 @@
   
   <div class="step">
     <h2>Step 3: Configure EmailJS</h2>
-    <p>Configure the EmailJS service with your credentials:</p>
+    <p>Configure the EmailJS service with your company credentials and client information:</p>
     <pre><code>
 &lt;script&gt;
   // Set up EmailJS configuration
@@ -61,14 +63,16 @@
     serviceId: 'YOUR_EMAILJS_SERVICE_ID',
     templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
     userId: 'YOUR_EMAILJS_USER_ID',
-    recipientEmail: 'admin@yourdomain.com'
+    recipientEmail: 'your-company@example.com',
+    companyName: 'Your Company Name',
+    clientSiteName: 'Client Beauty Clinic'
   });
 &lt;/script&gt;
     </code></pre>
   </div>
   
   <div class="step">
-    <h2>Step 4: Customize the Widget (Optional)</h2>
+    <h2>Step 4: Customize the Widget for Each Client</h2>
     <p>Customize the widget appearance and content for each client:</p>
     <pre><code>
 &lt;script&gt;
@@ -133,12 +137,14 @@
   &lt;div id="treatment-recommender-container"&gt;&lt;/div&gt;
   
   &lt;script&gt;
-    // Configure EmailJS
+    // Configure EmailJS with your company info
     window.TreatmentRecommender.configureEmailService({
       serviceId: 'YOUR_EMAILJS_SERVICE_ID',
       templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
       userId: 'YOUR_EMAILJS_USER_ID',
-      recipientEmail: 'contact@clientdomain.com'
+      recipientEmail: 'your-company@example.com',
+      companyName: 'Your Company Name',
+      clientSiteName: 'Client Beauty Clinic'
     });
     
     // Customize for this specific client
@@ -170,9 +176,33 @@
     </code></pre>
   </div>
   
+  <div class="step">
+    <h2>Setting Up Your Company's Email Workflow</h2>
+    <p>
+      <strong>For Agency/Company Use:</strong> This configuration allows you to centralize all client leads through your company email first.
+    </p>
+    <ol>
+      <li>
+        <strong>Use Your Company's EmailJS Account:</strong> Create one account that you'll manage for all clients.
+      </li>
+      <li>
+        <strong>Create an Email Template:</strong> Design a template that includes all treatment plan details and client information.
+      </li>
+      <li>
+        <strong>Configure Auto-Forwarding:</strong> Set up your email system to automatically forward submissions to the appropriate client based on the <code>clientSiteName</code> field.
+      </li>
+      <li>
+        <strong>Template Variables:</strong> Make sure your EmailJS template includes all fields, including <code>{clientSiteInfo}</code>, <code>{companyName}</code>, and <code>{clientSiteName}</code>.
+      </li>
+    </ol>
+    <p>
+      This approach gives you complete control over the lead flow while maintaining a custom experience for each client site.
+    </p>
+  </div>
+  
   <p>
-    <strong>Note:</strong> For agencies and service providers, you can create a custom configuration for each client,
-    including setting up EmailJS on their behalf. Just make sure each client has their own unique EmailJS account for email quota management.
+    <strong>Note:</strong> With this setup, your company will receive all form submissions first, which you can then forward to the respective clients.
+    This gives you oversight on all leads and allows you to provide additional value to your clients while maintaining the relationship.
   </p>
 </body>
 </html>

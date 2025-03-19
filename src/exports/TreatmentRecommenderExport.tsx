@@ -12,6 +12,8 @@ export interface EmailServiceConfig {
   templateId: string;
   userId: string;
   recipientEmail?: string;
+  companyName?: string;
+  clientSiteName?: string;
 }
 
 // Set up the email configuration globally
