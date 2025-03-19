@@ -57,30 +57,55 @@ const FaceModel: React.FC<FaceModelProps> = ({ onSelectArea, onBack }) => {
         {/* Face outline */}
         <motion.svg 
           viewBox="0 0 300 400" 
-          className="w-full h-full stroke-spa-dark fill-none stroke-[0.5]"
+          className="w-full h-full stroke-spa-dark fill-none stroke-1"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <path d="M150,50 C110,50 80,90 80,140 C80,160 85,180 95,195 L105,220 C115,245 130,270 150,280 C170,270 185,245 195,220 L205,195 C215,180 220,160 220,140 C220,90 190,50 150,50 Z" />
-          {/* Eyes */}
-          <path d="M120,150 C125,145 135,145 140,150 C135,155 125,155 120,150 Z" />
-          <path d="M160,150 C165,145 175,145 180,150 C175,155 165,155 160,150 Z" />
-          {/* Nose */}
-          <path d="M150,160 L150,180 M140,190 C145,195 155,195 160,190" />
-          {/* Mouth */}
-          <path d="M130,210 C140,220 160,220 170,210" />
+          {/* Face outline with more realistic features */}
+          <ellipse cx="150" cy="150" rx="90" ry="110" />
+          
+          {/* Hairline suggestion */}
+          <path d="M75,110 C90,70 120,40 150,40 C180,40 210,70 225,110" />
+          
+          {/* Ears */}
+          <path d="M60,150 C55,160 55,170 60,180 M240,150 C245,160 245,170 240,180" />
+          
+          {/* Eyes with more realistic shape */}
+          <ellipse cx="115" cy="135" rx="15" ry="7" />
+          <ellipse cx="185" cy="135" rx="15" ry="7" />
+          
+          {/* Eyebrows */}
+          <path d="M95,120 C105,115 125,115 135,122 M165,122 C175,115 195,115 205,120" />
+          
+          {/* Nose with more detailed structure */}
+          <path d="M150,135 C150,155 145,175 140,185 M150,135 C150,155 155,175 160,185" />
+          <path d="M135,185 C145,190 155,190 165,185" />
+          
+          {/* Mouth with fuller lips */}
+          <path d="M125,220 C135,227 165,227 175,220" />
+          <path d="M125,220 C135,215 165,215 175,220" />
+          
+          {/* Cheeks contour */}
+          <path d="M90,170 C105,190 120,195 130,195 M210,170 C195,190 180,195 170,195" />
+          
+          {/* Jawline and chin definition */}
+          <path d="M75,170 C85,220 110,260 150,270 C190,260 215,220 225,170" />
+          
+          {/* Neck suggestion */}
+          <path d="M115,270 C120,290 130,300 150,310 C170,300 180,290 185,270" />
         </motion.svg>
 
         {/* Hotspots - positioned absolutely */}
-        <Hotspot top="20%" left="50%" label="Forehead" onClick={() => onSelectArea('forehead')} />
-        <Hotspot top="40%" left="30%" label="Eyes" onClick={() => onSelectArea('eyes')} />
-        <Hotspot top="40%" left="70%" label="Eyes" onClick={() => onSelectArea('eyes')} />
-        <Hotspot top="50%" left="50%" label="Nose" onClick={() => onSelectArea('nose')} />
-        <Hotspot top="60%" left="50%" label="Cheeks" onClick={() => onSelectArea('cheeks')} />
-        <Hotspot top="70%" left="50%" label="Mouth & Lips" onClick={() => onSelectArea('mouth')} />
-        <Hotspot top="80%" left="50%" label="Jaw & Chin" onClick={() => onSelectArea('jaw')} />
-        <Hotspot top="60%" left="85%" label="Neck" onClick={() => onSelectArea('neck')} />
+        <Hotspot top="15%" left="50%" label="Forehead" onClick={() => onSelectArea('forehead')} />
+        <Hotspot top="34%" left="30%" label="Eyes" onClick={() => onSelectArea('eyes')} />
+        <Hotspot top="34%" left="70%" label="Eyes" onClick={() => onSelectArea('eyes')} />
+        <Hotspot top="46%" left="50%" label="Nose" onClick={() => onSelectArea('nose')} />
+        <Hotspot top="50%" left="25%" label="Cheeks" onClick={() => onSelectArea('cheeks')} />
+        <Hotspot top="50%" left="75%" label="Cheeks" onClick={() => onSelectArea('cheeks')} />
+        <Hotspot top="58%" left="50%" label="Mouth & Lips" onClick={() => onSelectArea('mouth')} />
+        <Hotspot top="70%" left="50%" label="Jaw & Chin" onClick={() => onSelectArea('jaw')} />
+        <Hotspot top="75%" left="85%" label="Neck" onClick={() => onSelectArea('neck')} />
       </div>
 
       {/* Instruction overlay */}
