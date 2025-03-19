@@ -50,17 +50,17 @@ const HumanModel: React.FC<HumanModelProps> = ({ onSelectArea, isFemale }) => {
         transition={{ duration: 0.8 }}
       >
         <div className="relative w-full h-full">
-          {/* Use the image you provided instead of SVG */}
+          {/* Use the uploaded silhouette images */}
           <img
-            src={isFemale ? "/female-silhouette.png" : "/male-silhouette.png"}
+            src={isFemale ? "/lovable-uploads/da8c2dd4-4cdb-4435-a7c3-745f495f3082.png" : "/lovable-uploads/a96653e2-811d-4f6e-ba00-9fd99439c20a.png"}
             alt={isFemale ? "Female body silhouette" : "Male body silhouette"}
             className="w-full h-full object-contain"
           />
 
           {/* Hotspots - positioned absolutely */}
           <Hotspot top="8%" left="50%" label="Face" onClick={() => onSelectArea('face')} />
-          <Hotspot top="32%" left="25%" label="Arms" onClick={() => onSelectArea('arms')} />
-          <Hotspot top="32%" left="75%" label="Arms" onClick={() => onSelectArea('arms')} />
+          <Hotspot top="30%" left="25%" label="Arms" onClick={() => onSelectArea('arms')} />
+          <Hotspot top="30%" left="75%" label="Arms" onClick={() => onSelectArea('arms')} />
           <Hotspot top="40%" left="50%" label="Abdomen" onClick={() => onSelectArea('abdomen')} />
           <Hotspot top="55%" left="35%" label="Thighs" onClick={() => onSelectArea('thighs')} />
           <Hotspot top="55%" left="65%" label="Thighs" onClick={() => onSelectArea('thighs')} />
