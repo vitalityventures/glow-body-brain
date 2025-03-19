@@ -21,190 +21,299 @@
       padding: 10px;
       overflow-x: auto;
     }
-    h1, h2 {
+    h1, h2, h3 {
       color: #333;
     }
     .step {
       margin-bottom: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-left: 4px solid #4f46e5;
+      border-radius: 0 5px 5px 0;
     }
     code {
       background: #f0f0f0;
       padding: 2px 5px;
       border-radius: 3px;
     }
+    .tip {
+      background-color: #e0f2fe;
+      border-left: 4px solid #0ea5e9;
+      padding: 10px 15px;
+      margin: 20px 0;
+      border-radius: 0 5px 5px 0;
+    }
+    img {
+      max-width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
   </style>
 </head>
 <body>
-  <h1>How to Integrate the Treatment Recommender Widget</h1>
+  <h1>Test Integration Guide for Your Med Spa Client</h1>
   
   <div class="step">
-    <h2>Step 1: Set Up EmailJS for Your Med Spa</h2>
-    <p>
-      Each med spa should create their own EmailJS account to comply with HIPAA and maintain control of patient data:
-    </p>
+    <h2>Step 1: Set Up Your Test EmailJS Account</h2>
     <ol>
-      <li>Create an account at <a href="https://www.emailjs.com/" target="_blank">EmailJS</a> for your med spa</li>
-      <li>Set up a service connected to your med spa's email address</li>
-      <li>Create an email template with parameters: <code>{firstName}</code>, <code>{lastName}</code>, <code>{email}</code>, 
-      <code>{phone}</code>, <code>{newsletter}</code>, <code>{treatmentPlan}</code>, and <code>{timestamp}</code></li>
-      <li>Note your EmailJS Service ID, Template ID, and User ID for configuration</li>
-    </ol>
-    <p><strong>Important:</strong> For healthcare providers dealing with patient information, ensure your EmailJS setup complies with relevant privacy regulations like HIPAA.</p>
-  </div>
-  
-  <div class="step">
-    <h2>Step 2: Include the Treatment Recommender Script</h2>
-    <p>Add the compiled JavaScript to your HTML:</p>
-    <pre><code>&lt;script src="path/to/treatment-recommender.js"&gt;&lt;/script&gt;</code></pre>
-  </div>
-  
-  <div class="step">
-    <h2>Step 3: Configure EmailJS</h2>
-    <p>Configure the EmailJS service with your med spa's credentials:</p>
-    <pre><code>
-&lt;script&gt;
-  // Set up EmailJS configuration with your med spa's credentials
-  window.TreatmentRecommender.configureEmailService({
-    serviceId: 'YOUR_EMAILJS_SERVICE_ID',
-    templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
-    userId: 'YOUR_EMAILJS_USER_ID'
-  });
-&lt;/script&gt;
-    </code></pre>
-  </div>
-  
-  <div class="step">
-    <h2>Step 4: Customize the Widget for Your Med Spa</h2>
-    <p>Customize the widget appearance and content for your med spa:</p>
-    <pre><code>
-&lt;script&gt;
-  // Customize for your specific med spa
-  window.TreatmentRecommender.configureSiteSettings({
-    title: "YOUR MED SPA NAME",
-    subtitle: "Find your perfect treatment",
-    aboutUsText: "Your med spa's custom about text here.",
-    contactInfo: {
-      email: "contact@yourmedspa.com",
-      phone: "(555) 555-5555",
-      address: "123 Med Spa Street, City",
-    },
-    navigation: {
-      showAbout: true,
-      showTreatments: true,
-      showIntegrationGuide: false, // Hide for client sites
-    },
-    copyrightName: "Your Med Spa Name",
-  });
-&lt;/script&gt;
-    </code></pre>
-  </div>
-  
-  <div class="step">
-    <h2>Step 5: Add the Treatment Recommender to Your Page</h2>
-    <p>Insert the recommender widget in your desired location:</p>
-    <pre><code>
-&lt;div id="treatment-recommender-container"&gt;&lt;/div&gt;
+      <li><strong>Create a new EmailJS account</strong>
+        <ul>
+          <li>Go to <a href="https://www.emailjs.com/" target="_blank">emailjs.com</a> and sign up for a free account</li>
+          <li>The free tier includes 200 emails per month, which is perfect for testing</li>
+          <li>Use your own email for testing purposes</li>
+        </ul>
+      </li>
+      <li><strong>Add an email service</strong>
+        <ul>
+          <li>After creating your account, click on "Email Services" in the left sidebar</li>
+          <li>Click "Add New Service" and select your preferred email provider (Gmail, Outlook, etc.)</li>
+          <li>Follow the authentication steps to connect your email</li>
+          <li>Give your service a name (e.g., "Test Med Spa Service")</li>
+          <li><strong>Important:</strong> Copy the <code>Service ID</code> that appears (it will look like "service_xxxxxxx")</li>
+        </ul>
+      </li>
+      <li><strong>Create an email template</strong>
+        <ul>
+          <li>Click on "Email Templates" in the left sidebar</li>
+          <li>Click "Create New Template"</li>
+          <li>Design your email template with the following variables:
+            <pre><code>Subject: New Treatment Plan from {{firstName}} {{lastName}}
 
-&lt;script&gt;
-  // Render the Treatment Recommender component
-  ReactDOM.render(
-    React.createElement(window.TreatmentRecommender.default),
-    document.getElementById('treatment-recommender-container')
-  );
-&lt;/script&gt;
-    </code></pre>
+Hi,
+
+A new treatment plan has been submitted:
+
+Name: {{firstName}} {{lastName}}
+Email: {{email}}
+Phone: {{phone}}
+Newsletter Signup: {{newsletter}}
+
+Treatment Plan:
+{{treatmentPlan}}
+
+Timestamp: {{timestamp}}
+
+This email was sent from the Treatment Recommender widget.
+            </code></pre>
+          </li>
+          <li>Save your template and note the <code>Template ID</code> (it will look like "template_xxxxxxx")</li>
+        </ul>
+      </li>
+      <li><strong>Get your User ID (Public Key)</strong>
+        <ul>
+          <li>Go to "Account" → "API Keys" in the left sidebar</li>
+          <li>Copy your <code>Public Key</code> (it will look like "XXXXXXXXXXXXXXXXXXXX")</li>
+        </ul>
+      </li>
+    </ol>
+    <div class="tip">
+      <strong>Test Tip:</strong> When setting up the template, make sure to include all variables (<code>{{firstName}}</code>, <code>{{lastName}}</code>, <code>{{email}}</code>, etc.) that the widget will pass. You can add custom styling to make the email look professional.
+    </div>
   </div>
   
   <div class="step">
-    <h2>Full Example</h2>
-    <pre><code>
-&lt;!DOCTYPE html&gt;
+    <h2>Step 2: Download and Build the Widget</h2>
+    <ol>
+      <li><strong>Install Node.js</strong> if you haven't already
+        <ul>
+          <li>Download from <a href="https://nodejs.org/" target="_blank">nodejs.org</a> (LTS version)</li>
+          <li>Follow the installation wizard</li>
+          <li>Verify installation by opening a command prompt or terminal and typing: <code>node -v</code></li>
+        </ul>
+      </li>
+      <li><strong>Download the project code</strong>
+        <ul>
+          <li>Clone the repository or extract the ZIP file to a folder on your computer</li>
+        </ul>
+      </li>
+      <li><strong>Install dependencies and build the widget</strong>
+        <ul>
+          <li>Open a command prompt or terminal in the project folder</li>
+          <li>Run: <code>npm install</code> to install dependencies</li>
+          <li>Run: <code>npx vite build --config src/vite-widget-config.ts</code> to build the widget</li>
+          <li>After a successful build, find these files in the <code>dist</code> folder:
+            <ul>
+              <li><code>treatment-recommender.js</code></li>
+              <li><code>treatment-recommender.css</code></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+  
+  <div class="step">
+    <h2>Step 3: Create a Simple Test Page</h2>
+    <p>Create a simple HTML file to test the widget. You can name it <code>test.html</code> and place it in your testing environment:</p>
+    <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
 &lt;head&gt;
   &lt;meta charset="UTF-8"&gt;
   &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-  &lt;title&gt;Your Med Spa&lt;/title&gt;
+  &lt;title&gt;Test Med Spa - Treatment Recommender&lt;/title&gt;
   
   &lt;!-- React Dependencies --&gt;
   &lt;script src="https://unpkg.com/react@18/umd/react.production.min.js"&gt;&lt;/script&gt;
   &lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"&gt;&lt;/script&gt;
   
   &lt;!-- Treatment Recommender Widget --&gt;
-  &lt;script src="path/to/treatment-recommender.js"&gt;&lt;/script&gt;
-  &lt;link rel="stylesheet" href="path/to/treatment-recommender.css"&gt;
+  &lt;script src="./dist/treatment-recommender.js"&gt;&lt;/script&gt;
+  &lt;link rel="stylesheet" href="./dist/treatment-recommender.css"&gt;
+  
+  &lt;style&gt;
+    body {
+      font-family: 'Arial', sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+  &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
-  &lt;h1&gt;Your Med Spa&lt;/h1&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Test Med Spa&lt;/h1&gt;
+    &lt;p&gt;This is a test page for the Treatment Recommender widget.&lt;/p&gt;
+  &lt;/header&gt;
   
   &lt;div id="treatment-recommender-container"&gt;&lt;/div&gt;
   
   &lt;script&gt;
-    // Configure EmailJS with your med spa's credentials
+    // Configure EmailJS with YOUR testing credentials from Step 1
     window.TreatmentRecommender.configureEmailService({
-      serviceId: 'YOUR_EMAILJS_SERVICE_ID',
-      templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
-      userId: 'YOUR_EMAILJS_USER_ID'
+      serviceId: 'YOUR_SERVICE_ID',  // Replace with your Service ID
+      templateId: 'YOUR_TEMPLATE_ID',  // Replace with your Template ID
+      userId: 'YOUR_USER_ID'  // Replace with your Public Key
     });
     
-    // Customize for your specific med spa
+    // Customize the widget for a fictional test med spa
     window.TreatmentRecommender.configureSiteSettings({
-      title: "YOUR MED SPA",
-      subtitle: "Discover your perfect treatment at Your Med Spa",
-      aboutUsText: "Your Med Spa offers premium aesthetic services.",
+      title: "TEST MED SPA",
+      subtitle: "Find your perfect treatment plan at our Test Med Spa",
+      aboutUsText: "Test Med Spa has been providing premium aesthetic services since 2010. Our team of experts is dedicated to helping you look and feel your best.",
       contactInfo: {
-        email: "contact@yourmedspa.com",
-        phone: "(555) 987-6543",
-        address: "123 Med Spa Street, City, State",
+        email: "contact@testmedspa.com",
+        phone: "(555) 123-4567",
+        address: "123 Test Street, Suite 100, Test City, CA 90210",
       },
       navigation: {
         showAbout: true,
         showTreatments: true,
-        showIntegrationGuide: false,
+        showIntegrationGuide: false,  // Hide for client sites
       },
-      copyrightName: "Your Med Spa",
+      copyrightName: "Test Med Spa",
     });
     
-    // Render the widget
+    // Render the Treatment Recommender component
     ReactDOM.render(
       React.createElement(window.TreatmentRecommender.default),
       document.getElementById('treatment-recommender-container')
     );
   &lt;/script&gt;
 &lt;/body&gt;
-&lt;/html&gt;
-    </code></pre>
+&lt;/html&gt;</code></pre>
+
+    <div class="tip">
+      <strong>Important:</strong> Replace <code>YOUR_SERVICE_ID</code>, <code>YOUR_TEMPLATE_ID</code>, and <code>YOUR_USER_ID</code> with the actual values you copied from your EmailJS account in Step 1.
+    </div>
   </div>
   
   <div class="step">
-    <h2>HIPAA Considerations</h2>
-    <p>
-      <strong>For Med Spas:</strong> As a healthcare provider, you should take these additional steps:
-    </p>
+    <h2>Step 4: Test the Widget</h2>
     <ol>
-      <li>
-        <strong>Use your own EmailJS account:</strong> Each med spa should manage their own EmailJS account and patient data.
+      <li><strong>Open your test page</strong>
+        <ul>
+          <li>You can use a local server to view the page. One simple way is to use the Live Server extension in Visual Studio Code</li>
+          <li>Alternatively, run <code>npx serve .</code> in your terminal from the project directory to start a simple server</li>
+        </ul>
       </li>
-      <li>
-        <strong>Review EmailJS security:</strong> Ensure EmailJS's security practices align with your HIPAA compliance needs.
+      <li><strong>Test the full user flow</strong>
+        <ul>
+          <li>Click on different body areas and select concerns</li>
+          <li>Add multiple concerns to your treatment plan</li>
+          <li>Complete the form with test data (your own email)</li>
+          <li>Submit the form to test the email functionality</li>
+        </ul>
       </li>
-      <li>
-        <strong>Consider Business Associate Agreement:</strong> You may need a BAA with EmailJS depending on your specific situation.
+      <li><strong>Check your email</strong>
+        <ul>
+          <li>Verify that you receive the formatted treatment plan via email</li>
+          <li>Check that all form data is correctly included in the email</li>
+        </ul>
       </li>
-      <li>
-        <strong>Secure data handling:</strong> Establish proper procedures for handling the treatment plan data once received.
-      </li>
-      <li>
-        <strong>Privacy policy:</strong> Update your website privacy policy to include information about the treatment recommender.
+      <li><strong>Debug if needed</strong>
+        <ul>
+          <li>If you don't receive an email, check the browser console for errors (F12 or right-click → Inspect → Console)</li>
+          <li>Verify your EmailJS credentials are correct in the test page</li>
+          <li>Check EmailJS dashboard for any failed email attempts</li>
+        </ul>
       </li>
     </ol>
-    <p>
-      Always consult with a healthcare compliance expert to ensure your implementation meets all necessary privacy requirements.
-    </p>
   </div>
   
-  <p>
-    <strong>Note:</strong> This setup ensures each med spa manages their own EmailJS configuration and patient data, 
-    which helps maintain proper data privacy controls.
-  </p>
+  <div class="step">
+    <h2>Step 5: Prepare for Real Client Deployment</h2>
+    <p>Once your testing is successful, you can prepare the widget for real client deployment:</p>
+    <ol>
+      <li><strong>Help your client set up their own EmailJS account</strong>
+        <ul>
+          <li>Walk them through the process in Step 1, or set it up for them with their email</li>
+          <li>Make sure they understand they need to provide you with their Service ID, Template ID, and User ID</li>
+        </ul>
+      </li>
+      <li><strong>Customize the widget settings for the client</strong>
+        <ul>
+          <li>Update the <code>configureSiteSettings</code> with the client's actual information</li>
+          <li>Replace the test med spa details with client's actual med spa name, contact information, etc.</li>
+        </ul>
+      </li>
+      <li><strong>Deploy the widget to the client's website</strong>
+        <ul>
+          <li>Copy the built files (<code>treatment-recommender.js</code> and <code>treatment-recommender.css</code>) to the client's server</li>
+          <li>Add the necessary HTML and script tags to their website (similar to the test page, but with their actual paths)</li>
+          <li>Configure with the client's EmailJS credentials</li>
+        </ul>
+      </li>
+      <li><strong>Test on the client's website</strong>
+        <ul>
+          <li>Perform a final test on the client's actual website to ensure everything works properly</li>
+          <li>Make any necessary adjustments to styling or configuration</li>
+        </ul>
+      </li>
+    </ol>
+    <div class="tip">
+      <strong>HIPAA Compliance Reminder:</strong> Each med spa client should use their own EmailJS account to handle their customer data, which helps with HIPAA compliance concerns. Advise your clients to review EmailJS's security practices and consider a Business Associate Agreement if required.
+    </div>
+  </div>
+  
+  <div class="step">
+    <h2>Troubleshooting Common Issues</h2>
+    <h3>Email Not Sending</h3>
+    <ul>
+      <li>Verify EmailJS credentials are correct</li>
+      <li>Check that all template variables are properly defined in the EmailJS template</li>
+      <li>Look for any JavaScript errors in the browser console</li>
+      <li>Check EmailJS dashboard for failed email attempts or quota limits</li>
+    </ul>
+    
+    <h3>Widget Not Rendering</h3>
+    <ul>
+      <li>Make sure React dependencies are loaded before the widget script</li>
+      <li>Verify the widget container ID matches in both HTML and JavaScript</li>
+      <li>Check for any JavaScript errors in the browser console</li>
+      <li>Ensure all widget files are properly loaded (check Network tab in developer tools)</li>
+    </ul>
+    
+    <h3>Styling Issues</h3>
+    <ul>
+      <li>Make sure the CSS file is properly loaded</li>
+      <li>Check for any style conflicts with the client's existing website CSS</li>
+      <li>Use browser developer tools to inspect element styles</li>
+    </ul>
+  </div>
 </body>
 </html>

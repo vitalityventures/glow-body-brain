@@ -32,7 +32,7 @@ export const sendTreatmentPlanEmail = async (data: EmailData): Promise<boolean> 
     // Format the treatment plan for better readability
     const formattedTreatmentPlan = data.treatmentPlan.map(item => 
       `${item.area}: ${item.concernLabel}`
-    ).join(', ');
+    ).join('\n');
     
     // Send email directly to the client's EmailJS account
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
