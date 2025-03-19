@@ -8,8 +8,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      // Ensure '@' points to the root directory
-      '@': resolve(__dirname, '..'),
+      // Point '@' to the src directory
+      '@': resolve(__dirname, './'),
     },
   },
   build: {
