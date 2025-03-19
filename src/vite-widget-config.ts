@@ -8,12 +8,12 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
+      '@': resolve(__dirname, '../src'),
     },
   },
   build: {
     lib: {
-      entry: resolve(__dirname, './exports/TreatmentRecommenderExport.tsx'),
+      entry: resolve(__dirname, '../exports/TreatmentRecommenderExport.tsx'),
       name: 'TreatmentRecommender',
       fileName: 'treatment-recommender',
     },

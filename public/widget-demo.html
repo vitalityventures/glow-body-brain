@@ -55,8 +55,8 @@
 &lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin&gt;&lt;/script&gt;
 
 &lt;!-- Include the widget script --&gt;
-&lt;script src="./treatment-recommender.umd.js"&gt;&lt;/script&gt;
-&lt;link rel="stylesheet" href="./treatment-recommender.css"&gt;
+&lt;script src="./assets/treatment-recommender.umd.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="./assets/style.css"&gt;
 
 &lt;!-- Create a container for the widget --&gt;
 &lt;div id="treatment-recommender-container"&gt;&lt;/div&gt;
@@ -93,12 +93,30 @@
   <!-- Actual widget integration for the demo -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="./assets/treatment-recommender.umd.js"></script>
+  <link rel="stylesheet" href="./assets/style.css">
+  
   <script>
-    // The widget will be loaded after building the project
-    // This is just a placeholder for demonstration purposes
     document.addEventListener('DOMContentLoaded', () => {
+      // Configure the widget with sample settings
+      TreatmentRecommender.configureSiteSettings({
+        title: "DEMO BEAUTY CLINIC",
+        subtitle: "Find your perfect beauty treatment",
+        copyrightName: "Demo Beauty"
+      });
+      
+      // Configure email service (using placeholder values for the demo)
+      TreatmentRecommender.configureEmailService({
+        serviceId: "demo_service",
+        templateId: "demo_template",
+        userId: "demo_user"
+      });
+      
+      // Render the widget
       const container = document.getElementById('treatment-recommender-container');
-      container.innerHTML = '<p style="text-align: center; padding: 2rem;">Widget will appear here after building the project.</p>';
+      ReactDOM.createRoot(container).render(
+        React.createElement(TreatmentRecommender.default)
+      );
     });
   </script>
 </body>
