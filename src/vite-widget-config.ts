@@ -13,7 +13,7 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: resolve(__dirname, '../exports/TreatmentRecommenderExport.tsx'),
+      entry: resolve(__dirname, 'exports/TreatmentRecommenderExport.tsx'),
       name: 'TreatmentRecommender',
       fileName: 'treatment-recommender',
     },
