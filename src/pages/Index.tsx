@@ -1,6 +1,7 @@
 
 import { motion } from 'framer-motion';
 import TreatmentRecommender from "../components/TreatmentRecommender/TreatmentRecommender";
+import { Toaster } from "sonner";
 
 const Index = () => {
   return (
@@ -28,6 +29,8 @@ const Index = () => {
           <p className="mt-1">All virtual submissions are confidential.</p>
         </div>
       </footer>
+      
+      <Toaster position="top-right" richColors />
     </div>
   );
 };

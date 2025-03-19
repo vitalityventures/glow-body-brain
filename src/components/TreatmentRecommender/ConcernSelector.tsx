@@ -99,7 +99,11 @@ const ConcernSelector: React.FC<ConcernSelectorProps> = ({
               />
               <label 
                 htmlFor={concern.id}
-                className="flex items-center w-full cursor-pointer"
+                className={`flex items-center w-full p-3 rounded-lg cursor-pointer transition-all ${
+                  selectedConcerns.includes(concern.id)
+                    ? 'bg-spa-accent bg-opacity-10 border border-spa-accent'
+                    : 'bg-white border border-gray-100 hover:border-spa-highlight'
+                }`}
               >
                 <div className={`w-5 h-5 rounded-full border ${selectedConcerns.includes(concern.id) 
                   ? 'bg-spa-accent border-spa-accent' 
@@ -111,7 +115,9 @@ const ConcernSelector: React.FC<ConcernSelectorProps> = ({
                     </svg>
                   )}
                 </div>
-                <span className="text-spa-dark">{concern.label}</span>
+                <span className={`text-spa-dark ${selectedConcerns.includes(concern.id) ? 'font-medium' : ''}`}>
+                  {concern.label}
+                </span>
               </label>
             </div>
           </motion.div>
@@ -122,9 +128,14 @@ const ConcernSelector: React.FC<ConcernSelectorProps> = ({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
+        className="flex justify-between"
       >
+        <div className="hidden sm:block w-24">
+          {/* Empty div for layout balance */}
+        </div>
+        
         <button
-          className={`w-full py-3 px-6 rounded-full font-medium transition-all duration-300 ${
+          className={`w-full sm:w-auto py-3 px-6 rounded-full font-medium transition-all duration-300 ${
             selectedConcerns.length > 0
               ? 'bg-spa-dark text-white shadow-lg hover:shadow-xl'
               : 'bg-gray-200 text-gray-400 cursor-not-allowed'
@@ -134,6 +145,12 @@ const ConcernSelector: React.FC<ConcernSelectorProps> = ({
         >
           Continue
         </button>
+        
+        <div className="hidden sm:block w-24 text-right">
+          <span className="text-sm text-spa-accent">
+            {selectedConcerns.length} selected
+          </span>
+        </div>
       </motion.div>
     </motion.div>
   );

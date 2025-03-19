@@ -4,6 +4,7 @@ import HumanModel from './HumanModel';
 import FaceModel from './FaceModel';
 import ConcernSelector from './ConcernSelector';
 import ResultsForm from './ResultsForm';
+import TreatmentPlanSidebar from './TreatmentPlanSidebar';
 import { toast } from "sonner";
 
 // Treatment area concerns data
@@ -91,13 +92,26 @@ const AREA_CONCERNS = {
 // Stages of the treatment recommender flow
 type Stage = 'HUMAN_MODEL' | 'FACE_MODEL' | 'CONCERN_SELECTOR' | 'RESULTS_FORM';
 
+// Interface for treatment plan items
+interface TreatmentPlanItem {
+  area: string;
+  concernId: string;
+  concernLabel: string;
+}
+
 const TreatmentRecommender: React.FC = () => {
   const [stage, setStage] = useState<Stage>('HUMAN_MODEL');
   const [selectedArea, setSelectedArea] = useState<string>('');
   const [isFemale, setIsFemale] = useState<boolean>(true);
   const [selectedConcerns, setSelectedConcerns] = useState<{ [key: string]: string[] }>({});
+  const [treatmentPlan, setTreatmentPlan] = useState<TreatmentPlanItem[]>([]);
   
   const handleSelectArea = (area: string) => {
+    if (area === 'switch-model') {
+      setIsFemale(!isFemale);
+      return;
+    }
+    
     setSelectedArea(area);
     if (area === 'face') {
       setStage('FACE_MODEL');
@@ -112,6 +126,37 @@ const TreatmentRecommender: React.FC = () => {
   };
 
   const handleSelectConcern = (concernId: string) => {
+    const areaData = AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS] || [];
+    const concernItem = areaData.find(c => c.id === concernId);
+    
+    if (!concernItem) return;
+    
+    const isAlreadySelected = treatmentPlan.some(
+      item => item.area === selectedArea && item.concernId === concernId
+    );
+    
+    if (isAlreadySelected) {
+      // Remove from treatment plan
+      setTreatmentPlan(prev => 
+        prev.filter(item => !(item.area === selectedArea && item.concernId === concernId))
+      );
+      
+      toast.info(`Removed "${concernItem.label}" from your treatment plan`);
+    } else {
+      // Add to treatment plan
+      setTreatmentPlan(prev => [
+        ...prev,
+        {
+          area: selectedArea,
+          concernId,
+          concernLabel: concernItem.label
+        }
+      ]);
+      
+      toast.success(`Added "${concernItem.label}" to your treatment plan`);
+    }
+    
+    // Also update the selectedConcerns state for backward compatibility
     setSelectedConcerns(prev => {
       const currentConcerns = prev[selectedArea] || [];
       if (currentConcerns.includes(concernId)) {
@@ -146,35 +191,48 @@ const TreatmentRecommender: React.FC = () => {
         setStage('HUMAN_MODEL');
       }
     } else if (stage === 'RESULTS_FORM') {
-      setStage('CONCERN_SELECTOR');
+      setStage('HUMAN_MODEL');
     }
   };
 
-  const handleSubmit = (email: string, name: string) => {
-    console.log('Submitting with email:', email);
-    console.log('Name:', name);
-    console.log('Selected concerns:', selectedConcerns);
-    
-    toast.success("Thank you! Your treatment plan will be emailed to you shortly.");
+  const handleClearTreatmentPlan = () => {
+    setTreatmentPlan([]);
+    setSelectedConcerns({});
+    toast.info("Treatment plan cleared");
   };
 
-  // Transform selectedConcerns object into array format for ResultsForm
-  const getConcernsArray = () => {
-    return Object.entries(selectedConcerns)
-      .filter(([_, concerns]) => concerns.length > 0)
-      .map(([area, concernIds]) => {
-        // Map concern IDs to their labels
-        const concernLabels = concernIds.map(id => {
-          const areaData = AREA_CONCERNS[area as keyof typeof AREA_CONCERNS] || [];
-          const concern = areaData.find(c => c.id === id);
-          return concern ? concern.label : id;
-        });
-        
-        return {
-          area,
-          concerns: concernLabels
-        };
-      });
+  const handleRemoveTreatmentItem = (area: string, concernId: string) => {
+    setTreatmentPlan(prev => 
+      prev.filter(item => !(item.area === area && item.concernId === concernId))
+    );
+    
+    // Also update the selectedConcerns state
+    setSelectedConcerns(prev => {
+      const currentConcerns = prev[area] || [];
+      return {
+        ...prev,
+        [area]: currentConcerns.filter(id => id !== concernId)
+      };
+    });
+  };
+
+  const handleFinishTreatment = () => {
+    if (treatmentPlan.length > 0) {
+      setStage('RESULTS_FORM');
+    }
+  };
+
+  const handleSubmit = (formData: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    newsletter: boolean;
+  }) => {
+    console.log('Submitting treatment plan:', treatmentPlan);
+    console.log('Form data:', formData);
+    
+    toast.success("Thank you! Your personalized treatment plan will be emailed to you shortly.");
   };
 
   // Animation variants for page transitions
@@ -182,6 +240,10 @@ const TreatmentRecommender: React.FC = () => {
     initial: { opacity: 0, x: 100 },
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -100 }
+  };
+
+  const isTreatmentItemSelected = (area: string, concernId: string) => {
+    return treatmentPlan.some(item => item.area === area && item.concernId === concernId);
   };
 
   return (
@@ -206,82 +268,91 @@ const TreatmentRecommender: React.FC = () => {
             Discover personalized aesthetic treatments tailored to your unique concerns
           </motion.p>
 
-          <AnimatePresence mode="wait">
-            {stage === 'HUMAN_MODEL' && (
-              <motion.div
-                key="human-model"
-                variants={pageVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                transition={{ duration: 0.3 }}
-              >
-                <div className="flex flex-col items-center">
-                  <HumanModel onSelectArea={handleSelectArea} isFemale={isFemale} />
-                  
-                  <motion.button
-                    className="text-spa-accent hover:text-spa-dark transition-colors mt-4 text-sm"
-                    onClick={() => setIsFemale(!isFemale)}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <AnimatePresence mode="wait">
+                {stage === 'HUMAN_MODEL' && (
+                  <motion.div
+                    key="human-model"
+                    variants={pageVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    transition={{ duration: 0.3 }}
                   >
-                    Switch to {isFemale ? 'male' : 'female'} model
-                  </motion.button>
-                </div>
-              </motion.div>
-            )}
+                    <div className="flex flex-col items-center">
+                      <HumanModel onSelectArea={handleSelectArea} isFemale={isFemale} />
+                    </div>
+                  </motion.div>
+                )}
 
-            {stage === 'FACE_MODEL' && (
-              <motion.div
-                key="face-model"
-                variants={pageVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                transition={{ duration: 0.3 }}
-              >
-                <FaceModel onSelectArea={handleSelectFacialArea} onBack={handleBack} />
-              </motion.div>
-            )}
+                {stage === 'FACE_MODEL' && (
+                  <motion.div
+                    key="face-model"
+                    variants={pageVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    transition={{ duration: 0.3 }}
+                  >
+                    <FaceModel onSelectArea={handleSelectFacialArea} onBack={handleBack} />
+                  </motion.div>
+                )}
 
-            {stage === 'CONCERN_SELECTOR' && (
-              <motion.div
-                key="concern-selector"
-                variants={pageVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                transition={{ duration: 0.3 }}
-              >
-                <ConcernSelector
-                  area={selectedArea}
-                  concerns={AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS] || []}
-                  selectedConcerns={selectedConcerns[selectedArea] || []}
-                  onSelectConcern={handleSelectConcern}
-                  onBack={handleBack}
-                  onContinue={handleContinue}
+                {stage === 'CONCERN_SELECTOR' && (
+                  <motion.div
+                    key="concern-selector"
+                    variants={pageVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ConcernSelector
+                      area={selectedArea}
+                      concerns={AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS] || []}
+                      selectedConcerns={treatmentPlan
+                        .filter(item => item.area === selectedArea)
+                        .map(item => item.concernId)}
+                      onSelectConcern={handleSelectConcern}
+                      onBack={handleBack}
+                      onContinue={handleContinue}
+                    />
+                  </motion.div>
+                )}
+
+                {stage === 'RESULTS_FORM' && (
+                  <motion.div
+                    key="results-form"
+                    variants={pageVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    transition={{ duration: 0.3 }}
+                    className="lg:col-span-3"
+                  >
+                    <ResultsForm
+                      treatmentPlan={treatmentPlan}
+                      onBack={handleBack}
+                      onSubmit={handleSubmit}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Treatment Plan Sidebar - Only show on non-results stages */}
+            {stage !== 'RESULTS_FORM' && (
+              <div className="hidden lg:block">
+                <TreatmentPlanSidebar
+                  planItems={treatmentPlan}
+                  onRemoveItem={handleRemoveTreatmentItem}
+                  onClearAll={handleClearTreatmentPlan}
+                  onFinish={handleFinishTreatment}
                 />
-              </motion.div>
+              </div>
             )}
-
-            {stage === 'RESULTS_FORM' && (
-              <motion.div
-                key="results-form"
-                variants={pageVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                transition={{ duration: 0.3 }}
-              >
-                <ResultsForm
-                  selectedConcerns={getConcernsArray()}
-                  onBack={handleBack}
-                  onSubmit={handleSubmit}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          </div>
         </div>
       </div>
     </div>
