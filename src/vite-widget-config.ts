@@ -9,12 +9,12 @@ export default defineConfig({
   resolve: {
     alias: {
       // Point '@' to the src directory
-      '@': resolve(__dirname, './src'),
+      '@': resolve(__dirname, '.'),
     },
   },
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/exports/TreatmentRecommenderExport.tsx'),
+      entry: resolve(__dirname, 'exports/TreatmentRecommenderExport.tsx'),
       name: 'TreatmentRecommender',
       fileName: 'treatment-recommender',
     },
