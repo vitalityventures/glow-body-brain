@@ -109,56 +109,6 @@ const TreatmentRecommenderWidget = () => {
   );
 };
 
-// Export a sample initialization script for documentation purposes
-const sampleScript = `
-<!-- Include React and ReactDOM -->
-<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-
-<!-- Include the widget script -->
-<script src="path/to/treatment-recommender.umd.js"></script>
-<link rel="stylesheet" href="path/to/style.css">
-
-<!-- Create a container for the widget -->
-<div id="treatment-recommender-container"></div>
-
-<script>
-  // Configure widget settings (optional)
-  TreatmentRecommender.configureSiteSettings({
-    title: "YOUR BRAND NAME",
-    subtitle: "Your custom subtitle here",
-    copyrightName: "Your Brand",
-    // Control header/footer visibility
-    layout: {
-      showHeader: false,  // Hide header on client sites
-      showFooter: false   // Hide footer on client sites
-    }
-  });
-  
-  // Configure email service (required for form submissions)
-  TreatmentRecommender.configureEmailService({
-    serviceId: "your_emailjs_service_id",
-    templateId: "your_emailjs_template_id",
-    userId: "your_emailjs_user_id"
-  });
-  
-  // Render the widget
-  document.addEventListener('DOMContentLoaded', function() {
-    var container = document.getElementById('treatment-recommender-container');
-    if (window.ReactDOM.createRoot) {
-      ReactDOM.createRoot(container).render(
-        React.createElement(TreatmentRecommender.default)
-      );
-    } else {
-      ReactDOM.render(
-        React.createElement(TreatmentRecommender.default),
-        container
-      );
-    }
-  });
-</script>
-`;
-
 // For browser compatibility, assign everything to the default export
 const exportObj = {
   default: TreatmentRecommenderWidget,
