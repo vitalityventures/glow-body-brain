@@ -20,7 +20,11 @@ export const configureEmailService = (config: EmailServiceConfig) => {
   emailConfig = config;
   
   // Update the configuration in localStorage so it persists
-  localStorage.setItem('emailServiceConfig', JSON.stringify(config));
+  try {
+    localStorage.setItem('emailServiceConfig', JSON.stringify(config));
+  } catch (e) {
+    console.error('Failed to save email config to localStorage:', e);
+  }
   
   console.log('Email service configured:', config);
 };
@@ -30,14 +34,14 @@ export const getEmailServiceConfig = (): EmailServiceConfig | null => {
   if (emailConfig) return emailConfig;
   
   // Try to load from localStorage if not set
-  const savedConfig = localStorage.getItem('emailServiceConfig');
-  if (savedConfig) {
-    try {
+  try {
+    const savedConfig = localStorage.getItem('emailServiceConfig');
+    if (savedConfig) {
       emailConfig = JSON.parse(savedConfig);
       return emailConfig;
-    } catch (e) {
-      console.error('Failed to parse email config from localStorage:', e);
     }
+  } catch (e) {
+    console.error('Failed to parse email config from localStorage:', e);
   }
   
   return null;
@@ -67,25 +71,29 @@ export const configureSiteSettings = (config: Partial<SiteConfig>) => {
   };
   
   // Update in localStorage for persistence
-  localStorage.setItem('siteConfig', JSON.stringify(siteConfig));
+  try {
+    localStorage.setItem('siteConfig', JSON.stringify(siteConfig));
+  } catch (e) {
+    console.error('Failed to save site config to localStorage:', e);
+  }
   
   console.log('Site configuration updated:', siteConfig);
   
-  // Force refresh to apply changes
-  window.location.reload();
+  // Instead of force reloading, just inform that settings have been updated
+  console.log('Configuration complete - refresh to apply all changes');
 };
 
 // Get current site config
 export const getSiteConfig = (): SiteConfig => {
   // Try to load from localStorage
-  const savedConfig = localStorage.getItem('siteConfig');
-  if (savedConfig) {
-    try {
+  try {
+    const savedConfig = localStorage.getItem('siteConfig');
+    if (savedConfig) {
       const parsedConfig = JSON.parse(savedConfig);
       siteConfig = { ...defaultSiteConfig, ...parsedConfig };
-    } catch (e) {
-      console.error('Failed to parse site config from localStorage:', e);
     }
+  } catch (e) {
+    console.error('Failed to parse site config from localStorage:', e);
   }
   
   return siteConfig;
@@ -101,15 +109,15 @@ const TreatmentRecommenderWidget = () => {
   );
 };
 
-// Sample initialization script for documentation purposes
-const initializeWidgetScript = `
+// Export a sample initialization script for documentation purposes
+const sampleScript = `
 <!-- Include React and ReactDOM -->
 <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
 
 <!-- Include the widget script -->
 <script src="path/to/treatment-recommender.umd.js"></script>
-<link rel="stylesheet" href="path/to/treatment-recommender.css">
+<link rel="stylesheet" href="path/to/style.css">
 
 <!-- Create a container for the widget -->
 <div id="treatment-recommender-container"></div>
@@ -135,14 +143,29 @@ const initializeWidgetScript = `
   });
   
   // Render the widget
-  const container = document.getElementById('treatment-recommender-container');
-  ReactDOM.createRoot(container).render(
-    React.createElement(TreatmentRecommender.default)
-  );
+  document.addEventListener('DOMContentLoaded', function() {
+    var container = document.getElementById('treatment-recommender-container');
+    if (window.ReactDOM.createRoot) {
+      ReactDOM.createRoot(container).render(
+        React.createElement(TreatmentRecommender.default)
+      );
+    } else {
+      ReactDOM.render(
+        React.createElement(TreatmentRecommender.default),
+        container
+      );
+    }
+  });
 </script>
 `;
 
-// For documentation purposes only - not actually executed
-console.info("Widget initialization example:", initializeWidgetScript);
+// For browser compatibility, assign everything to the default export
+const exportObj = {
+  default: TreatmentRecommenderWidget,
+  configureEmailService,
+  configureSiteSettings,
+  getSiteConfig,
+  getEmailServiceConfig
+};
 
-export default TreatmentRecommenderWidget;
+export default exportObj;

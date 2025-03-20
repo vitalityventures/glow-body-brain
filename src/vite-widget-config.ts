@@ -16,6 +16,7 @@ export default defineConfig({
       entry: resolve(__dirname, './exports/TreatmentRecommenderExport.tsx'),
       name: 'TreatmentRecommender',
       fileName: 'treatment-recommender',
+      formats: ['umd'], // Only generate UMD format for browser compatibility
     },
     rollupOptions: {
       // Make sure to externalize dependencies that shouldn't be bundled
@@ -26,11 +27,16 @@ export default defineConfig({
           react: 'React',
           'react-dom': 'ReactDOM',
         },
-        // Ensure the CSS is properly extracted
-        assetFileNames: 'assets/[name][extname]',
+        // Ensure the CSS is properly extracted and directly usable
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === 'style.css') return 'style.css';
+          return 'assets/[name][extname]';
+        },
       },
     },
     // Generate sourcemaps for easier debugging
     sourcemap: true,
+    // Ensure we're targeting browsers to avoid modern syntax issues
+    target: 'es2015',
   },
 });
