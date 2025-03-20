@@ -6,6 +6,27 @@ import '../index.css'; // Make sure to include your styles
 import { SiteConfig } from '../config/siteConfig';
 import defaultSiteConfig from '../config/siteConfig';
 
+// Helper function to handle path detection (consistent with main.tsx)
+function detectBasePath() {
+  const { hostname, pathname } = window.location;
+  
+  // For GitHub Pages
+  if (hostname.includes('github.io')) {
+    const pathSegments = pathname.split('/');
+    if (pathSegments.length > 1 && pathSegments[1] !== '') {
+      return `/${pathSegments[1]}/`;
+    }
+  }
+  
+  return '/';
+}
+
+// Make base path available globally
+if (typeof window !== 'undefined' && !window.BASE_PATH) {
+  window.BASE_PATH = detectBasePath();
+  console.log("[Widget] Base path set to:", window.BASE_PATH);
+}
+
 // Configuration for the client's EmailJS service
 export interface EmailServiceConfig {
   serviceId: string;
@@ -163,7 +184,7 @@ if (typeof window !== 'undefined') {
 // A single default export for the entire module
 export default TreatmentRecommenderExport;
 
-// A single named exports statement with all exports
+// Export all named exports
 export {
   Widget,
   TreatmentRecommenderWidget,

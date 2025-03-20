@@ -35,6 +35,9 @@ export default defineConfig({
           if (info.name === 'style.css') return 'widget-style.css';
           return 'assets/[name][extname]';
         },
+        // Ensure relative paths work correctly in all environments
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
       },
     },
     // Generate sourcemaps for easier debugging
