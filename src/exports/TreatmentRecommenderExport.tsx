@@ -19,7 +19,7 @@ let emailConfig: EmailServiceConfig | null = null;
 /**
  * Configures the EmailJS service for sending treatment results
  */
-const configureEmailService = (config: EmailServiceConfig) => {
+function configureEmailService(config: EmailServiceConfig) {
   emailConfig = config;
   
   // Update the configuration in localStorage so it persists
@@ -30,10 +30,10 @@ const configureEmailService = (config: EmailServiceConfig) => {
   }
   
   console.log('Email service configured:', config);
-};
+}
 
 // Retrieves the current email configuration
-const getEmailServiceConfig = (): EmailServiceConfig | null => {
+function getEmailServiceConfig(): EmailServiceConfig | null {
   if (emailConfig) return emailConfig;
   
   // Try to load from localStorage if not set
@@ -48,7 +48,7 @@ const getEmailServiceConfig = (): EmailServiceConfig | null => {
   }
   
   return null;
-};
+}
 
 // Store the site configuration globally
 let siteConfig: SiteConfig = defaultSiteConfig;
@@ -56,7 +56,7 @@ let siteConfig: SiteConfig = defaultSiteConfig;
 /**
  * Configure site settings for the widget
  */
-const configureSiteSettings = (config: Partial<SiteConfig>) => {
+function configureSiteSettings(config: Partial<SiteConfig>) {
   // For embedded widgets, default to hiding header and footer
   const isEmbedded = window !== window.top; // Check if running in an iframe
   
@@ -86,10 +86,10 @@ const configureSiteSettings = (config: Partial<SiteConfig>) => {
   
   // Instead of force reloading, just inform that settings have been updated
   console.log('Configuration complete - refresh to apply all changes');
-};
+}
 
 // Get current site config
-const getSiteConfig = (): SiteConfig => {
+function getSiteConfig(): SiteConfig {
   // Try to load from localStorage
   try {
     const savedConfig = localStorage.getItem('siteConfig');
@@ -102,17 +102,17 @@ const getSiteConfig = (): SiteConfig => {
   }
   
   return siteConfig;
-};
+}
 
 // Main Widget Component
-const TreatmentRecommenderWidget = () => {
+function TreatmentRecommenderWidget() {
   return (
     <div className="treatment-recommender-widget">
       <TreatmentRecommender />
       <Toaster position="top-right" richColors />
     </div>
   );
-};
+}
 
 // Alias Widget to TreatmentRecommenderWidget for simplicity
 const Widget = TreatmentRecommenderWidget;
@@ -143,7 +143,7 @@ if (typeof window !== 'undefined') {
 }
 
 // For direct rendering via script tags
-export function render(container: HTMLElement) {
+function render(container: HTMLElement) {
   if (container) {
     import('react-dom/client').then(({ createRoot }) => {
       const root = createRoot(container);
@@ -153,15 +153,17 @@ export function render(container: HTMLElement) {
   }
 }
 
-// Export everything the widget needs through the default export
+// Export everything through a single default export
 export default TreatmentRecommenderExport;
 
-// Export named exports for direct imports
+// Export all named functions/components in a single export statement 
+// to prevent duplicate declarations
 export {
   Widget,
   TreatmentRecommenderWidget,
   configureEmailService,
   configureSiteSettings,
   getSiteConfig,
-  getEmailServiceConfig
+  getEmailServiceConfig,
+  render
 };
