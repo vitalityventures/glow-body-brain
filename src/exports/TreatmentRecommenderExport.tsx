@@ -130,9 +130,9 @@ export default TreatmentRecommenderExport;
 // Also export individual components for named imports
 export { 
   Widget,
-  TreatmentRecommenderWidget, 
-  configureSiteSettings,
-  configureEmailService
+  TreatmentRecommenderWidget
+  // Remove duplicate exports of configureSiteSettings and configureEmailService
+  // since they're already exported above
 };
 
 // Attach to window for direct browser usage with improved consistency
