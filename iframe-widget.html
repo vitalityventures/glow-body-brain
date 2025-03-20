@@ -14,28 +14,57 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   
   <script>
-    // Dynamically determine base path
+    // Improved base path detection for GitHub Pages
     (function() {
-      // Extract repository name from URL
-      const pathSegments = window.location.pathname.split('/');
+      // Debug information
+      console.log("Initial URL:", window.location.href);
+      
+      // This function detects if we're on GitHub Pages and adjusts the base path
+      const { protocol, hostname, pathname } = window.location;
       let basePath = '/';
       
-      // If we're on GitHub Pages, the second segment will be the repo name
-      if (pathSegments.length > 1 && pathSegments[1] !== '') {
-        basePath = '/' + pathSegments[1] + '/';
-        document.write('<base href="' + basePath + '">');
-      } else {
-        document.write('<base href="/">');
+      // If we're on GitHub Pages (github.io domain)
+      if (hostname.includes('github.io')) {
+        // Extract repository name from pathname
+        const pathSegments = pathname.split('/');
+        if (pathSegments.length > 1 && pathSegments[1] !== '') {
+          basePath = '/' + pathSegments[1] + '/';
+        }
       }
+      
+      console.log('Setting base path to:', basePath);
+      document.write('<base href="' + basePath + '">');
       
       // Store for later use
       window.basePath = basePath;
     })();
   </script>
   
-  <!-- Include the widget script with a versioned URL to prevent caching issues -->
-  <script src="./treatment-recommender.umd.js?v=1.0.2"></script>
-  <link rel="stylesheet" href="./style.css?v=1.0.2">
+  <!-- Include the widget script with a dynamic path -->
+  <script>
+    // We'll load these scripts after the page loads to ensure base path is set
+    document.addEventListener('DOMContentLoaded', function() {
+      const base = window.basePath || '/';
+      
+      // Add widget script
+      const scriptElement = document.createElement('script');
+      scriptElement.src = base + 'treatment-recommender.umd.js?v=' + new Date().getTime();
+      scriptElement.onerror = function() {
+        console.error('Failed to load widget script from:', this.src);
+        document.getElementById('treatment-recommender-container').innerHTML = 
+          '<div style="color:red;padding:20px;">Error loading widget script. Check console for details.</div>';
+      };
+      document.head.appendChild(scriptElement);
+      
+      // Add widget styles
+      const styleElement = document.createElement('link');
+      styleElement.rel = 'stylesheet';
+      styleElement.href = base + 'style.css?v=' + new Date().getTime();
+      document.head.appendChild(styleElement);
+      
+      console.log('Dynamically loaded widget from:', base);
+    });
+  </script>
   
   <style>
     /* Reset styles for iframe environment */
@@ -57,11 +86,26 @@
       height: auto;
       min-height: 100%;
     }
+    
+    /* Error message styling */
+    .error-message {
+      color: #721c24;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      padding: 20px;
+      margin: 20px;
+      border-radius: 5px;
+      font-family: Arial, sans-serif;
+    }
   </style>
 </head>
 <body>
   <!-- Create a container for the widget -->
-  <div id="treatment-recommender-container"></div>
+  <div id="treatment-recommender-container">
+    <div style="padding: 20px; text-align: center;">
+      Loading Treatment Recommender...
+    </div>
+  </div>
   
   <script>
     // Parse URL query parameters to customize the widget for each client
@@ -90,13 +134,10 @@
     };
     
     // Debug information
+    console.log('URL parameters:', Object.fromEntries(params));
     console.log('Base path:', window.basePath);
-    console.log('Loading widget with config:', siteConfig);
     console.log('Email config:', emailConfig);
-    
-    // Configure the widget with the parsed settings
-    window.TreatmentRecommender.configureEmailService(emailConfig);
-    window.TreatmentRecommender.configureSiteSettings(siteConfig);
+    console.log('Site config:', siteConfig);
     
     // Function to adjust iframe height (iframe-to-parent communication)
     function adjustIframeHeight() {
@@ -104,39 +145,59 @@
       window.parent.postMessage({ type: 'resize', height: height }, '*');
     }
     
-    // Render the widget
-    document.addEventListener('DOMContentLoaded', function() {
-      // Log that we're starting to render
-      console.log('Rendering Treatment Recommender widget...');
-      
-      const container = document.getElementById('treatment-recommender-container');
-      if (!container) {
-        console.error('Container not found!');
+    // Function to render the widget with error handling
+    function renderWidget() {
+      if (!window.TreatmentRecommender || !window.TreatmentRecommender.default) {
+        console.error('TreatmentRecommender not loaded correctly:', window.TreatmentRecommender);
+        document.getElementById('treatment-recommender-container').innerHTML = 
+          '<div class="error-message">Error: Widget failed to load. Please check the console for details.</div>';
         return;
       }
       
       try {
-        if (!window.TreatmentRecommender || !window.TreatmentRecommender.default) {
-          console.error('TreatmentRecommender not loaded correctly:', window.TreatmentRecommender);
-          // Show error in container
-          container.innerHTML = '<div style="color: red; padding: 20px;">Error: Widget failed to load. Please check the console for details.</div>';
-          return;
-        }
+        // Configure the widget with the parsed settings
+        window.TreatmentRecommender.configureEmailService(emailConfig);
+        window.TreatmentRecommender.configureSiteSettings(siteConfig);
         
+        // Render the component
+        const container = document.getElementById('treatment-recommender-container');
         ReactDOM.createRoot(container).render(
           React.createElement(window.TreatmentRecommender.default)
         );
         console.log('Widget rendered successfully');
       } catch (error) {
         console.error('Error rendering widget:', error);
-        container.innerHTML = '<div style="color: red; padding: 20px;">Error: ' + error.message + '</div>';
+        document.getElementById('treatment-recommender-container').innerHTML = 
+          '<div class="error-message">Error: ' + error.message + '</div>';
       }
+    }
+    
+    // Wait for widget script to load before rendering
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check periodically if TreatmentRecommender has loaded
+      const checkInterval = setInterval(function() {
+        if (window.TreatmentRecommender) {
+          clearInterval(checkInterval);
+          console.log('TreatmentRecommender loaded, rendering widget...');
+          renderWidget();
+          
+          // Set up periodic iframe height adjustment
+          setInterval(adjustIframeHeight, 500);
+          
+          // Also adjust height when window resizes
+          window.addEventListener('resize', adjustIframeHeight);
+        }
+      }, 100);
       
-      // Set up periodic iframe height adjustment
-      setInterval(adjustIframeHeight, 500);
-      
-      // Also adjust height when window resizes
-      window.addEventListener('resize', adjustIframeHeight);
+      // Timeout after 10 seconds
+      setTimeout(function() {
+        clearInterval(checkInterval);
+        if (!window.TreatmentRecommender) {
+          console.error('TreatmentRecommender failed to load after 10 seconds');
+          document.getElementById('treatment-recommender-container').innerHTML = 
+            '<div class="error-message">Error: Widget failed to load after 10 seconds. Please check your network connection.</div>';
+        }
+      }, 10000);
     });
   </script>
 </body>
