@@ -94,11 +94,12 @@
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   
-  <!-- Point to the correct paths where the files are actually built -->
+  <!-- Fixed paths to match where the build actually outputs files -->
   <script src="../dist/treatment-recommender.umd.cjs"></script>
   <link rel="stylesheet" href="../dist/assets/style.css">
   
   <script>
+    // Wait for the DOM to be fully loaded before initializing
     document.addEventListener('DOMContentLoaded', () => {
       // Configure the widget with sample settings
       TreatmentRecommender.configureSiteSettings({
