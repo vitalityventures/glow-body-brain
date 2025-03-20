@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treatment Recommender - Client Setup Guide</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1, h2, h3 {
+      color: #1a365d;
+    }
+    code {
+      background: #f5f5f5;
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      font-family: Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 0.9em;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    .parameter-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    .parameter-table th, .parameter-table td {
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    .parameter-table th {
+      background-color: #f0f4f8;
+    }
+    .note {
+      background-color: #fffde7;
+      border-left: 4px solid #fbc02d;
+      padding: 10px 15px;
+      margin: 15px 0;
+    }
+    .example {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f0f7ff;
+      border-radius: 5px;
+      border-left: 4px solid #2d8cff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Treatment Recommender - Client Setup Guide</h1>
+  
+  <h2>Quick Start: Add to WordPress</h2>
+  <p>To add the Treatment Recommender to a WordPress site:</p>
+  <ol>
+    <li>Go to the page where you want to add the widget</li>
+    <li>Add a "Custom HTML" block</li>
+    <li>Paste the iframe code (see examples below)</li>
+    <li>Update the parameters for your specific client</li>
+    <li>Save and publish the page</li>
+  </ol>
+
+  <div class="example">
+    <h3>Basic WordPress Example</h3>
+    <pre><code>&lt;iframe 
+  src="https://yourusername.github.io/treatment-recommender/iframe-widget.html?serviceId=YOUR_EMAILJS_SERVICE_ID&templateId=YOUR_EMAILJS_TEMPLATE_ID&userId=YOUR_EMAILJS_USER_ID&title=CLINIC_NAME" 
+  width="100%" 
+  height="800px" 
+  frameborder="0"
+  allow="web-share"
+&gt;&lt;/iframe&gt;</code></pre>
+  </div>
+
+  <h2>All Available URL Parameters</h2>
+  <p>Customize the widget for each client by changing these URL parameters:</p>
+  
+  <table class="parameter-table">
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+    <tr>
+      <td><code>serviceId</code></td>
+      <td>EmailJS service ID</td>
+      <td><code>service_abc123</code></td>
+    </tr>
+    <tr>
+      <td><code>templateId</code></td>
+      <td>EmailJS template ID</td>
+      <td><code>template_xyz789</code></td>
+    </tr>
+    <tr>
+      <td><code>userId</code></td>
+      <td>EmailJS user ID</td>
+      <td><code>user_def456</code></td>
+    </tr>
+    <tr>
+      <td><code>title</code></td>
+      <td>Clinic or brand name</td>
+      <td><code>Serenity Med Spa</code></td>
+    </tr>
+    <tr>
+      <td><code>subtitle</code></td>
+      <td>Subtitle text</td>
+      <td><code>Your Beauty Journey Starts Here</code></td>
+    </tr>
+    <tr>
+      <td><code>copyright</code></td>
+      <td>Copyright name in footer</td>
+      <td><code>Serenity Med Spa</code></td>
+    </tr>
+    <tr>
+      <td><code>showHeader</code></td>
+      <td>Show or hide header (true/false)</td>
+      <td><code>false</code></td>
+    </tr>
+    <tr>
+      <td><code>showFooter</code></td>
+      <td>Show or hide footer (true/false)</td>
+      <td><code>false</code></td>
+    </tr>
+  </table>
+
+  <div class="note">
+    <strong>Note:</strong> URL parameters should be properly encoded, especially if they contain spaces or special characters.
+  </div>
+
+  <h2>Examples for Different Clients</h2>
+
+  <div class="example">
+    <h3>Client 1: Serenity Med Spa</h3>
+    <pre><code>&lt;iframe 
+  src="https://yourusername.github.io/treatment-recommender/iframe-widget.html?serviceId=service_abc123&templateId=template_xyz789&userId=user_def456&title=Serenity%20Med%20Spa&subtitle=Your%20Beauty%20Journey%20Starts%20Here&copyright=Serenity%20Med%20Spa&showHeader=false&showFooter=false" 
+  width="100%" 
+  height="800px" 
+  frameborder="0"
+&gt;&lt;/iframe&gt;</code></pre>
+  </div>
+
+  <div class="example">
+    <h3>Client 2: Radiance Beauty Clinic</h3>
+    <pre><code>&lt;iframe 
+  src="https://yourusername.github.io/treatment-recommender/iframe-widget.html?serviceId=service_rad123&templateId=template_rad789&userId=user_rad456&title=Radiance%20Beauty%20Clinic&subtitle=Discover%20Your%20Natural%20Glow&copyright=Radiance%20Beauty%20Clinic&showHeader=false&showFooter=false" 
+  width="100%" 
+  height="800px" 
+  frameborder="0"
+&gt;&lt;/iframe&gt;</code></pre>
+  </div>
+
+  <h2>Setting Up EmailJS</h2>
+  <p>For each client, you'll need to set up EmailJS:</p>
+  <ol>
+    <li>Create an account at <a href="https://www.emailjs.com/" target="_blank">EmailJS.com</a></li>
+    <li>Add an email service (like Gmail, Outlook, etc.)</li>
+    <li>Create an email template with these variables:
+      <ul>
+        <li><code>firstName</code></li>
+        <li><code>lastName</code></li>
+        <li><code>email</code></li>
+        <li><code>phone</code></li>
+        <li><code>newsletter</code></li>
+        <li><code>treatmentPlan</code></li>
+        <li><code>timestamp</code></li>
+        <li><code>source</code></li>
+      </ul>
+    </li>
+    <li>Note your service ID, template ID, and user ID</li>
+  </ol>
+
+  <h2>Troubleshooting</h2>
+  <ul>
+    <li><strong>Widget not loading:</strong> Check if the iframe URL is correct and the repository is properly deployed.</li>
+    <li><strong>Emails not sending:</strong> Verify the EmailJS credentials and check console for errors.</li>
+    <li><strong>Layout issues:</strong> Try adjusting the iframe height or width.</li>
+  </ul>
+
+  <footer style="margin-top: 50px; border-top: 1px solid #eee; padding-top: 20px; text-align: center; font-size: 0.9em;">
+    <p>Treatment Recommender Client Setup Guide &copy; 2023</p>
+  </footer>
+</body>
+</html>
