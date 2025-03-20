@@ -22,7 +22,7 @@ let emailConfig: EmailServiceConfig | null = null;
 function configureEmailService(config: EmailServiceConfig) {
   emailConfig = config;
   
-  // Update the configuration in localStorage so it persists
+  // Try to save to localStorage
   try {
     localStorage.setItem('emailServiceConfig', JSON.stringify(config));
   } catch (e) {
@@ -32,7 +32,9 @@ function configureEmailService(config: EmailServiceConfig) {
   console.log('Email service configured:', config);
 }
 
-// Retrieves the current email configuration
+/**
+ * Retrieves the current email configuration
+ */
 function getEmailServiceConfig(): EmailServiceConfig | null {
   if (emailConfig) return emailConfig;
   
@@ -83,12 +85,12 @@ function configureSiteSettings(config: Partial<SiteConfig>) {
   }
   
   console.log('Site configuration updated:', siteConfig);
-  
-  // Instead of force reloading, just inform that settings have been updated
   console.log('Configuration complete - refresh to apply all changes');
 }
 
-// Get current site config
+/**
+ * Get current site config
+ */
 function getSiteConfig(): SiteConfig {
   // Try to load from localStorage
   try {
@@ -104,7 +106,9 @@ function getSiteConfig(): SiteConfig {
   return siteConfig;
 }
 
-// Main Widget Component
+/**
+ * Main Widget Component
+ */
 function TreatmentRecommenderWidget() {
   return (
     <div className="treatment-recommender-widget">
@@ -117,6 +121,19 @@ function TreatmentRecommenderWidget() {
 // Alias Widget to TreatmentRecommenderWidget for simplicity
 const Widget = TreatmentRecommenderWidget;
 
+/**
+ * For direct rendering via script tags
+ */
+function render(container: HTMLElement) {
+  if (container) {
+    import('react-dom/client').then(({ createRoot }) => {
+      const root = createRoot(container);
+      root.render(<TreatmentRecommenderWidget />);
+      console.log('Widget rendered into container:', container);
+    });
+  }
+}
+
 // Create a clear exports object with all widget functionality
 const TreatmentRecommenderExport = {
   Widget,
@@ -124,6 +141,7 @@ const TreatmentRecommenderExport = {
   configureSiteSettings,
   getSiteConfig,
   getEmailServiceConfig,
+  render,
   // Add version information
   version: '1.0.0',
   buildDate: new Date().toISOString()
@@ -142,22 +160,10 @@ if (typeof window !== 'undefined') {
   window.treatmentRecommender = TreatmentRecommenderExport;
 }
 
-// For direct rendering via script tags
-function render(container: HTMLElement) {
-  if (container) {
-    import('react-dom/client').then(({ createRoot }) => {
-      const root = createRoot(container);
-      root.render(<TreatmentRecommenderWidget />);
-      console.log('Widget rendered into container:', container);
-    });
-  }
-}
-
-// Export everything through a single default export
+// A single default export for the entire module
 export default TreatmentRecommenderExport;
 
-// Export all named functions/components in a single export statement 
-// to prevent duplicate declarations
+// A single named exports statement with all exports
 export {
   Widget,
   TreatmentRecommenderWidget,
