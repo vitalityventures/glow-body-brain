@@ -11,6 +11,7 @@ export default defineConfig({
       '@': resolve(__dirname, '../src'),
     },
   },
+  base: process.env.BASE_URL || '/',
   build: {
     lib: {
       entry: resolve(__dirname, './exports/TreatmentRecommenderExport.tsx'),
