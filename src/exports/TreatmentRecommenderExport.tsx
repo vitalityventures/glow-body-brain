@@ -16,6 +16,9 @@ export interface EmailServiceConfig {
 // Set up the email configuration globally
 let emailConfig: EmailServiceConfig | null = null;
 
+/**
+ * Configures the EmailJS service for sending treatment results
+ */
 export const configureEmailService = (config: EmailServiceConfig) => {
   emailConfig = config;
   
@@ -50,7 +53,9 @@ export const getEmailServiceConfig = (): EmailServiceConfig | null => {
 // Store the site configuration globally
 let siteConfig: SiteConfig = defaultSiteConfig;
 
-// Configure site settings for the widget
+/**
+ * Configure site settings for the widget
+ */
 export const configureSiteSettings = (config: Partial<SiteConfig>) => {
   // For embedded widgets, default to hiding header and footer
   const isEmbedded = window !== window.top; // Check if running in an iframe
@@ -100,7 +105,7 @@ export const getSiteConfig = (): SiteConfig => {
 };
 
 // Main Widget Component
-const TreatmentRecommenderWidget = () => {
+export const TreatmentRecommenderWidget = () => {
   return (
     <div className="treatment-recommender-widget">
       <TreatmentRecommender />
@@ -109,10 +114,10 @@ const TreatmentRecommenderWidget = () => {
   );
 };
 
-// Define all widget exports in a predictable structure
-const Widget = TreatmentRecommenderWidget;
+// Alias Widget to TreatmentRecommenderWidget for simplicity
+export const Widget = TreatmentRecommenderWidget;
 
-// Create a clear exports object
+// Create a clear exports object with all widget functionality
 const TreatmentRecommenderExport = {
   Widget,
   configureEmailService,
@@ -122,17 +127,6 @@ const TreatmentRecommenderExport = {
   // Add version information
   version: '1.0.0',
   buildDate: new Date().toISOString()
-};
-
-// Export the complete widget object as default
-export default TreatmentRecommenderExport;
-
-// Also export individual components for named imports
-export { 
-  Widget,
-  TreatmentRecommenderWidget
-  // Remove duplicate exports of configureSiteSettings and configureEmailService
-  // since they're already exported above
 };
 
 // Attach to window for direct browser usage with improved consistency
@@ -158,3 +152,6 @@ export function render(container: HTMLElement) {
     });
   }
 }
+
+// Export the complete widget object as default
+export default TreatmentRecommenderExport;
