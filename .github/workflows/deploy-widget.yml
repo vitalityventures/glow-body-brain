@@ -24,15 +24,22 @@ jobs:
       - name: Install Dependencies 📦
         run: npm ci
 
+      - name: Extract Repository Name
+        id: repo-name
+        run: |
+          REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
+          echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
+          echo "Repository name: $REPO_NAME"
+
       - name: Build Widget 🔨
         run: npx vite build --config src/vite-widget-config.ts
         env:
-          BASE_URL: /glow-body-brain/
+          BASE_URL: /${{ env.REPO_NAME }}/
 
       - name: Build Main App 🏗️
         run: npm run build
         env:
-          BASE_URL: /glow-body-brain/
+          BASE_URL: /${{ env.REPO_NAME }}/
 
       - name: Copy HTML Files 📋
         run: |
@@ -40,6 +47,7 @@ jobs:
           cp public/iframe-widget.html dist/
           cp public/iframe-integration-example.html dist/
           cp public/integration-example.html dist/
+          cp public/index.html dist/
 
       - name: Create 404.html 🔍
         run: |

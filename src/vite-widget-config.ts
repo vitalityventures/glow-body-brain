@@ -11,6 +11,7 @@ export default defineConfig({
       '@': resolve(__dirname, '../src'),
     },
   },
+  // Use environment variable for base URL, critical for GitHub Pages
   base: process.env.BASE_URL || '/',
   build: {
     lib: {
