@@ -1,0 +1,3 @@
+BASE_URL: /glow-body-brain/
+Build timestamp: Thu Mar 20 22:19:36 UTC 2025
+Repository: vitalityventures/glow-body-brain
