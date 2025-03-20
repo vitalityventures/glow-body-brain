@@ -22,6 +22,12 @@ export interface SiteConfig {
     showIntegrationGuide: boolean;
   };
   
+  // Layout controls
+  layout: {
+    showHeader: boolean;
+    showFooter: boolean;
+  };
+  
   // Copyright
   copyrightName: string;
 }
@@ -45,6 +51,12 @@ const siteConfig: SiteConfig = {
     showAbout: true,
     showTreatments: true,
     showIntegrationGuide: true, // Set to false to hide for client-facing sites
+  },
+  
+  // Layout controls - default to showing everything for the main site
+  layout: {
+    showHeader: true,
+    showFooter: true,
   },
   
   // Copyright

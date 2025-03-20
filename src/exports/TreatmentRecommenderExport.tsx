@@ -48,8 +48,23 @@ let siteConfig: SiteConfig = defaultSiteConfig;
 
 // Configure site settings for the widget
 export const configureSiteSettings = (config: Partial<SiteConfig>) => {
-  // Merge with default config
-  siteConfig = { ...defaultSiteConfig, ...config };
+  // For embedded widgets, default to hiding header and footer
+  const isEmbedded = window !== window.top; // Check if running in an iframe
+  
+  const layoutDefaults = isEmbedded ? 
+    { showHeader: false, showFooter: false } : 
+    { showHeader: true, showFooter: true };
+  
+  // Merge with default config, with layout detection
+  siteConfig = { 
+    ...defaultSiteConfig, 
+    ...config,
+    layout: {
+      ...defaultSiteConfig.layout,
+      ...layoutDefaults,
+      ...(config.layout || {})
+    }
+  };
   
   // Update in localStorage for persistence
   localStorage.setItem('siteConfig', JSON.stringify(siteConfig));
@@ -104,7 +119,12 @@ const initializeWidgetScript = `
   TreatmentRecommender.configureSiteSettings({
     title: "YOUR BRAND NAME",
     subtitle: "Your custom subtitle here",
-    copyrightName: "Your Brand"
+    copyrightName: "Your Brand",
+    // Control header/footer visibility
+    layout: {
+      showHeader: false,  // Hide header on client sites
+      showFooter: false   // Hide footer on client sites
+    }
   });
   
   // Configure email service (required for form submissions)

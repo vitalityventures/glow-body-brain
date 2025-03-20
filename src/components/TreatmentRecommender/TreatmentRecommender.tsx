@@ -6,7 +6,7 @@ import TreatmentPlanSidebar from './TreatmentPlanSidebar';
 import MobileTreatmentDrawer from './MobileTreatmentDrawer';
 import ModelPanel from './ModelPanel';
 import { useTreatmentRecommender } from './hooks/useTreatmentRecommender';
-import siteConfig from '../../config/siteConfig';
+import { getSiteConfig } from '../../exports/TreatmentRecommenderExport';
 
 const TreatmentRecommender: React.FC = () => {
   const {
@@ -24,6 +24,8 @@ const TreatmentRecommender: React.FC = () => {
     handleFinishTreatment,
     handleSubmit
   } = useTreatmentRecommender();
+
+  const siteConfig = getSiteConfig();
 
   const pageVariants = {
     initial: { opacity: 0, x: 100 },
