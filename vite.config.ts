@@ -6,7 +6,8 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  // Extract the repository name for GitHub Pages deployment
+  // For GitHub Pages, we need to use the repository name as the base path
+  // Extract it from env or use '/' for local development
   const baseUrl = process.env.BASE_URL || '/';
   console.log('Building with base URL:', baseUrl);
   
@@ -25,6 +26,14 @@ export default defineConfig(({ mode }) => {
       alias: {
         "@": path.resolve(__dirname, "./src"),
       },
+    },
+    build: {
+      // Ensure source maps are generated
+      sourcemap: true,
+      // Output more detailed build information
+      reportCompressedSize: true,
+      // Make sure assets are properly referenced
+      assetsDir: 'assets',
     },
   };
 });

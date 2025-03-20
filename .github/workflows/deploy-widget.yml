@@ -31,6 +31,13 @@ jobs:
           echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
           echo "Repository name: $REPO_NAME"
 
+      - name: Debug Environment
+        run: |
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Repository Name: ${{ env.REPO_NAME }}"
+          echo "GitHub Pages URL will be: https://$(echo $GITHUB_REPOSITORY | cut -d'/' -f1).github.io/${{ env.REPO_NAME }}/"
+          echo "BASE_URL will be: /${{ env.REPO_NAME }}/"
+
       - name: Build Widget 🔨
         run: npx vite build --config src/vite-widget-config.ts
         env:
@@ -52,6 +59,13 @@ jobs:
       - name: Create 404.html 🔍
         run: |
           cp dist/index.html dist/404.html
+
+      - name: Debug Build Output
+        run: |
+          echo "Contents of dist directory:"
+          ls -la dist
+          echo "Contents of dist/assets directory:"
+          ls -la dist/assets || echo "No assets directory found"
 
       - name: Deploy to GitHub Pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4

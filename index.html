@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,21 +10,26 @@
     <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
     
     <script>
-      // Handle GitHub Pages path issues dynamically
+      // Improved GitHub Pages path handling
       (function() {
-        // Extract repository name from URL
-        const pathSegments = window.location.pathname.split('/');
-        let basePath = '/';
+        // This function detects if we're on GitHub Pages and adjusts the base path
+        const { protocol, hostname, pathname } = window.location;
         
-        // If we're on GitHub Pages, the second segment will be the repo name
-        if (pathSegments.length > 1 && pathSegments[1] !== '') {
-          basePath = '/' + pathSegments[1] + '/';
-          document.write('<base href="' + basePath + '">');
+        // If we're on GitHub Pages (github.io domain)
+        if (hostname.includes('github.io')) {
+          // Get the repository name from the pathname
+          const pathSegments = pathname.split('/');
+          if (pathSegments.length > 1 && pathSegments[1] !== '') {
+            // Format: /<repo-name>/
+            const basePath = '/' + pathSegments[1] + '/';
+            console.log('GitHub Pages detected. Setting base path:', basePath);
+            document.write('<base href="' + basePath + '">');
+          }
         } else {
+          // For local or custom domain deployments
           document.write('<base href="/">');
+          console.log('Local or custom domain detected. Base path set to: /');
         }
-        
-        console.log('Setting base path to:', basePath);
       })();
     </script>
   </head>
@@ -33,8 +39,13 @@
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module">
-      const basePath = document.querySelector('base').getAttribute('href');
-      import(basePath + 'src/main.tsx');
+      // This ensures our module paths respect the base path
+      const base = document.querySelector('base')?.getAttribute('href') || '/';
+      console.log('Loading main.tsx from:', base + 'src/main.tsx');
+      import(base + 'src/main.tsx').catch(e => {
+        console.error('Failed to load main.tsx:', e);
+        document.getElementById('root').innerHTML = '<div style="color:red;padding:20px;">Error loading application. See console for details.</div>';
+      });
     </script>
   </body>
 </html>
