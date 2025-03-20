@@ -156,7 +156,7 @@ export function render(container: HTMLElement) {
 // Export everything the widget needs through the default export
 export default TreatmentRecommenderExport;
 
-// Also export named exports for direct imports
+// Export named exports for direct imports
 export {
   Widget,
   TreatmentRecommenderWidget,
