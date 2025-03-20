@@ -68,14 +68,26 @@ jobs:
         run: |
           cp dist/index.html dist/404.html
 
-      # Copy widget files to root level for easier access
-      - name: Copy Widget Files to Root Level
+      # Important: Copy widget files to multiple locations to ensure they're found
+      - name: Copy Widget Files to Multiple Locations
         run: |
-          # Find the treatment-recommender files and copy to root level
-          find dist -name "treatment-recommender*.js" -exec cp {} dist/ \;
-          find dist -name "style*.css" -exec cp {} dist/ \;
-          echo "Root level files after copying:"
-          ls -la dist/*.js dist/*.css || echo "No files found"
+          # Find all JS and CSS files from the widget build
+          echo "Copying widget files to multiple locations to ensure they're found..."
+          mkdir -p dist/assets
+          
+          # Copy directly to dist root (important!)
+          find dist -type f -name "treatment-recommender*" -exec cp {} dist/ \;
+          find dist -type f -name "style*.css" -exec cp {} dist/ \;
+          
+          # Also copy to assets directory as fallback
+          find dist -type f -name "treatment-recommender*" -exec cp {} dist/assets/ \;
+          find dist -type f -name "style*.css" -exec cp {} dist/assets/ \;
+          
+          echo "Files copied to root level:"
+          ls -la dist/*.js dist/*.css || echo "No files at root level"
+          
+          echo "Files copied to assets directory:"
+          ls -la dist/assets/*.js dist/assets/*.css || echo "No files in assets directory"
 
       - name: Create Debug Info Files
         run: |

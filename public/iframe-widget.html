@@ -42,13 +42,18 @@
         }
       }
       
+      // Ensure trailing slash for consistency
+      if (!basePath.endsWith('/')) {
+        basePath += '/';
+      }
+      
       debugLog('Setting base path to:', basePath);
       document.write('<base href="' + basePath + '">');
       
       // Store for later use
       window.basePath = basePath;
       
-      // Add debug info to the page (will be removed once loaded)
+      // Add visible debug info to the page (will be removed once loaded)
       const debugInfo = document.createElement('div');
       debugInfo.id = 'debug-info';
       debugInfo.style.position = 'absolute';
@@ -75,15 +80,25 @@
     document.addEventListener('DOMContentLoaded', function() {
       const base = window.basePath || '/';
       
-      debugLog('Dynamically loaded widget from:', base);
+      debugLog('Dynamically loading widget from:', base);
       
-      // Try multiple possible paths to find the widget script
+      // Expanded list of possible script paths
       const possibleScriptPaths = [
+        // Root level paths (most likely to work with our updated workflow)
+        base + 'treatment-recommender.js',
         base + 'treatment-recommender.umd.js',
+        
+        // Assets directory paths (fallbacks)
+        base + 'assets/treatment-recommender.js',
         base + 'assets/treatment-recommender.umd.js',
+        
+        // Try both github.io paths and relative paths
+        'https://' + window.location.hostname + base + 'treatment-recommender.umd.js',
+        'https://' + window.location.hostname + base + 'treatment-recommender.js',
+        
+        // Additional fallbacks with file extensions
         base + 'treatment-recommender.umd.cjs',
-        base + 'assets/treatment-recommender.umd.cjs',
-        base + 'assets/treatment-recommender-*.js' // For wildcard matching if possible
+        base + 'assets/treatment-recommender.umd.cjs'
       ];
       
       // Try to load the first script, with fallbacks
@@ -106,10 +121,26 @@
         scriptElement.src = path;
         scriptElement.onerror = function() {
           console.warn('Failed to load widget script from:', path, '- trying next path');
+          // Remove this script element to avoid conflicting with next attempt
+          scriptElement.remove();
           loadScript(paths, index + 1);
         };
         scriptElement.onload = function() {
           debugLog('Widget script loaded successfully from:', path);
+          
+          // Success message for quick visual confirmation
+          const successMsg = document.createElement('div');
+          successMsg.style.position = 'fixed';
+          successMsg.style.bottom = '10px';
+          successMsg.style.right = '10px';
+          successMsg.style.backgroundColor = 'rgba(46, 204, 113, 0.9)';
+          successMsg.style.color = 'white';
+          successMsg.style.padding = '10px';
+          successMsg.style.borderRadius = '5px';
+          successMsg.style.zIndex = '9999';
+          successMsg.innerHTML = 'Script loaded from: ' + path;
+          document.body.appendChild(successMsg);
+          setTimeout(() => successMsg.remove(), 5000);
           
           // Now try to load the CSS
           loadCSS();
@@ -117,12 +148,19 @@
         document.head.appendChild(scriptElement);
       }
       
-      // Similarly, try multiple possible paths for the CSS
+      // Similarly, expanded list of possible paths for the CSS
       function loadCSS() {
         const possibleCSSPaths = [
+          // Root level paths
           base + 'style.css',
+          
+          // Assets directory paths
           base + 'assets/style.css',
-          base + 'assets/index.css'
+          base + 'assets/index.css',
+          
+          // Try both github.io paths and relative paths
+          'https://' + window.location.hostname + base + 'style.css',
+          'https://' + window.location.hostname + base + 'assets/style.css'
         ];
         
         function tryNextCSS(cssIndex = 0) {
@@ -139,10 +177,26 @@
           styleElement.href = cssPath;
           styleElement.onerror = function() {
             console.warn('Failed to load widget styles from:', cssPath, '- trying next path');
+            // Remove this style element to avoid conflicts
+            styleElement.remove();
             tryNextCSS(cssIndex + 1);
           };
           styleElement.onload = function() {
             debugLog('Widget styles loaded successfully from:', cssPath);
+            
+            // Show success message
+            const successMsg = document.createElement('div');
+            successMsg.style.position = 'fixed';
+            successMsg.style.bottom = '50px';
+            successMsg.style.right = '10px';
+            successMsg.style.backgroundColor = 'rgba(52, 152, 219, 0.9)';
+            successMsg.style.color = 'white';
+            successMsg.style.padding = '10px';
+            successMsg.style.borderRadius = '5px';
+            successMsg.style.zIndex = '9999';
+            successMsg.innerHTML = 'CSS loaded from: ' + cssPath;
+            document.body.appendChild(successMsg);
+            setTimeout(() => successMsg.remove(), 5000);
           };
           document.head.appendChild(styleElement);
         }
@@ -154,41 +208,50 @@
       function checkAvailableResources() {
         debugLog('Checking for available resources...');
         
-        // Try to list files in the current directory
-        fetch(base)
+        // Create a debug panel
+        const debugPanel = document.createElement('div');
+        debugPanel.style.backgroundColor = '#f8f9fa';
+        debugPanel.style.border = '1px solid #dee2e6';
+        debugPanel.style.borderRadius = '5px';
+        debugPanel.style.padding = '15px';
+        debugPanel.style.margin = '20px';
+        debugPanel.style.fontFamily = 'monospace';
+        debugPanel.style.fontSize = '12px';
+        debugPanel.style.maxHeight = '300px';
+        debugPanel.style.overflow = 'auto';
+        debugPanel.innerHTML = '<h3>Resource Debugging</h3><p>Checking available files...</p>';
+        
+        document.getElementById('treatment-recommender-container').appendChild(debugPanel);
+        
+        // Try to access asset-list.txt which our workflow creates
+        fetch(base + 'asset-list.txt')
           .then(response => response.text())
-          .then(html => {
-            debugLog('Directory listing:', html.match(/href="[^"]+"/g));
-            
-            // Try to list files in the assets directory
-            return fetch(base + 'assets/');
-          })
-          .then(response => response.text())
-          .then(html => {
-            debugLog('Assets directory listing:', html.match(/href="[^"]+"/g));
+          .then(text => {
+            debugPanel.innerHTML += '<h4>Files in deployment:</h4><pre>' + text + '</pre>';
           })
           .catch(err => {
-            console.error('Resource check failed:', err);
+            debugPanel.innerHTML += '<p>Could not access asset list: ' + err.message + '</p>';
             
-            // Create a more detailed error message with diagnostic info
-            const container = document.getElementById('treatment-recommender-container');
-            if (container) {
-              container.innerHTML += `
-                <div style="margin-top:20px;border:1px solid #f0f0f0;padding:15px;font-family:monospace;font-size:12px;">
-                  <h3>Diagnostic Information</h3>
-                  <p>URL: ${window.location.href}</p>
-                  <p>Base Path: ${base}</p>
-                  <p>Attempted Script Paths: ${possibleScriptPaths.join(', ')}</p>
-                  <p>Resource check error: ${err.message}</p>
-                  <button onclick="location.reload()">Reload Page</button>
-                </div>
-              `;
-            }
+            // Try to list directory contents
+            debugPanel.innerHTML += '<p>Trying directory listing fallback...</p>';
+            
+            // Try to create a more detailed error message with diagnostic info
+            debugPanel.innerHTML += `
+              <div style="margin-top:20px;">
+                <h3>Diagnostic Information</h3>
+                <p>URL: ${window.location.href}</p>
+                <p>Base Path: ${base}</p>
+                <p>Attempted Script Paths: ${possibleScriptPaths.join('<br>')}</p>
+                <button onclick="location.reload()">Reload Page</button>
+              </div>
+            `;
           });
       }
       
-      // Start loading the script
-      loadScript(possibleScriptPaths);
+      // Start loading the script after a brief delay (allows base path to be properly set)
+      setTimeout(() => {
+        loadScript(possibleScriptPaths);
+      }, 100);
     });
   </script>
   
@@ -360,10 +423,31 @@
             '<p>Widget failed to load after 10 seconds.</p>' +
             '<p>Please check your network connection or try again later.</p>' +
             '<button onclick="location.reload()">Try Again</button>' +
+            '<div id="debug-container"></div>' +
             '</div>';
+            
+          // Run the resource checker to help debug
+          checkAvailableResources();
         }
       }, 10000);
     });
+    
+    // Global function for checking resources in case of error
+    function checkAvailableResources() {
+      const base = window.basePath || '/';
+      const debugContainer = document.getElementById('debug-container') || document.createElement('div');
+      debugContainer.innerHTML = '<h4>Checking available resources...</h4>';
+      
+      // Try to list files that should be available
+      fetch(base + 'asset-list.txt')
+        .then(response => response.text())
+        .then(text => {
+          debugContainer.innerHTML += '<h5>Files found:</h5><pre style="font-size:10px;max-height:200px;overflow:auto">' + text + '</pre>';
+        })
+        .catch(err => {
+          debugContainer.innerHTML += '<p>Could not access asset list: ' + err.message + '</p>';
+        });
+    }
   </script>
 </body>
 </html>
