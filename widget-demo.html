@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treatment Recommender Widget Demo</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+    header {
+      background: #f9f9f9;
+      padding: 2rem;
+      border-bottom: 1px solid #eaeaea;
+      text-align: center;
+    }
+    main {
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .demo-wrapper {
+      margin-top: 2rem;
+      border: 1px solid #eaeaea;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 0.5rem;
+      border-radius: 4px;
+      display: block;
+      white-space: pre-wrap;
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Treatment Recommender Widget Demo</h1>
+    <p>This page demonstrates how to embed the treatment recommender widget in any website.</p>
+  </header>
+  
+  <main>
+    <h2>Widget Integration</h2>
+    <p>To integrate this widget into your website, add the following code to your HTML:</p>
+    
+    <code>
+&lt;!-- Include React and ReactDOM --&gt;
+&lt;script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin&gt;&lt;/script&gt;
+&lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin&gt;&lt;/script&gt;
+
+&lt;!-- Include the widget script --&gt;
+&lt;script src="./assets/treatment-recommender.umd.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="./assets/style.css"&gt;
+
+&lt;!-- Create a container for the widget --&gt;
+&lt;div id="treatment-recommender-container"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  // Configure widget settings (optional)
+  TreatmentRecommender.configureSiteSettings({
+    title: "YOUR BRAND NAME",
+    subtitle: "Your custom subtitle here",
+    copyrightName: "Your Brand",
+    // Hide header and footer for client sites
+    layout: {
+      showHeader: false,
+      showFooter: false
+    }
+  });
+  
+  // Configure email service (required for form submissions)
+  TreatmentRecommender.configureEmailService({
+    serviceId: "your_emailjs_service_id",
+    templateId: "your_emailjs_template_id",
+    userId: "your_emailjs_user_id"
+  });
+  
+  // Render the widget
+  const container = document.getElementById('treatment-recommender-container');
+  ReactDOM.createRoot(container).render(
+    React.createElement(TreatmentRecommender.default)
+  );
+&lt;/script&gt;
+    </code>
+    
+    <h2>Live Demo</h2>
+    <div class="demo-wrapper">
+      <div id="treatment-recommender-container"></div>
+    </div>
+  </main>
+
+  <!-- Actual widget integration for the demo -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Fixed paths to match where the build actually outputs files -->
+  <script src="../dist/treatment-recommender.umd.cjs"></script>
+  <link rel="stylesheet" href="../dist/assets/style.css">
+  
+  <script>
+    // Wait for the DOM to be fully loaded before initializing
+    document.addEventListener('DOMContentLoaded', () => {
+      // Configure the widget with sample settings
+      TreatmentRecommender.configureSiteSettings({
+        title: "DEMO BEAUTY CLINIC",
+        subtitle: "Find your perfect beauty treatment",
+        copyrightName: "Demo Beauty",
+        // For the demo, set this to true to show how it would look on your main site
+        // Set to false to show how it would look on client sites
+        layout: {
+          showHeader: false,
+          showFooter: false
+        }
+      });
+      
+      // Configure email service (using placeholder values for the demo)
+      TreatmentRecommender.configureEmailService({
+        serviceId: "demo_service",
+        templateId: "demo_template",
+        userId: "demo_user"
+      });
+      
+      // Render the widget
+      const container = document.getElementById('treatment-recommender-container');
+      ReactDOM.createRoot(container).render(
+        React.createElement(TreatmentRecommender.default)
+      );
+    });
+  </script>
+</body>
+</html>

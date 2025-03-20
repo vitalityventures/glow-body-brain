@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treatment Recommender Widget Integration Guide</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      color: #333;
+    }
+    pre {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      overflow-x: auto;
+      font-size: 14px;
+    }
+    code {
+      background: #f0f0f0;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+    .step {
+      margin-bottom: 30px;
+      border-left: 4px solid #4f46e5;
+      padding-left: 20px;
+      background: #f9f9f9;
+      padding: 10px 20px 20px 20px;
+      border-radius: 0px 5px 5px 0px;
+    }
+    h1 {
+      color: #4f46e5;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    h2 {
+      color: #4f46e5;
+      margin-top: 0;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 8px;
+    }
+    .tip {
+      background-color: #e0f2fe;
+      border-left: 4px solid #0ea5e9;
+      padding: 10px 15px;
+      margin: 20px 0;
+      border-radius: 0px 5px 5px 0px;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .note {
+      background-color: #fef9c3;
+      border-left: 4px solid #eab308;
+      padding: 10px 15px;
+      margin: 20px 0;
+      border-radius: 0px 5px 5px 0px;
+    }
+    ol {
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Treatment Recommender Widget<br>Step-by-Step Integration Guide</h1>
+  
+  <p>This guide will walk you through every step needed to integrate the Treatment Recommender widget into your website, even if you've never used Vite or built a JavaScript application before.</p>
+  
+  <div class="step">
+    <h2>Step 1: Set Up Your Development Environment</h2>
+    <ol>
+      <li><strong>Install Node.js</strong> - This is required to build the application.
+        <ul>
+          <li>Visit <a href="https://nodejs.org/" target="_blank">nodejs.org</a> and download the LTS (Long Term Support) version.</li>
+          <li>Follow the installer instructions for your operating system.</li>
+          <li>To verify installation, open a command prompt or terminal and type: <code>node -v</code> and <code>npm -v</code></li>
+        </ul>
+      </li>
+      <li><strong>Download the project code</strong> - If you received the code via GitHub, clone the repository:
+        <pre><code>git clone [your-repository-url]
+cd [your-project-name]</code></pre>
+        <p>Or if you received a ZIP file, extract it to a folder on your computer.</p>
+      </li>
+      <li><strong>Install dependencies</strong> - Open a terminal/command prompt in the project directory and run:
+        <pre><code>npm install</code></pre>
+        <p>This will install all the required dependencies for the project.</p>
+      </li>
+    </ol>
+  </div>
+  
+  <div class="step">
+    <h2>Step 2: Configure EmailJS</h2>
+    <p>The widget uses EmailJS to send form data via email. You need to set up an account and create a template:</p>
+    <ol>
+      <li><strong>Create an EmailJS account</strong>
+        <ul>
+          <li>Go to <a href="https://www.emailjs.com/" target="_blank">emailjs.com</a> and sign up for a free account.</li>
+          <li>The free tier allows 200 emails per month.</li>
+        </ul>
+      </li>
+      <li><strong>Connect an email service</strong>
+        <ul>
+          <li>After logging in, go to "Email Services" and click "Add New Service".</li>
+          <li>Choose your email provider (Gmail, Outlook, etc.) and follow the authentication steps.</li>
+          <li>Note down the <strong>Service ID</strong> that EmailJS assigns to your service.</li>
+        </ul>
+      </li>
+      <li><strong>Create an email template</strong>
+        <ul>
+          <li>Go to "Email Templates" and click "Create New Template".</li>
+          <li>Design your email template. Make sure to include these dynamic variables:
+            <pre><code>{{firstName}}
+{{lastName}}
+{{email}}
+{{phone}}
+{{newsletter}}
+{{treatmentPlan}}</code></pre>
+          </li>
+          <li>Save the template and note down the <strong>Template ID</strong>.</li>
+        </ul>
+      </li>
+      <li><strong>Get your User ID</strong>
+        <ul>
+          <li>Go to "Account" → "API Keys".</li>
+          <li>Copy your <strong>Public Key</strong> (this is your User ID for the widget).</li>
+        </ul>
+      </li>
+    </ol>
+    <div class="note">
+      <strong>Note:</strong> The EmailJS free tier is limited to 200 emails per month. For production use with higher volume, you may need to upgrade to a paid plan.
+    </div>
+  </div>
+  
+  <div class="step">
+    <h2>Step 3: Build the Widget</h2>
+    <p>Now you'll build the widget to generate the files needed for your website:</p>
+    <ol>
+      <li>Open a terminal/command prompt in the project directory.</li>
+      <li>Run the build command with the widget configuration:
+        <pre><code>npx vite build --config src/vite-widget-config.ts</code></pre>
+      </li>
+      <li>After the build completes, you'll find the following files in the <code>dist</code> folder:
+        <ul>
+          <li><code>treatment-recommender.js</code> - The main JavaScript file</li>
+          <li><code>treatment-recommender.css</code> - The stylesheet for the widget</li>
+          <li>Other asset files (if any)</li>
+        </ul>
+      </li>
+    </ol>
+    <div class="tip">
+      <strong>Tip:</strong> If the build fails, make sure you've installed all dependencies with <code>npm install</code> and that you're using the correct configuration file.
+    </div>
+  </div>
+  
+  <div class="step">
+    <h2>Step 4: Add the Widget to Your Website</h2>
+    <p>Now you can integrate the widget into your website:</p>
+    <ol>
+      <li><strong>Copy the built files</strong> to your website's assets directory (or any location where you store JavaScript and CSS files).</li>
+      <li><strong>Add the dependencies and widget code</strong> to your HTML page:
+        <pre><code>&lt;!-- Add React dependencies --&gt;
+&lt;script src="https://unpkg.com/react@18/umd/react.production.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- Add the widget files --&gt;
+&lt;script src="path/to/treatment-recommender.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="path/to/treatment-recommender.css"&gt;</code></pre>
+        <p>Replace <code>path/to/</code> with the actual path where you placed the files.</p>
+      </li>
+      <li><strong>Create a container</strong> for the widget in your HTML:
+        <pre><code>&lt;div id="treatment-recommender-container"&gt;&lt;/div&gt;</code></pre>
+      </li>
+      <li><strong>Initialize the widget</strong> with your EmailJS configuration:
+        <pre><code>&lt;script&gt;
+  // Configure EmailJS with your credentials
+  window.TreatmentRecommender.configureEmailService({
+    serviceId: 'YOUR_EMAILJS_SERVICE_ID',  // From Step 2
+    templateId: 'YOUR_EMAILJS_TEMPLATE_ID',  // From Step 2
+    userId: 'YOUR_EMAILJS_USER_ID',  // From Step 2
+    recipientEmail: 'your-email@example.com'  // Optional: Specify where to send the emails
+  });
+  
+  // Render the widget in the container
+  ReactDOM.render(
+    React.createElement(window.TreatmentRecommender.default),
+    document.getElementById('treatment-recommender-container')
+  );
+&lt;/script&gt;</code></pre>
+      </li>
+    </ol>
+  </div>
+  
+  <div class="step">
+    <h2>Step 5: Customize Widget for Different Clients</h2>
+    <p>The Treatment Recommender widget can be customized for each client using the <code>configureSiteSettings</code> function:</p>
+    <ol>
+      <li><strong>Customize branding, content, and navigation</strong> - Each client can have their own title, subtitle, contact information, and more:
+        <pre><code>&lt;script&gt;
+  // First, configure EmailJS
+  window.TreatmentRecommender.configureEmailService({
+    serviceId: 'YOUR_EMAILJS_SERVICE_ID',
+    templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
+    userId: 'YOUR_EMAILJS_USER_ID',
+    recipientEmail: 'client@example.com'
+  });
+  
+  // Then, customize the widget for this specific client
+  window.TreatmentRecommender.configureSiteSettings({
+    // Branding
+    title: "CLIENT NAME BEAUTY CLINIC",
+    subtitle: "Custom subtitle for this specific client",
+    
+    // Footer content
+    aboutUsText: "Custom about us text for this client's beauty clinic.",
+    contactInfo: {
+      email: "contact@clientdomain.com",
+      phone: "(555) 555-5555",
+      address: "123 Client Street, City, State",
+    },
+    
+    // Control which navigation items to show
+    navigation: {
+      showAbout: true,
+      showTreatments: true,
+      showIntegrationGuide: false, // Hide integration guide for client sites
+    },
+    
+    // Copyright name
+    copyrightName: "Client Name Beauty Clinic",
+  });
+  
+  // Render the widget
+  ReactDOM.render(
+    React.createElement(window.TreatmentRecommender.default),
+    document.getElementById('treatment-recommender-container')
+  );
+&lt;/script&gt;</code></pre>
+      </li>
+      <li><strong>Properties you can customize:</strong>
+        <ul>
+          <li><code>title</code>: The main heading displayed in the header (client name or brand)</li>
+          <li><code>subtitle</code>: Secondary text explaining the purpose of the tool</li>
+          <li><code>aboutUsText</code>: Paragraph text for the footer "About Us" section</li>
+          <li><code>contactInfo</code>: Client's email, phone, and address information</li>
+          <li><code>navigation</code>: Control which navigation links are visible</li>
+          <li><code>copyrightName</code>: Name used in the copyright footer</li>
+        </ul>
+      </li>
+      <li><strong>Notes for service providers:</strong>
+        <ul>
+          <li>You can set up the EmailJS account for your clients as part of your service</li>
+          <li>Configure their widget settings during installation to match their branding</li>
+          <li>Hide the Integration Guide navigation for client-facing deployments</li>
+          <li>For complete white-labeling, make sure to update all text fields to match client branding</li>
+        </ul>
+      </li>
+    </ol>
+    <div class="tip">
+      <strong>Tip for agencies and service providers:</strong> Create a configuration template file for each client where you store their custom settings. This makes it easy to update or redeploy the widget when needed.
+    </div>
+  </div>
+  
+  <div class="step">
+    <h2>Complete Example with Custom Settings</h2>
+    <p>Here's a complete example of a minimal HTML page with the widget integrated and customized for a specific client:</p>
+    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Acme Beauty Clinic&lt;/title&gt;
+  
+  &lt;!-- React Dependencies --&gt;
+  &lt;script src="https://unpkg.com/react@18/umd/react.production.min.js"&gt;&lt;/script&gt;
+  &lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"&gt;&lt;/script&gt;
+  
+  &lt;!-- Treatment Recommender Widget --&gt;
+  &lt;script src="path/to/treatment-recommender.js"&gt;&lt;/script&gt;
+  &lt;link rel="stylesheet" href="path/to/treatment-recommender.css"&gt;
+  
+  &lt;style&gt;
+    body {
+      font-family: 'Arial', sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Acme Beauty Clinic&lt;/h1&gt;
+  
+  &lt;div id="treatment-recommender-container"&gt;&lt;/div&gt;
+  
+  &lt;script&gt;
+    // Configure EmailJS
+    window.TreatmentRecommender.configureEmailService({
+      serviceId: 'YOUR_EMAILJS_SERVICE_ID',
+      templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
+      userId: 'YOUR_EMAILJS_USER_ID',
+      recipientEmail: 'contact@acmebeauty.com'
+    });
+    
+    // Customize widget for Acme Beauty Clinic
+    window.TreatmentRecommender.configureSiteSettings({
+      title: "ACME BEAUTY",
+      subtitle: "Find your perfect treatment at Acme Beauty Clinic",
+      aboutUsText: "Acme Beauty Clinic has been providing top-quality aesthetic treatments for over 15 years.",
+      contactInfo: {
+        email: "contact@acmebeauty.com",
+        phone: "(555) 987-6543",
+        address: "789 Beauty Blvd, Suite 200, Los Angeles, CA",
+      },
+      navigation: {
+        showAbout: true,
+        showTreatments: true,
+        showIntegrationGuide: false,  // Hide this for client sites
+      },
+      copyrightName: "Acme Beauty Clinic",
+    });
+    
+    // Render the widget
+    ReactDOM.render(
+      React.createElement(window.TreatmentRecommender.default),
+      document.getElementById('treatment-recommender-container')
+    );
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+  </div>
+  
+  <div class="step">
+    <h2>Troubleshooting</h2>
+    <p>If you encounter issues with the widget integration:</p>
+    <ol>
+      <li><strong>Check browser console for errors</strong> - Open your browser's developer tools (F12 in most browsers) and look for error messages.</li>
+      <li><strong>Verify EmailJS configuration</strong> - Double-check your service ID, template ID, and user ID for typos.</li>
+      <li><strong>Check file paths</strong> - Make sure the paths to the widget files are correct.</li>
+      <li><strong>React version issues</strong> - If you're already using React on your site, make sure you're not loading React twice.</li>
+    </ol>
+  </div>
+  
+  <div class="step">
+    <h2>Additional Resources</h2>
+    <ul>
+      <li><a href="https://www.emailjs.com/docs/" target="_blank">EmailJS Documentation</a></li>
+      <li><a href="https://reactjs.org/docs/getting-started.html" target="_blank">React Documentation</a></li>
+      <li><a href="https://vitejs.dev/guide/" target="_blank">Vite Documentation</a> (if you need to modify the widget)</li>
+    </ul>
+  </div>
+  
+</body>
+</html>

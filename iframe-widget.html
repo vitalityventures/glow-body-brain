@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treatment Recommender Widget</title>
+  
+  <!-- Prevent iframe from being indexed by search engines -->
+  <meta name="robots" content="noindex, nofollow">
+  
+  <!-- Include React and ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Include the widget script with a versioned URL to prevent caching issues -->
+  <script src="./treatment-recommender.umd.js?v=1.0.0"></script>
+  <link rel="stylesheet" href="./style.css?v=1.0.0">
+  
+  <style>
+    /* Reset styles for iframe environment */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+    }
+    
+    #treatment-recommender-container {
+      height: 100%;
+      min-height: 600px;
+    }
+    
+    /* Allow iframe to resize based on content */
+    body {
+      height: auto;
+      min-height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <!-- Create a container for the widget -->
+  <div id="treatment-recommender-container"></div>
+  
+  <script>
+    // Parse URL query parameters to customize the widget for each client
+    const params = new URLSearchParams(window.location.search);
+    
+    // Check if the URL contains client-specific configuration
+    const clientId = params.get('clientId');
+    
+    // Configure EmailJS with parameters (fallback to demo values if missing)
+    const emailConfig = {
+      serviceId: params.get('serviceId') || 'default_service_id',
+      templateId: params.get('templateId') || 'default_template_id',
+      userId: params.get('userId') || 'default_user_id'
+    };
+    
+    // Client-specific site settings
+    const siteConfig = {
+      title: params.get('title') || "TREATMENT RECOMMENDER",
+      subtitle: params.get('subtitle') || "Discover personalized aesthetic treatments",
+      copyrightName: params.get('copyright') || "Treatment Recommender",
+      // Hide header and footer by default in iframe mode
+      layout: {
+        showHeader: params.get('showHeader') === 'true' ? true : false,
+        showFooter: params.get('showFooter') === 'true' ? true : false
+      }
+    };
+    
+    // Configure the widget with the parsed settings
+    window.TreatmentRecommender.configureEmailService(emailConfig);
+    window.TreatmentRecommender.configureSiteSettings(siteConfig);
+    
+    // Function to adjust iframe height (iframe-to-parent communication)
+    function adjustIframeHeight() {
+      const height = document.body.scrollHeight;
+      window.parent.postMessage({ type: 'resize', height: height }, '*');
+    }
+    
+    // Render the widget
+    document.addEventListener('DOMContentLoaded', function() {
+      const container = document.getElementById('treatment-recommender-container');
+      ReactDOM.createRoot(container).render(
+        React.createElement(window.TreatmentRecommender.default)
+      );
+      
+      // Set up periodic iframe height adjustment
+      setInterval(adjustIframeHeight, 500);
+      
+      // Also adjust height when window resizes
+      window.addEventListener('resize', adjustIframeHeight);
+    });
+  </script>
+</body>
+</html>

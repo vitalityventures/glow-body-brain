@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treatment Recommender Widget for WordPress</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+    header {
+      background: #f9f9f9;
+      padding: 2rem;
+      border-bottom: 1px solid #eaeaea;
+      text-align: center;
+    }
+    main {
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .demo-wrapper {
+      margin-top: 2rem;
+      border: 1px solid #eaeaea;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 0.5rem;
+      border-radius: 4px;
+      display: block;
+      white-space: pre-wrap;
+      margin: 1rem 0;
+      font-size: 14px;
+    }
+    .important-note {
+      background-color: #ffe5e5;
+      border-left: 4px solid #ff4444;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    .solution-note {
+      background-color: #e5f5e5;
+      border-left: 4px solid #44bb44;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    h2 {
+      margin-top: 2rem;
+      border-bottom: 1px solid #eaeaea;
+      padding-bottom: 0.5rem;
+    }
+    .steps {
+      margin-left: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Treatment Recommender Widget for WordPress</h1>
+    <p>This page demonstrates how to embed the treatment recommender widget in WordPress.</p>
+  </header>
+  
+  <main>
+    <div class="important-note">
+      <h3>WordPress File Upload Restriction</h3>
+      <p>WordPress blocks direct uploads of JavaScript (.js) files for security reasons. Below are two solutions to this limitation.</p>
+    </div>
+    
+    <h2>Solution 1: Use a Plugin to Allow JS Uploads (Recommended)</h2>
+    <div class="solution-note">
+      <p>Install the "WP Extra File Types" plugin or similar that allows JavaScript files to be uploaded to the media library:</p>
+      <ol class="steps">
+        <li>Go to Plugins → Add New and search for "WP Extra File Types"</li>
+        <li>Install and activate the plugin</li>
+        <li>Go to Settings → WP Extra File Types</li>
+        <li>Check the box for JavaScript (.js) files</li>
+        <li>Save changes</li>
+        <li>Now you can upload the .js and .css files to your media library</li>
+      </ol>
+    </div>
+    
+    <h2>Solution 2: Host the Files Externally</h2>
+    <div class="solution-note">
+      <p>Host your JS and CSS files on an external service that allows JavaScript files:</p>
+      <ol class="steps">
+        <li>Upload the files to a service like GitHub Pages, Amazon S3, or your own web server</li>
+        <li>Make sure the files are publicly accessible</li>
+        <li>Use the direct URLs to these files in your WordPress integration</li>
+      </ol>
+    </div>
+
+    <h2>Solution 3: Add Files via FTP</h2>
+    <div class="solution-note">
+      <p>Upload files directly to your WordPress site using FTP:</p>
+      <ol class="steps">
+        <li>Connect to your WordPress site using an FTP client (like FileZilla)</li>
+        <li>Navigate to wp-content/uploads/custom-widget/ (create this folder if it doesn't exist)</li>
+        <li>Upload the treatment-recommender.umd.js and style.css files</li>
+        <li>Use the direct URLs to these files in your WordPress integration</li>
+      </ol>
+    </div>
+    
+    <h2>WordPress Integration Instructions</h2>
+    <p>After making the JS file accessible using one of the methods above, add the following code to your WordPress page using a Code Block or HTML Block:</p>
+    
+    <code>
+&lt;!-- React Dependencies --&gt;
+&lt;script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin&gt;&lt;/script&gt;
+&lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin&gt;&lt;/script&gt;
+
+&lt;!-- Widget Files - Update these URLs with your actual file locations --&gt;
+&lt;script src="https://YOUR-DOMAIN.com/wp-content/uploads/custom-widget/treatment-recommender.umd.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="https://YOUR-DOMAIN.com/wp-content/uploads/custom-widget/style.css"&gt;
+
+&lt;!-- Widget Container --&gt;
+&lt;div id="treatment-recommender-container" style="width: 100%; min-height: 800px;"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+// Configure EmailJS
+window.TreatmentRecommender.configureEmailService({
+  serviceId: "your_emailjs_service_id",
+  templateId: "your_emailjs_template_id",
+  userId: "your_emailjs_user_id"
+});
+
+// Configure Widget Settings
+window.TreatmentRecommender.configureSiteSettings({
+  title: "YOUR BRAND NAME",
+  subtitle: "Your custom subtitle here",
+  copyrightName: "Your Brand",
+  layout: {
+    showHeader: true, 
+    showFooter: true
+  }
+});
+
+// Render the widget
+document.addEventListener('DOMContentLoaded', function() {
+  var container = document.getElementById('treatment-recommender-container');
+  if (window.ReactDOM.createRoot) {
+    ReactDOM.createRoot(container).render(
+      React.createElement(TreatmentRecommender.default)
+    );
+  } else {
+    ReactDOM.render(
+      React.createElement(TreatmentRecommender.default),
+      container
+    );
+  }
+});
+&lt;/script&gt;
+    </code>
+    
+    <h2>WordPress with Elementor Specific Instructions</h2>
+    <p>If you're using Elementor Page Builder:</p>
+    <ol>
+      <li>Edit your page with Elementor</li>
+      <li>Add an "HTML" widget to your page</li>
+      <li>Paste the code above into the HTML widget</li>
+      <li>Save and update the page</li>
+    </ol>
+    
+    <h2>WordPress with Divi Builder Specific Instructions</h2>
+    <p>If you're using the Divi Builder:</p>
+    <ol>
+      <li>Create a new page or edit an existing one</li>
+      <li>Add a "Code Module" element</li>
+      <li>Paste the code above into the module</li>
+      <li>Important: Make sure "Disable on-page builder" is checked in the module settings</li>
+      <li>Save and publish the page</li>
+    </ol>
+    
+    <h2>Troubleshooting</h2>
+    <p>If the widget doesn't appear:</p>
+    <ol>
+      <li>Check your browser console for errors (F12 or right-click → Inspect → Console)</li>
+      <li>Verify that your JavaScript and CSS file URLs are correct</li>
+      <li>Make sure the files are accessible by directly visiting their URLs in your browser</li>
+      <li>Confirm your FTP upload or plugin configuration was successful</li>
+      <li>If using a page builder, make sure it's not adding extra HTML that interferes with the script</li>
+    </ol>
+  </main>
+</body>
+</html>
