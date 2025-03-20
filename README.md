@@ -34,8 +34,8 @@ npx vite build --config src/vite-widget-config.ts
 - The build command compiles the React code into optimized JavaScript and CSS files that can be embedded in any website.
 
 This will generate the widget files in the `dist` folder:
-- `treatment-recommender.js` - The main JavaScript file containing all widget functionality
-- `treatment-recommender.css` - The stylesheet with all the widget's visual styling
+- `treatment-recommender.umd.js` - The main JavaScript file containing all widget functionality
+- `style.css` - The stylesheet with all the widget's visual styling
 - and other related assets
 
 ## Integration Guide
@@ -50,7 +50,29 @@ This will generate the widget files in the `dist` folder:
 
 ### Step 2: Add the Widget to Your Website
 
-Include the compiled JavaScript and CSS in your HTML:
+#### Option 1: Embed via iframe (Recommended for Most Users)
+
+This is the simplest way to add the widget to your site:
+
+```html
+<iframe 
+  src="https://vitalityventures.github.io/treatmentrecommender/iframe-widget.html?serviceId=YOUR_EMAILJS_SERVICE_ID&templateId=YOUR_EMAILJS_TEMPLATE_ID&userId=YOUR_EMAILJS_USER_ID&title=YOUR_TITLE&subtitle=YOUR_SUBTITLE" 
+  width="100%" 
+  height="800px" 
+  frameborder="0"
+></iframe>
+```
+
+The iframe URL accepts these parameters:
+- `serviceId` - Your EmailJS service ID
+- `templateId` - Your EmailJS template ID
+- `userId` - Your EmailJS user ID
+- `title` (optional) - Custom title for the widget
+- `subtitle` (optional) - Custom subtitle for the widget
+
+#### Option 2: Direct JavaScript Integration
+
+For more control, include the compiled JavaScript and CSS in your HTML:
 
 ```html
 <!-- Include React dependencies -->
@@ -58,8 +80,8 @@ Include the compiled JavaScript and CSS in your HTML:
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
 <!-- Include the Treatment Recommender Widget -->
-<script src="path/to/treatment-recommender.js"></script>
-<link rel="stylesheet" href="path/to/treatment-recommender.css">
+<script src="https://vitalityventures.github.io/treatmentrecommender/treatment-recommender.umd.js"></script>
+<link rel="stylesheet" href="https://vitalityventures.github.io/treatmentrecommender/style.css">
 
 <!-- Create a container for the widget -->
 <div id="treatment-recommender-container"></div>
@@ -72,33 +94,29 @@ Include the compiled JavaScript and CSS in your HTML:
     userId: 'YOUR_EMAILJS_USER_ID'
   });
   
+  // Optional: Configure widget appearance
+  window.TreatmentRecommender.configureSiteSettings({
+    title: "Your Clinic Name",
+    subtitle: "Find your perfect treatment"
+  });
+  
   // Render the widget
   ReactDOM.render(
-    React.createElement(window.TreatmentRecommender.default),
+    React.createElement(window.TreatmentRecommender.Widget),
     document.getElementById('treatment-recommender-container')
   );
 </script>
 ```
 
-**Why this step?** This code snippet:
-1. Includes the necessary React libraries that the widget depends on
-2. Loads the widget's JavaScript and CSS files that you built earlier
-3. Creates a container element where the widget will appear on your website
-4. Configures the widget with your EmailJS credentials so emails are sent to your account
-5. Renders the widget into the container element
+### Troubleshooting Integration
 
-### EmailJS Template Example
+If you experience issues loading the widget:
 
-Your EmailJS template should include parameters for:
-- firstName - Client's first name from the form
-- lastName - Client's last name from the form
-- email - Client's email address for follow-up
-- phone - Client's phone number for contact
-- newsletter - Whether client opted into the newsletter
-- treatmentPlan - The full list of selected treatments/concerns
-- timestamp - When the form was submitted
-
-**Why this matters?** These parameters allow you to receive all the important client information in a structured email. The treatment plan contains all the body areas and concerns they selected, which helps you prepare for their visit or consultation.
+1. Check the browser console for errors (Press F12 to open developer tools)
+2. Verify that all file paths are correct
+3. Visit the widget-path-check.html file on your site to check resource loading
+4. Ensure your EmailJS credentials are correct
+5. Test with the iframe integration first as it's the most reliable
 
 ## Development
 

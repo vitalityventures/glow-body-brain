@@ -42,12 +42,46 @@ jobs:
         run: npx vite build --config src/vite-widget-config.ts
         env:
           BASE_URL: /${{ env.REPO_NAME }}/
+          NODE_ENV: production
 
-      - name: Debug Widget Build Output
+      - name: Verify Widget Files Existence
         run: |
-          echo "Contents of dist directory after widget build:"
-          ls -la dist
-          find dist -name "*.js" -o -name "*.css" | sort
+          echo "Checking for widget files..."
+          if [ -f "dist/treatment-recommender.umd.js" ]; then
+            echo "✅ Widget JS file exists at root"
+          else
+            echo "❌ Widget JS file not found at root"
+            find dist -name "treatment-recommender*.js" || echo "No widget JS files found anywhere"
+          fi
+          
+          if [ -f "dist/style.css" ]; then
+            echo "✅ Widget CSS file exists at root"
+          else
+            echo "❌ Widget CSS file not found at root"
+            find dist -name "style*.css" || echo "No widget CSS files found anywhere"
+          fi
+
+      - name: Copy Widget Files to Multiple Locations
+        run: |
+          # Create necessary directories
+          mkdir -p dist/assets
+          
+          # Ensure widget files are at the root level (critical for iframe loading)
+          cp dist/treatment-recommender.umd.js dist/ || echo "Failed to copy JS file (may already be there)"
+          cp dist/style.css dist/ || echo "Failed to copy CSS file (may already be there)"
+          
+          # Also copy to assets as fallback
+          cp dist/treatment-recommender.umd.js dist/assets/ || echo "Failed to copy JS to assets"
+          cp dist/style.css dist/assets/ || echo "Failed to copy CSS to assets"
+          
+          # Create multiple variations of filenames to handle any path issues
+          cp dist/treatment-recommender.umd.js dist/treatment-recommender.js || echo "Failed to create JS alias"
+          
+          echo "Files at root level:"
+          ls -la dist/*.js dist/*.css || echo "No root level files found"
+          
+          echo "Files in assets directory:"
+          ls -la dist/assets/*.js dist/assets/*.css || echo "No files in assets directory"
 
       - name: Build Main App 🏗️
         run: npm run build
@@ -68,31 +102,10 @@ jobs:
         run: |
           cp dist/index.html dist/404.html
 
-      # Important: Copy widget files to multiple locations to ensure they're found
-      - name: Copy Widget Files to Multiple Locations
-        run: |
-          # Find all JS and CSS files from the widget build
-          echo "Copying widget files to multiple locations to ensure they're found..."
-          mkdir -p dist/assets
-          
-          # Copy directly to dist root (important!)
-          find dist -type f -name "treatment-recommender*" -exec cp {} dist/ \;
-          find dist -type f -name "style*.css" -exec cp {} dist/ \;
-          
-          # Also copy to assets directory as fallback
-          find dist -type f -name "treatment-recommender*" -exec cp {} dist/assets/ \;
-          find dist -type f -name "style*.css" -exec cp {} dist/assets/ \;
-          
-          echo "Files copied to root level:"
-          ls -la dist/*.js dist/*.css || echo "No files at root level"
-          
-          echo "Files copied to assets directory:"
-          ls -la dist/assets/*.js dist/assets/*.css || echo "No files in assets directory"
-
       - name: Create Debug Info Files
         run: |
           # Create a file listing all assets
-          echo "Asset listing for debugging:" > dist/asset-list.txt
+          echo "Asset listing for debugging ($(date)):" > dist/asset-list.txt
           find dist -type f | sort >> dist/asset-list.txt
           
           # Create config debug file
@@ -101,6 +114,53 @@ jobs:
           echo "Repository: $GITHUB_REPOSITORY" >> dist/debug-info.txt
           echo "Files in dist directory:" >> dist/debug-info.txt
           ls -la dist >> dist/debug-info.txt
+          
+          # Create widget path check page
+          cat > dist/widget-path-check.html << EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Widget Path Check</title>
+          </head>
+          <body>
+            <h1>Widget Resource Check</h1>
+            <ul id="results"></ul>
+            
+            <script>
+              const paths = [
+                "treatment-recommender.umd.js",
+                "treatment-recommender.js",
+                "assets/treatment-recommender.umd.js",
+                "assets/treatment-recommender.js",
+                "style.css",
+                "assets/style.css"
+              ];
+              
+              const resultsList = document.getElementById('results');
+              
+              paths.forEach(path => {
+                const li = document.createElement('li');
+                const fullPath = "/${{ env.REPO_NAME }}/" + path;
+                fetch(fullPath)
+                  .then(response => {
+                    if (response.ok) {
+                      li.textContent = \`✅ \${fullPath} - FOUND (\${response.status})\`;
+                      li.style.color = 'green';
+                    } else {
+                      li.textContent = \`❌ \${fullPath} - NOT FOUND (\${response.status})\`;
+                      li.style.color = 'red';
+                    }
+                  })
+                  .catch(error => {
+                    li.textContent = \`❌ \${fullPath} - ERROR: \${error.message}\`;
+                    li.style.color = 'red';
+                  });
+                resultsList.appendChild(li);
+              });
+            </script>
+          </body>
+          </html>
+          EOF
 
       - name: Debug Build Output
         run: |
@@ -117,4 +177,3 @@ jobs:
           folder: dist
           branch: gh-pages
           clean: true
-

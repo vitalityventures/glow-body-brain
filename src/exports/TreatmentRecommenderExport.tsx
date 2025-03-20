@@ -110,12 +110,19 @@ const TreatmentRecommenderWidget = () => {
 };
 
 // For browser compatibility, assign everything to the default export
-const exportObj = {
-  default: TreatmentRecommenderWidget,
+const TreatmentRecommender_Export = {
+  Widget: TreatmentRecommenderWidget,
   configureEmailService,
   configureSiteSettings,
   getSiteConfig,
   getEmailServiceConfig
 };
 
-export default exportObj;
+// Export as both default and named for maximum compatibility
+export default TreatmentRecommender_Export;
+
+// Also attach to window for direct browser usage
+if (typeof window !== 'undefined') {
+  // @ts-ignore - adding property to window
+  window.TreatmentRecommender = TreatmentRecommender_Export;
+}
