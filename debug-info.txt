@@ -1,3 +1,22 @@
 BASE_URL: /glow-body-brain/
-Build timestamp: Thu Mar 20 22:19:36 UTC 2025
+Build timestamp: Thu Mar 20 22:33:21 UTC 2025
 Repository: vitalityventures/glow-body-brain
+Files in dist directory:
+total 344
+drwxr-xr-x 4 runner docker   4096 Mar 20 22:33 .
+drwxr-xr-x 8 runner docker   4096 Mar 20 22:33 ..
+-rw-r--r-- 1 runner docker   2590 Mar 20 22:33 404.html
+-rw-r--r-- 1 runner docker    589 Mar 20 22:33 asset-list.txt
+drwxr-xr-x 2 runner docker   4096 Mar 20 22:33 assets
+-rw-r--r-- 1 runner docker    144 Mar 20 22:33 debug-info.txt
+-rw-r--r-- 1 runner docker   1150 Mar 20 22:33 favicon.ico
+-rw-r--r-- 1 runner docker   4427 Mar 20 22:33 iframe-integration-example.html
+-rw-r--r-- 1 runner docker  17397 Mar 20 22:33 iframe-widget.html
+-rw-r--r-- 1 runner docker   2590 Mar 20 22:33 index.html
+-rw-r--r-- 1 runner docker  12293 Mar 20 22:33 integration-example.html
+drwxr-xr-x 2 runner docker   4096 Mar 20 22:33 lovable-uploads
+-rw-r--r-- 1 runner docker 233240 Mar 20 22:33 og-image.png
+-rw-r--r-- 1 runner docker   3253 Mar 20 22:33 placeholder.svg
+-rw-r--r-- 1 runner docker   6615 Mar 20 22:33 widget-demo-wp.html
+-rw-r--r-- 1 runner docker   4294 Mar 20 22:33 widget-demo.html
+-rw-r--r-- 1 runner docker  14281 Mar 20 22:33 widget-integration-guide.html

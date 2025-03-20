@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Widget Path Check</title>
+</head>
+<body>
+  <h1>Widget Resource Check</h1>
+  <ul id="results"></ul>
+  
+  <script>
+    const paths = [
+      "treatment-recommender.umd.js",
+      "treatment-recommender.js",
+      "assets/treatment-recommender.umd.js",
+      "assets/treatment-recommender.js",
+      "style.css",
+      "assets/style.css"
+    ];
+    
+    const resultsList = document.getElementById('results');
+    
+    paths.forEach(path => {
+      const li = document.createElement('li');
+      const fullPath = "/glow-body-brain/" + path;
+      fetch(fullPath)
+        .then(response => {
+          if (response.ok) {
+            li.textContent = `✅ ${fullPath} - FOUND (${response.status})`;
+            li.style.color = 'green';
+          } else {
+            li.textContent = `❌ ${fullPath} - NOT FOUND (${response.status})`;
+            li.style.color = 'red';
+          }
+        })
+        .catch(error => {
+          li.textContent = `❌ ${fullPath} - ERROR: ${error.message}`;
+          li.style.color = 'red';
+        });
+      resultsList.appendChild(li);
+    });
+  </script>
+</body>
+</html>

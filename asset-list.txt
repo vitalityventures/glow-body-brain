@@ -1,0 +1,18 @@
+Asset listing for debugging (Thu Mar 20 22:33:21 UTC 2025):
+dist/404.html
+dist/asset-list.txt
+dist/assets/index-BOu80qpJ.js
+dist/assets/index-BOu80qpJ.js.map
+dist/favicon.ico
+dist/iframe-integration-example.html
+dist/iframe-widget.html
+dist/index.html
+dist/integration-example.html
+dist/lovable-uploads/49f7be39-ec15-4190-82da-7c3c086c6be2.png
+dist/lovable-uploads/a96653e2-811d-4f6e-ba00-9fd99439c20a.png
+dist/lovable-uploads/da8c2dd4-4cdb-4435-a7c3-745f495f3082.png
+dist/og-image.png
+dist/placeholder.svg
+dist/widget-demo-wp.html
+dist/widget-demo.html
+dist/widget-integration-guide.html
