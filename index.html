@@ -20,9 +20,9 @@
         // This function detects if we're on GitHub Pages and adjusts the base path
         const { protocol, hostname, pathname } = window.location;
         
-        debugLog("Current URL:", window.location.href);
-        debugLog("Hostname:", hostname);
-        debugLog("Pathname:", pathname);
+        console.log("Current URL:", window.location.href);
+        console.log("Hostname:", hostname);
+        console.log("Pathname:", pathname);
         
         let basePath = '/';
         
@@ -30,103 +30,39 @@
         if (hostname.includes('github.io') || hostname.includes('lovable.app')) {
           // Get the repository name from the pathname
           const pathSegments = pathname.split('/');
-          debugLog("Path segments:", pathSegments);
+          console.log("Path segments:", pathSegments);
           
           if (pathSegments.length > 1 && pathSegments[1] !== '') {
             // Format: /<repo-name>/
             basePath = '/' + pathSegments[1] + '/';
-            debugLog('GitHub Pages or Preview detected. Setting base path:', basePath);
+            console.log('GitHub Pages or Preview detected. Setting base path:', basePath);
             document.write('<base href="' + basePath + '">');
+          } else {
+            document.write('<base href="/">');
           }
         } else {
           // For local or custom domain deployments
           document.write('<base href="/">');
-          debugLog('Local or custom domain detected. Base path set to: /');
+          console.log('Local or custom domain detected. Base path set to: /');
         }
         
         // Store the base path for later use
         window.basePath = basePath;
-        
-        // Create a debug info element
-        document.addEventListener('DOMContentLoaded', function() {
-          const debugInfo = document.createElement('div');
-          debugInfo.id = 'debug-info';
-          debugInfo.style.position = 'fixed';
-          debugInfo.style.bottom = '10px';
-          debugInfo.style.right = '10px';
-          debugInfo.style.backgroundColor = 'rgba(0,0,0,0.7)';
-          debugInfo.style.color = 'white';
-          debugInfo.style.padding = '5px';
-          debugInfo.style.fontSize = '10px';
-          debugInfo.style.zIndex = '9999';
-          debugInfo.innerHTML = `Base: ${basePath}<br>Host: ${hostname}`;
-          
-          document.body.appendChild(debugInfo);
-          // Remove after 10 seconds
-          setTimeout(() => debugInfo.remove(), 10000);
-        });
+        window.BASE_PATH = basePath;
       })();
     </script>
   </head>
 
   <body>
     <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module">
-      // This ensures our module paths respect the base path
-      const base = window.basePath || document.querySelector('base')?.getAttribute('href') || '/';
-      window.debugLog('Loading application from:', base);
+      import { createRoot } from 'react-dom/client';
+      import { App } from './src/main.tsx';
       
-      // Add a loading indicator while waiting for the app
       const root = document.getElementById('root');
-      root.innerHTML = `
-        <div style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;">
-          <div style="border:4px solid #f3f3f3;border-top:4px solid #3498db;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;"></div>
-          <div style="margin-top:20px;">Loading application...</div>
-        </div>
-        <style>
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        </style>
-      `;
-      
-      // Check for available resources
-      fetch(base)
-        .then(response => {
-          window.debugLog('Base directory fetch status:', response.status);
-          return response.text();
-        })
-        .then(html => {
-          window.debugLog('Available resources:', html.match(/href="[^"]+"/g));
-        })
-        .catch(e => {
-          console.error('Failed to check available resources:', e);
-        });
-      
-      // Use a script tag instead of dynamic import to help with path resolution
-      const script = document.createElement('script');
-      script.type = 'module';
-      script.src = base + 'src/main.tsx';
-      script.onerror = function(e) {
-        console.error('Failed to load main.tsx via script tag:', e);
-        root.innerHTML = `
-          <div style="color:red;padding:20px;max-width:600px;margin:0 auto;text-align:center;margin-top:50px;">
-            <h2>Error loading application</h2>
-            <p>The application failed to initialize. This could be due to path issues on GitHub Pages.</p>
-            <p style="font-family:monospace;background:#f5f5f5;padding:10px;text-align:left;overflow-x:auto;">Error: ${e}</p>
-            <button onclick="location.reload()" style="padding:10px 20px;background:#4f46e5;color:white;border:none;border-radius:5px;margin-top:20px;cursor:pointer;">
-              Try Again
-            </button>
-            <div style="margin-top:20px;font-size:12px;color:#666;">
-              Technical info: Base path = ${base}
-            </div>
-          </div>
-        `;
-      };
-      document.body.appendChild(script);
+      if (root) {
+        createRoot(root).render(App());
+      }
     </script>
     
     <style>

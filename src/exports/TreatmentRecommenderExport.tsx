@@ -1,4 +1,3 @@
-
 import React from 'react';
 import TreatmentRecommender from '../components/TreatmentRecommender/TreatmentRecommender';
 import { Toaster } from 'sonner';
@@ -22,7 +21,7 @@ function detectBasePath() {
 }
 
 // Make base path available globally
-if (typeof window !== 'undefined' && !window.BASE_PATH) {
+if (typeof window !== 'undefined') {
   window.BASE_PATH = detectBasePath();
   console.log("[Widget] Base path set to:", window.BASE_PATH);
 }
@@ -173,11 +172,9 @@ if (typeof window !== 'undefined') {
   console.log('Attaching TreatmentRecommender to window object');
   
   // Attach as TreatmentRecommender for the main access
-  // @ts-ignore - adding property to window
   window.TreatmentRecommender = TreatmentRecommenderExport;
   
   // Also add as treatmentRecommender (lowercase) for backup
-  // @ts-ignore - adding property to window
   window.treatmentRecommender = TreatmentRecommenderExport;
 }
 

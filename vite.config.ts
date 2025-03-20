@@ -16,6 +16,17 @@ export default defineConfig(({ mode }) => {
     server: {
       host: "::",
       port: 8080,
+      // Add middleware to handle path redirection for client-side routing
+      middlewares: [
+        (req, res, next) => {
+          // For client-side routing, send index.html for HTML requests that aren't for files
+          if (req.url && req.url.startsWith('/') && !req.url.includes('.') && !req.url.startsWith('/assets/')) {
+            console.log(`Client-side routing middleware: redirecting ${req.url} to index.html`);
+            req.url = '/index.html';
+          }
+          next();
+        }
+      ]
     },
     plugins: [
       react(),
@@ -30,6 +41,8 @@ export default defineConfig(({ mode }) => {
     // Ensure we use client-side routing properly
     optimizeDeps: {
       include: ['react-router-dom'],
+      // Force include problematic dependencies
+      force: true
     },
     build: {
       // Ensure source maps are generated
