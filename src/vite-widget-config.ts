@@ -41,7 +41,7 @@ export default defineConfig({
     // Ensure we're targeting browsers to avoid modern syntax issues
     target: 'es2015',
     // Make sure the file extension is compatible with all hosting environments
-    outDir: 'dist',
+    outDir: '../dist',
     // Add asset path info to help with debugging
     reportCompressedSize: true,
   },

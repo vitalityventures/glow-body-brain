@@ -39,12 +39,12 @@ jobs:
           echo "BASE_URL will be: /${{ env.REPO_NAME }}/"
 
       - name: Build Widget 🔨
-        run: npx vite build --config src/vite-widget-config.ts
+        run: npx vite build --config src/vite-widget-config.ts --debug
         env:
           BASE_URL: /${{ env.REPO_NAME }}/
 
       - name: Build Main App 🏗️
-        run: npm run build
+        run: npm run build --debug
         env:
           BASE_URL: /${{ env.REPO_NAME }}/
 
@@ -60,12 +60,20 @@ jobs:
         run: |
           cp dist/index.html dist/404.html
 
+      - name: Add Debug File
+        run: |
+          echo "BASE_URL: /${{ env.REPO_NAME }}/" > dist/debug-info.txt
+          echo "Build timestamp: $(date)" >> dist/debug-info.txt
+          echo "Repository: $GITHUB_REPOSITORY" >> dist/debug-info.txt
+
       - name: Debug Build Output
         run: |
           echo "Contents of dist directory:"
           ls -la dist
           echo "Contents of dist/assets directory:"
           ls -la dist/assets || echo "No assets directory found"
+          echo "Looking for JS and CSS files:"
+          find dist -name "*.js" -o -name "*.css"
 
       - name: Deploy to GitHub Pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4

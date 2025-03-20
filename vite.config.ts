@@ -34,6 +34,15 @@ export default defineConfig(({ mode }) => {
       reportCompressedSize: true,
       // Make sure assets are properly referenced
       assetsDir: 'assets',
+      // Add rollup specific options to ensure compatibility
+      rollupOptions: {
+        output: {
+          manualChunks: undefined,
+          entryFileNames: 'assets/[name]-[hash].js',
+          chunkFileNames: 'assets/[name]-[hash].js',
+          assetFileNames: 'assets/[name]-[hash].[ext]'
+        }
+      }
     },
   };
 });

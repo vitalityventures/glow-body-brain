@@ -14,29 +14,58 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   
   <script>
+    // Debug function - will be displayed in console
+    function debugLog(message, data) {
+      console.log(`[TreatmentWidget] ${message}`, data || '');
+    }
+    
     // Improved base path detection for GitHub Pages
     (function() {
       // Debug information
-      console.log("Initial URL:", window.location.href);
+      debugLog("Initial URL:", window.location.href);
       
       // This function detects if we're on GitHub Pages and adjusts the base path
       const { protocol, hostname, pathname } = window.location;
       let basePath = '/';
       
+      debugLog("Hostname:", hostname);
+      debugLog("Pathname:", pathname);
+      
       // If we're on GitHub Pages (github.io domain)
       if (hostname.includes('github.io')) {
         // Extract repository name from pathname
         const pathSegments = pathname.split('/');
+        debugLog("Path segments:", pathSegments);
+        
         if (pathSegments.length > 1 && pathSegments[1] !== '') {
           basePath = '/' + pathSegments[1] + '/';
         }
       }
       
-      console.log('Setting base path to:', basePath);
+      debugLog('Setting base path to:', basePath);
       document.write('<base href="' + basePath + '">');
       
       // Store for later use
       window.basePath = basePath;
+      
+      // Add debug info to the page (will be removed once loaded)
+      const debugInfo = document.createElement('div');
+      debugInfo.id = 'debug-info';
+      debugInfo.style.position = 'absolute';
+      debugInfo.style.top = '0';
+      debugInfo.style.left = '0';
+      debugInfo.style.backgroundColor = 'rgba(255,255,255,0.8)';
+      debugInfo.style.padding = '5px';
+      debugInfo.style.fontSize = '10px';
+      debugInfo.style.zIndex = '9999';
+      debugInfo.innerHTML = `BasePath: ${basePath}<br>Hostname: ${hostname}<br>Pathname: ${pathname}`;
+      
+      // Append debug info after body is ready
+      document.addEventListener('DOMContentLoaded', function() {
+        document.body.appendChild(debugInfo);
+        // Remove after 10 seconds
+        setTimeout(() => debugInfo.remove(), 10000);
+      });
     })();
   </script>
   
@@ -46,13 +75,32 @@
     document.addEventListener('DOMContentLoaded', function() {
       const base = window.basePath || '/';
       
+      debugLog('Loading scripts with base path:', base);
+      
       // Add widget script
       const scriptElement = document.createElement('script');
       scriptElement.src = base + 'treatment-recommender.umd.js?v=' + new Date().getTime();
-      scriptElement.onerror = function() {
-        console.error('Failed to load widget script from:', this.src);
+      scriptElement.onerror = function(error) {
+        console.error('Failed to load widget script from:', this.src, error);
         document.getElementById('treatment-recommender-container').innerHTML = 
-          '<div style="color:red;padding:20px;">Error loading widget script. Check console for details.</div>';
+          '<div style="color:red;padding:20px;">Error loading widget script. Check console for details.</div>' +
+          '<div style="font-size:12px;margin-top:10px;">Attempted to load from: ' + this.src + '</div>';
+        
+        // Show available resources
+        debugLog('Checking for available resources...');
+        const resourceCheck = document.createElement('script');
+        resourceCheck.textContent = `
+          fetch('./')
+            .then(response => response.text())
+            .then(html => {
+              console.log('Available files:', html.match(/href="[^"]+"/g));
+            })
+            .catch(err => console.error('Resource check failed:', err));
+        `;
+        document.head.appendChild(resourceCheck);
+      };
+      scriptElement.onload = function() {
+        debugLog('Widget script loaded successfully');
       };
       document.head.appendChild(scriptElement);
       
@@ -60,9 +108,10 @@
       const styleElement = document.createElement('link');
       styleElement.rel = 'stylesheet';
       styleElement.href = base + 'style.css?v=' + new Date().getTime();
+      styleElement.onerror = function() {
+        console.error('Failed to load widget styles from:', this.href);
+      };
       document.head.appendChild(styleElement);
-      
-      console.log('Dynamically loaded widget from:', base);
     });
   </script>
   
@@ -97,13 +146,38 @@
       border-radius: 5px;
       font-family: Arial, sans-serif;
     }
+    
+    /* Loading indicator */
+    .loading-indicator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      flex-direction: column;
+    }
+    
+    .loading-spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
   <!-- Create a container for the widget -->
   <div id="treatment-recommender-container">
-    <div style="padding: 20px; text-align: center;">
-      Loading Treatment Recommender...
+    <div class="loading-indicator">
+      <div class="loading-spinner"></div>
+      <div>Loading Treatment Recommender...</div>
     </div>
   </div>
   
@@ -134,10 +208,10 @@
     };
     
     // Debug information
-    console.log('URL parameters:', Object.fromEntries(params));
-    console.log('Base path:', window.basePath);
-    console.log('Email config:', emailConfig);
-    console.log('Site config:', siteConfig);
+    debugLog('URL parameters:', Object.fromEntries(params));
+    debugLog('Base path:', window.basePath);
+    debugLog('Email config:', emailConfig);
+    debugLog('Site config:', siteConfig);
     
     // Function to adjust iframe height (iframe-to-parent communication)
     function adjustIframeHeight() {
@@ -150,7 +224,12 @@
       if (!window.TreatmentRecommender || !window.TreatmentRecommender.default) {
         console.error('TreatmentRecommender not loaded correctly:', window.TreatmentRecommender);
         document.getElementById('treatment-recommender-container').innerHTML = 
-          '<div class="error-message">Error: Widget failed to load. Please check the console for details.</div>';
+          '<div class="error-message">' +
+          '<h3>Error: Widget failed to load</h3>' +
+          '<p>The widget components could not be found.</p>' +
+          '<p>Technical details: TreatmentRecommender object not available.</p>' +
+          '<button onclick="location.reload()">Try Again</button>' +
+          '</div>';
         return;
       }
       
@@ -164,11 +243,15 @@
         ReactDOM.createRoot(container).render(
           React.createElement(window.TreatmentRecommender.default)
         );
-        console.log('Widget rendered successfully');
+        debugLog('Widget rendered successfully');
       } catch (error) {
         console.error('Error rendering widget:', error);
         document.getElementById('treatment-recommender-container').innerHTML = 
-          '<div class="error-message">Error: ' + error.message + '</div>';
+          '<div class="error-message">' +
+          '<h3>Error rendering widget</h3>' +
+          '<p>' + error.message + '</p>' +
+          '<button onclick="location.reload()">Try Again</button>' +
+          '</div>';
       }
     }
     
@@ -178,7 +261,7 @@
       const checkInterval = setInterval(function() {
         if (window.TreatmentRecommender) {
           clearInterval(checkInterval);
-          console.log('TreatmentRecommender loaded, rendering widget...');
+          debugLog('TreatmentRecommender loaded, rendering widget...');
           renderWidget();
           
           // Set up periodic iframe height adjustment
@@ -195,7 +278,12 @@
         if (!window.TreatmentRecommender) {
           console.error('TreatmentRecommender failed to load after 10 seconds');
           document.getElementById('treatment-recommender-container').innerHTML = 
-            '<div class="error-message">Error: Widget failed to load after 10 seconds. Please check your network connection.</div>';
+            '<div class="error-message">' +
+            '<h3>Loading Timeout</h3>' +
+            '<p>Widget failed to load after 10 seconds.</p>' +
+            '<p>Please check your network connection or try again later.</p>' +
+            '<button onclick="location.reload()">Try Again</button>' +
+            '</div>';
         }
       }, 10000);
     });
