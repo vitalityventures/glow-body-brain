@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../../components/ui/resizable';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/resizable';
 import FaceModel from './FaceModel';
 import HumanModel from './HumanModel';
 import ConcernSelector from './ConcernSelector';
