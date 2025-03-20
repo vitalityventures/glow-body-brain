@@ -1,7 +1,7 @@
 
-import React from 'react';
-import { ShoppingBag } from 'lucide-react';
-import { Drawer, DrawerContent, DrawerTrigger } from '../ui/drawer';
+import React, { useState } from 'react';
+import { ShoppingBag, X } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 import TreatmentPlanSidebar from './TreatmentPlanSidebar';
 import { TreatmentPlanItem } from './types';
 
@@ -18,10 +18,12 @@ const MobileTreatmentDrawer: React.FC<MobileTreatmentDrawerProps> = ({
   onClearAll,
   onFinish
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="fixed bottom-4 right-4 lg:hidden z-20">
-      <Drawer>
-        <DrawerTrigger asChild>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <SheetTrigger asChild>
           <button 
             className="bg-spa-dark text-white p-3 rounded-full shadow-lg flex items-center justify-center"
             aria-label="Open treatment plan"
@@ -33,8 +35,8 @@ const MobileTreatmentDrawer: React.FC<MobileTreatmentDrawerProps> = ({
               </span>
             )}
           </button>
-        </DrawerTrigger>
-        <DrawerContent className="max-h-[90vh]">
+        </SheetTrigger>
+        <SheetContent side="bottom" className="max-h-[90vh] rounded-t-xl">
           <div className="px-4 py-6 max-h-[calc(90vh-40px)] overflow-auto">
             <TreatmentPlanSidebar
               planItems={treatmentPlan}
@@ -43,8 +45,8 @@ const MobileTreatmentDrawer: React.FC<MobileTreatmentDrawerProps> = ({
               onFinish={onFinish}
             />
           </div>
-        </DrawerContent>
-      </Drawer>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };
