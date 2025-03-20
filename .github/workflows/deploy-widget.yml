@@ -26,12 +26,24 @@ jobs:
 
       - name: Build Widget 🔨
         run: npx vite build --config src/vite-widget-config.ts
+        env:
+          BASE_URL: /glow-body-brain/
+
+      - name: Build Main App 🏗️
+        run: npm run build
+        env:
+          BASE_URL: /glow-body-brain/
 
       - name: Copy HTML Files 📋
         run: |
           mkdir -p dist
           cp public/iframe-widget.html dist/
-          cp public/iframe-integration-example.html dist/index.html
+          cp public/iframe-integration-example.html dist/
+          cp public/integration-example.html dist/
+
+      - name: Create 404.html 🔍
+        run: |
+          cp dist/index.html dist/404.html
 
       - name: Deploy to GitHub Pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4

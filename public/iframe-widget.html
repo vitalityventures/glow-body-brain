@@ -14,8 +14,8 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   
   <!-- Include the widget script with a versioned URL to prevent caching issues -->
-  <script src="./treatment-recommender.umd.js?v=1.0.0"></script>
-  <link rel="stylesheet" href="./style.css?v=1.0.0">
+  <script src="./treatment-recommender.umd.js?v=1.0.1"></script>
+  <link rel="stylesheet" href="./style.css?v=1.0.1">
   
   <style>
     /* Reset styles for iframe environment */
@@ -38,6 +38,12 @@
       min-height: 100%;
     }
   </style>
+  
+  <script>
+    // Handle base path for GitHub Pages
+    const basePath = window.location.pathname.includes('/glow-body-brain/') ? '/glow-body-brain/' : '/';
+    document.write('<base href="' + basePath + '">');
+  </script>
 </head>
 <body>
   <!-- Create a container for the widget -->
