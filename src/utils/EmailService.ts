@@ -34,6 +34,19 @@ export const sendTreatmentPlanEmail = async (data: EmailData): Promise<boolean> 
       `${item.area}: ${item.concernLabel}`
     ).join('\n');
     
+    // Get hostname of the parent page if in an iframe
+    let parentURL = "Not available";
+    try {
+      if (window.parent !== window) {
+        // We're in an iframe
+        parentURL = document.referrer || "Unknown";
+      } else {
+        parentURL = window.location.href;
+      }
+    } catch (e) {
+      console.log('Could not determine parent URL due to cross-origin restrictions');
+    }
+    
     // Send email directly to the client's EmailJS account
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
@@ -51,7 +64,8 @@ export const sendTreatmentPlanEmail = async (data: EmailData): Promise<boolean> 
           phone: data.phone,
           newsletter: data.newsletter ? 'Yes' : 'No',
           treatmentPlan: formattedTreatmentPlan,
-          timestamp: new Date().toLocaleString()
+          timestamp: new Date().toLocaleString(),
+          source: parentURL // Include the source page URL
         }
       })
     });

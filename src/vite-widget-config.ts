@@ -38,7 +38,7 @@ export default defineConfig({
     sourcemap: true,
     // Ensure we're targeting browsers to avoid modern syntax issues
     target: 'es2015',
-    // Make sure the file extension is compatible with WordPress
+    // Make sure the file extension is compatible with all hosting environments
     outDir: 'dist',
   },
 });

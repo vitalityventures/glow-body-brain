@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treatment Recommender Widget - Iframe Integration Example</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    
+    .iframe-container {
+      width: 100%;
+      margin: 20px 0;
+      overflow: hidden;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    
+    #widget-iframe {
+      width: 100%;
+      min-height: 750px;
+      border: none;
+    }
+    
+    pre {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    
+    .info-box {
+      background: #e0f7fa;
+      border-left: 4px solid #00bcd4;
+      padding: 15px;
+      margin: 20px 0;
+    }
+  </style>
+  
+  <script>
+    // Listen for messages from the iframe to resize it dynamically
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'resize') {
+        const iframe = document.getElementById('widget-iframe');
+        if (iframe && event.data.height) {
+          iframe.style.height = (event.data.height + 50) + 'px'; // Add padding
+        }
+      }
+    });
+  </script>
+</head>
+<body>
+  <h1>Treatment Recommender Widget Integration</h1>
+  
+  <div class="info-box">
+    <h3>How This Works</h3>
+    <p>This example shows how to embed the Treatment Recommender as an iframe. The widget is hosted externally, and you only need to add a simple iframe to your website.</p>
+    <p>Benefits:</p>
+    <ul>
+      <li>No JavaScript or CSS files on your server</li>
+      <li>No code blocks in WordPress</li>
+      <li>Widget updates happen automatically</li>
+      <li>Easy to implement for clients with any website platform</li>
+    </ul>
+  </div>
+  
+  <h2>Live Demo</h2>
+  <div class="iframe-container">
+    <!-- Replace HOSTED_WIDGET_URL with your actual hosted widget URL -->
+    <iframe 
+      id="widget-iframe" 
+      src="iframe-widget.html?title=DEMO%20CLINIC&subtitle=Find%20your%20perfect%20treatment&serviceId=demo_service&templateId=demo_template&userId=demo_user"
+      title="Treatment Recommender Widget" 
+      allow="clipboard-write"
+    ></iframe>
+  </div>
+  
+  <h2>Embed Code</h2>
+  <p>Copy and paste this code into your website where you want the widget to appear:</p>
+  <pre>&lt;!-- Treatment Recommender Widget --&gt;
+&lt;iframe 
+  id="treatment-recommender-widget" 
+  src="https://YOUR-HOSTING-DOMAIN.com/iframe-widget.html?title=YOUR%20CLINIC%20NAME&subtitle=Custom%20subtitle&serviceId=YOUR_SERVICE_ID&templateId=YOUR_TEMPLATE_ID&userId=YOUR_USER_ID"
+  style="width: 100%; min-height: 750px; border: none;" 
+  title="Treatment Recommender Widget"
+  allow="clipboard-write"
+&gt;&lt;/iframe&gt;
+
+&lt;script&gt;
+  // Automatically resize iframe based on content height
+  window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'resize') {
+      const iframe = document.getElementById('treatment-recommender-widget');
+      if (iframe && event.data.height) {
+        iframe.style.height = (event.data.height + 50) + 'px';
+      }
+    }
+  });
+&lt;/script&gt;</pre>
+
+  <h2>Configuration Options</h2>
+  <p>Customize the widget by adding these URL parameters:</p>
+  <ul>
+    <li><strong>serviceId</strong> - EmailJS service ID</li>
+    <li><strong>templateId</strong> - EmailJS template ID</li>
+    <li><strong>userId</strong> - EmailJS user ID</li>
+    <li><strong>title</strong> - Clinic/brand name</li>
+    <li><strong>subtitle</strong> - Custom subtitle</li>
+    <li><strong>copyright</strong> - Copyright name</li>
+    <li><strong>showHeader</strong> - Set to 'true' to show header (default: false)</li>
+    <li><strong>showFooter</strong> - Set to 'true' to show footer (default: false)</li>
+  </ul>
+  
+  <div class="info-box">
+    <h3>Hosting Instructions</h3>
+    <p>To host the widget files, upload these files to your web server:</p>
+    <ul>
+      <li><code>iframe-widget.html</code> - The container page for the widget</li>
+      <li><code>treatment-recommender.umd.js</code> - The widget JavaScript</li>
+      <li><code>style.css</code> - The widget styles</li>
+    </ul>
+    <p>You can host these files on:</p>
+    <ul>
+      <li>Your own web hosting server</li>
+      <li>Amazon S3 or another cloud storage service</li>
+      <li>GitHub Pages (free hosting)</li>
+      <li>Netlify, Vercel, or similar static site hosts</li>
+    </ul>
+  </div>
+</body>
+</html>
