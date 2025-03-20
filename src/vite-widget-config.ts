@@ -17,8 +17,8 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, './exports/TreatmentRecommenderExport.tsx'),
       name: 'TreatmentRecommender',
-      // Use consistent naming - this is critical for predictable file names
-      fileName: () => 'treatment-recommender',
+      // Fixed filename with NO hash to ensure predictable paths
+      fileName: () => 'widget',
       formats: ['umd'], // Only generate UMD format for browser compatibility
     },
     rollupOptions: {
@@ -30,9 +30,9 @@ export default defineConfig({
           react: 'React',
           'react-dom': 'ReactDOM',
         },
-        // Ensure the CSS is properly extracted with a consistent name
+        // Ensure CSS has a consistent name with NO hash
         assetFileNames: (info) => {
-          if (info.name === 'style.css') return 'style.css';
+          if (info.name === 'style.css') return 'widget-style.css';
           return 'assets/[name][extname]';
         },
       },

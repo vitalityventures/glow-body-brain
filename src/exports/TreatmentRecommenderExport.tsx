@@ -99,7 +99,7 @@ export const getSiteConfig = (): SiteConfig => {
   return siteConfig;
 };
 
-// Main export component that can be embedded in any website
+// Main Widget Component
 const TreatmentRecommenderWidget = () => {
   return (
     <div className="treatment-recommender-widget">
@@ -109,26 +109,43 @@ const TreatmentRecommenderWidget = () => {
   );
 };
 
-// Define a complete widget object with all exports
+// Define all widget exports in a predictable structure
+const Widget = TreatmentRecommenderWidget;
+
+// Create a clear exports object
 const TreatmentRecommenderExport = {
-  Widget: TreatmentRecommenderWidget,
+  Widget,
   configureEmailService,
   configureSiteSettings,
   getSiteConfig,
   getEmailServiceConfig,
-  // Add a version and metadata for debugging
+  // Add version information
   version: '1.0.0',
   buildDate: new Date().toISOString()
 };
 
-// Export as both default and named for maximum compatibility
+// Export the complete widget object as default
 export default TreatmentRecommenderExport;
 
-// Also attach to window for direct browser usage
+// Also export individual components for named imports
+export { 
+  Widget,
+  TreatmentRecommenderWidget, 
+  configureSiteSettings,
+  configureEmailService
+};
+
+// Attach to window for direct browser usage with improved consistency
 if (typeof window !== 'undefined') {
   console.log('Attaching TreatmentRecommender to window object');
+  
+  // Attach as TreatmentRecommender for the main access
   // @ts-ignore - adding property to window
   window.TreatmentRecommender = TreatmentRecommenderExport;
+  
+  // Also add as treatmentRecommender (lowercase) for backup
+  // @ts-ignore - adding property to window
+  window.treatmentRecommender = TreatmentRecommenderExport;
 }
 
 // For direct rendering via script tags
