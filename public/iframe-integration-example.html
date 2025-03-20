@@ -65,7 +65,7 @@
   
   <div class="info-box">
     <h3>How This Works</h3>
-    <p>This example shows how to embed the Treatment Recommender as an iframe. The widget is hosted externally, and you only need to add a simple iframe to your website.</p>
+    <p>This example shows how to embed the Treatment Recommender as an iframe. The widget is hosted on GitHub Pages, and you only need to add a simple iframe to your website.</p>
     <p>Benefits:</p>
     <ul>
       <li>No JavaScript or CSS files on your server</li>
@@ -77,7 +77,7 @@
   
   <h2>Live Demo</h2>
   <div class="iframe-container">
-    <!-- Replace HOSTED_WIDGET_URL with your actual hosted widget URL -->
+    <!-- This iframe loads the actual widget from GitHub Pages -->
     <iframe 
       id="widget-iframe" 
       src="iframe-widget.html?title=DEMO%20CLINIC&subtitle=Find%20your%20perfect%20treatment&serviceId=demo_service&templateId=demo_template&userId=demo_user"
@@ -91,7 +91,7 @@
   <pre>&lt;!-- Treatment Recommender Widget --&gt;
 &lt;iframe 
   id="treatment-recommender-widget" 
-  src="https://YOUR-HOSTING-DOMAIN.com/iframe-widget.html?title=YOUR%20CLINIC%20NAME&subtitle=Custom%20subtitle&serviceId=YOUR_SERVICE_ID&templateId=YOUR_TEMPLATE_ID&userId=YOUR_USER_ID"
+  src="https://vitalityventures.github.io/treatmentrecommender/iframe-widget.html?title=YOUR%20CLINIC%20NAME&subtitle=Custom%20subtitle&serviceId=YOUR_SERVICE_ID&templateId=YOUR_TEMPLATE_ID&userId=YOUR_USER_ID"
   style="width: 100%; min-height: 750px; border: none;" 
   title="Treatment Recommender Widget"
   allow="clipboard-write"
@@ -123,20 +123,10 @@
   </ul>
   
   <div class="info-box">
-    <h3>Hosting Instructions</h3>
-    <p>To host the widget files, upload these files to your web server:</p>
-    <ul>
-      <li><code>iframe-widget.html</code> - The container page for the widget</li>
-      <li><code>treatment-recommender.umd.js</code> - The widget JavaScript</li>
-      <li><code>style.css</code> - The widget styles</li>
-    </ul>
-    <p>You can host these files on:</p>
-    <ul>
-      <li>Your own web hosting server</li>
-      <li>Amazon S3 or another cloud storage service</li>
-      <li>GitHub Pages (free hosting)</li>
-      <li>Netlify, Vercel, or similar static site hosts</li>
-    </ul>
+    <h3>GitHub Pages Hosting</h3>
+    <p>This widget is hosted on GitHub Pages at:</p>
+    <p><a href="https://vitalityventures.github.io/treatmentrecommender/" target="_blank">https://vitalityventures.github.io/treatmentrecommender/</a></p>
+    <p>When you update the repository, the widget will automatically be rebuilt and deployed, so all your clients get the latest version instantly.</p>
   </div>
 </body>
 </html>
