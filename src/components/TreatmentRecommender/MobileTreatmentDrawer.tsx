@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { ShoppingBag, X } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
+import { ShoppingBag } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '../../components/ui/sheet';
 import TreatmentPlanSidebar from './TreatmentPlanSidebar';
 import { TreatmentPlanItem } from './types';
 
