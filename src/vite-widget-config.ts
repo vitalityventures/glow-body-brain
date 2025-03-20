@@ -18,7 +18,7 @@ export default defineConfig({
       entry: resolve(__dirname, './exports/TreatmentRecommenderExport.tsx'),
       name: 'TreatmentRecommender',
       // Use consistent naming - this is critical for predictable file names
-      fileName: () => 'treatment-recommender.umd.js',
+      fileName: () => 'treatment-recommender',
       formats: ['umd'], // Only generate UMD format for browser compatibility
     },
     rollupOptions: {
@@ -31,8 +31,8 @@ export default defineConfig({
           'react-dom': 'ReactDOM',
         },
         // Ensure the CSS is properly extracted with a consistent name
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name === 'style.css') return 'style.css';
+        assetFileNames: (info) => {
+          if (info.name === 'style.css') return 'style.css';
           return 'assets/[name][extname]';
         },
       },
@@ -41,11 +41,11 @@ export default defineConfig({
     sourcemap: true,
     // Ensure we're targeting browsers to avoid modern syntax issues
     target: 'es2015',
-    // Make sure the file extension is compatible with all hosting environments
-    outDir: '../dist',
-    // Add asset path info to help with debugging
+    // Make sure asset path info helps with debugging
     reportCompressedSize: true,
-    // Disable minification for easier debugging if needed
-    minify: process.env.NODE_ENV === 'production',
+    // Always output to the root of the dist directory
+    outDir: '../dist',
+    // Ensure output files are copied to the root of outDir
+    emptyOutDir: false,
   },
 });

@@ -44,44 +44,87 @@ jobs:
           BASE_URL: /${{ env.REPO_NAME }}/
           NODE_ENV: production
 
+      - name: Create Widget Manifest 📄
+        run: |
+          # Create a manifest file that lists all widget files
+          echo "Widget files created at: $(date)" > dist/widget-manifest.json
+          echo "{" >> dist/widget-manifest.json
+          echo "  \"widgetFiles\": [" >> dist/widget-manifest.json
+          find dist -type f -name "treatment-recommender*" -o -name "style.css" | sed 's/^/    "/;s/$/",/' | sed '$ s/,$//' >> dist/widget-manifest.json
+          echo "  ]," >> dist/widget-manifest.json
+          echo "  \"buildDate\": \"$(date)\"," >> dist/widget-manifest.json
+          echo "  \"repository\": \"$GITHUB_REPOSITORY\"," >> dist/widget-manifest.json
+          echo "  \"version\": \"1.0.0\"" >> dist/widget-manifest.json
+          echo "}" >> dist/widget-manifest.json
+          
+          # Display the manifest for debugging
+          cat dist/widget-manifest.json
+
+      - name: Create Widget Aliases 🔗
+        run: |
+          # Create directory structure
+          mkdir -p dist/widget
+          
+          # Find the generated widget file
+          WIDGET_FILE=$(find dist -name "treatment-recommender*.js" | head -n 1)
+          STYLE_FILE=$(find dist -name "style.css" | head -n 1)
+          
+          if [ -n "$WIDGET_FILE" ]; then
+            echo "Widget JS file found at: $WIDGET_FILE"
+            
+            # Create aliases at strategic locations
+            cp "$WIDGET_FILE" dist/treatment-recommender.js
+            cp "$WIDGET_FILE" dist/treatment-recommender.umd.js
+            cp "$WIDGET_FILE" dist/widget/treatment-recommender.js
+            
+            echo "Created widget JS aliases at:"
+            echo "- dist/treatment-recommender.js"
+            echo "- dist/treatment-recommender.umd.js"
+            echo "- dist/widget/treatment-recommender.js"
+          else
+            echo "ERROR: Widget JS file not found!"
+            find dist -type f -name "*.js" | sort
+          fi
+          
+          if [ -n "$STYLE_FILE" ]; then
+            echo "Widget CSS file found at: $STYLE_FILE"
+            
+            # Create aliases at strategic locations
+            cp "$STYLE_FILE" dist/style.css
+            cp "$STYLE_FILE" dist/widget/style.css
+            
+            echo "Created widget CSS aliases at:"
+            echo "- dist/style.css"
+            echo "- dist/widget/style.css"
+          else
+            echo "ERROR: Widget CSS file not found!"
+            find dist -type f -name "*.css" | sort
+          fi
+
       - name: Verify Widget Files Existence
         run: |
           echo "Checking for widget files..."
-          if [ -f "dist/treatment-recommender.umd.js" ]; then
-            echo "✅ Widget JS file exists at root"
-          else
-            echo "❌ Widget JS file not found at root"
-            find dist -name "treatment-recommender*.js" || echo "No widget JS files found anywhere"
-          fi
+          for file in "treatment-recommender.js" "treatment-recommender.umd.js" "style.css"; do
+            if [ -f "dist/$file" ]; then
+              echo "✅ $file exists at root"
+              ls -la "dist/$file"
+            else
+              echo "❌ $file NOT found at root"
+            fi
+          done
           
-          if [ -f "dist/style.css" ]; then
-            echo "✅ Widget CSS file exists at root"
-          else
-            echo "❌ Widget CSS file not found at root"
-            find dist -name "style*.css" || echo "No widget CSS files found anywhere"
-          fi
-
-      - name: Copy Widget Files to Multiple Locations
-        run: |
-          # Create necessary directories
-          mkdir -p dist/assets
+          echo "Checking widget directory..."
+          for file in "treatment-recommender.js" "style.css"; do
+            if [ -f "dist/widget/$file" ]; then
+              echo "✅ widget/$file exists"
+              ls -la "dist/widget/$file"
+            else
+              echo "❌ widget/$file NOT found"
+            fi
+          done
           
-          # Ensure widget files are at the root level (critical for iframe loading)
-          cp dist/treatment-recommender.umd.js dist/ || echo "Failed to copy JS file (may already be there)"
-          cp dist/style.css dist/ || echo "Failed to copy CSS file (may already be there)"
-          
-          # Also copy to assets as fallback
-          cp dist/treatment-recommender.umd.js dist/assets/ || echo "Failed to copy JS to assets"
-          cp dist/style.css dist/assets/ || echo "Failed to copy CSS to assets"
-          
-          # Create multiple variations of filenames to handle any path issues
-          cp dist/treatment-recommender.umd.js dist/treatment-recommender.js || echo "Failed to create JS alias"
-          
-          echo "Files at root level:"
-          ls -la dist/*.js dist/*.css || echo "No root level files found"
-          
-          echo "Files in assets directory:"
-          ls -la dist/assets/*.js dist/assets/*.css || echo "No files in assets directory"
+          echo "Looking for all JavaScript files:"
+          find dist -name "*.js" -type f | sort
 
       - name: Build Main App 🏗️
         run: npm run build
@@ -90,13 +133,45 @@ jobs:
 
       - name: Copy HTML Files 📋
         run: |
-          mkdir -p dist
+          mkdir -p dist/widget-demo
           cp public/iframe-widget.html dist/
           cp public/iframe-integration-example.html dist/
           cp public/integration-example.html dist/
           cp public/index.html dist/
           cp public/widget-demo.html dist/ || echo "Widget demo file not found, skipping"
           cp public/widget-integration-guide.html dist/ || echo "Integration guide file not found, skipping"
+          
+          # Create a direct widget test page
+          cat > dist/widget-test.html << EOF
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Widget Direct Test</title>
+            <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+            <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+            <script src="treatment-recommender.js"></script>
+            <link rel="stylesheet" href="style.css">
+          </head>
+          <body>
+            <div id="widget-container" style="height:800px;"></div>
+            <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                if (window.TreatmentRecommender) {
+                  ReactDOM.createRoot(document.getElementById('widget-container')).render(
+                    React.createElement(window.TreatmentRecommender.Widget)
+                  );
+                  console.log('Widget rendered directly');
+                } else {
+                  document.getElementById('widget-container').innerHTML = 
+                    '<div style="color:red;padding:20px;">Error: TreatmentRecommender not found</div>';
+                }
+              });
+            </script>
+          </body>
+          </html>
+          EOF
 
       - name: Create 404.html 🔍
         run: |
@@ -121,41 +196,82 @@ jobs:
           <html>
           <head>
             <title>Widget Path Check</title>
+            <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 20px; }
+              .success { color: green; }
+              .error { color: red; }
+              pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+              #results { margin-top: 20px; }
+            </style>
           </head>
           <body>
             <h1>Widget Resource Check</h1>
-            <ul id="results"></ul>
+            <p>Testing all possible widget resource paths. This helps diagnose loading issues.</p>
+            <button id="check-btn">Check All Paths</button>
+            <div id="results"></div>
             
             <script>
-              const paths = [
-                "treatment-recommender.umd.js",
-                "treatment-recommender.js",
-                "assets/treatment-recommender.umd.js",
-                "assets/treatment-recommender.js",
-                "style.css",
-                "assets/style.css"
-              ];
-              
-              const resultsList = document.getElementById('results');
-              
-              paths.forEach(path => {
-                const li = document.createElement('li');
-                const fullPath = "/${{ env.REPO_NAME }}/" + path;
-                fetch(fullPath)
-                  .then(response => {
-                    if (response.ok) {
-                      li.textContent = \`✅ \${fullPath} - FOUND (\${response.status})\`;
-                      li.style.color = 'green';
-                    } else {
-                      li.textContent = \`❌ \${fullPath} - NOT FOUND (\${response.status})\`;
-                      li.style.color = 'red';
-                    }
-                  })
-                  .catch(error => {
-                    li.textContent = \`❌ \${fullPath} - ERROR: \${error.message}\`;
-                    li.style.color = 'red';
-                  });
-                resultsList.appendChild(li);
+              document.getElementById('check-btn').addEventListener('click', function() {
+                const paths = [
+                  "treatment-recommender.js",
+                  "treatment-recommender.umd.js",
+                  "widget/treatment-recommender.js",
+                  "style.css",
+                  "widget/style.css"
+                ];
+                
+                const resultsList = document.getElementById('results');
+                resultsList.innerHTML = '<h3>Checking paths...</h3>';
+                
+                // Also display base URL info
+                const baseInfo = document.createElement('div');
+                baseInfo.innerHTML = \`
+                  <h3>Environment Info</h3>
+                  <p>URL: \${window.location.href}</p>
+                  <p>Origin: \${window.location.origin}</p>
+                  <p>Pathname: \${window.location.pathname}</p>
+                \`;
+                resultsList.appendChild(baseInfo);
+                
+                // Results container
+                const resultsContainer = document.createElement('div');
+                resultsList.appendChild(resultsContainer);
+                
+                // Check each path
+                Promise.all(paths.map(path => {
+                  const fullPath = window.location.pathname.includes('/widget-path-check.html') 
+                    ? window.location.pathname.replace('/widget-path-check.html', '/') + path
+                    : '/' + path;
+                    
+                  return fetch(fullPath)
+                    .then(response => {
+                      const li = document.createElement('div');
+                      if (response.ok) {
+                        li.innerHTML = \`<p class="success">✅ \${fullPath} - FOUND (\${response.status})</p>\`;
+                      } else {
+                        li.innerHTML = \`<p class="error">❌ \${fullPath} - NOT FOUND (\${response.status})</p>\`;
+                      }
+                      resultsContainer.appendChild(li);
+                      return { path: fullPath, status: response.status, ok: response.ok };
+                    })
+                    .catch(error => {
+                      const li = document.createElement('div');
+                      li.innerHTML = \`<p class="error">❌ \${fullPath} - ERROR: \${error.message}</p>\`;
+                      resultsContainer.appendChild(li);
+                      return { path: fullPath, error: error.message, ok: false };
+                    });
+                }))
+                .then(results => {
+                  // Add a summary
+                  const summary = document.createElement('div');
+                  const successCount = results.filter(r => r.ok).length;
+                  summary.innerHTML = \`
+                    <h3>Summary</h3>
+                    <p>\${successCount} of \${paths.length} paths found successfully</p>
+                    <pre>\${JSON.stringify(results, null, 2)}</pre>
+                  \`;
+                  resultsList.appendChild(summary);
+                });
               });
             </script>
           </body>
@@ -166,8 +282,8 @@ jobs:
         run: |
           echo "Contents of dist directory:"
           ls -la dist
-          echo "Contents of dist/assets directory:"
-          ls -la dist/assets || echo "No assets directory found"
+          echo "Contents of dist/widget directory:"
+          ls -la dist/widget || echo "No widget directory found"
           echo "Looking for JS and CSS files:"
           find dist -name "*.js" -o -name "*.css"
 

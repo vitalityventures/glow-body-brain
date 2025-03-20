@@ -109,20 +109,35 @@ const TreatmentRecommenderWidget = () => {
   );
 };
 
-// For browser compatibility, assign everything to the default export
-const TreatmentRecommender_Export = {
+// Define a complete widget object with all exports
+const TreatmentRecommenderExport = {
   Widget: TreatmentRecommenderWidget,
   configureEmailService,
   configureSiteSettings,
   getSiteConfig,
-  getEmailServiceConfig
+  getEmailServiceConfig,
+  // Add a version and metadata for debugging
+  version: '1.0.0',
+  buildDate: new Date().toISOString()
 };
 
 // Export as both default and named for maximum compatibility
-export default TreatmentRecommender_Export;
+export default TreatmentRecommenderExport;
 
 // Also attach to window for direct browser usage
 if (typeof window !== 'undefined') {
+  console.log('Attaching TreatmentRecommender to window object');
   // @ts-ignore - adding property to window
-  window.TreatmentRecommender = TreatmentRecommender_Export;
+  window.TreatmentRecommender = TreatmentRecommenderExport;
+}
+
+// For direct rendering via script tags
+export function render(container: HTMLElement) {
+  if (container) {
+    import('react-dom/client').then(({ createRoot }) => {
+      const root = createRoot(container);
+      root.render(<TreatmentRecommenderWidget />);
+      console.log('Widget rendered into container:', container);
+    });
+  }
 }
