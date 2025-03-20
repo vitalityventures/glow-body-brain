@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  // For GitHub Pages, we need to use the repository name as the base path
+  // For GitHub Pages or preview environments, we need to use the repository name as the base path
   // Extract it from env or use '/' for local development
   const baseUrl = process.env.BASE_URL || '/';
   console.log('Building with base URL:', baseUrl);
@@ -26,6 +26,10 @@ export default defineConfig(({ mode }) => {
       alias: {
         "@": path.resolve(__dirname, "./src"),
       },
+    },
+    // Ensure we use client-side routing properly
+    optimizeDeps: {
+      include: ['react-router-dom'],
     },
     build: {
       // Ensure source maps are generated

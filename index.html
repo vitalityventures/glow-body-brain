@@ -11,7 +11,7 @@
     
     <script>
       // Debug function
-      function debugLog(message, data) {
+      window.debugLog = function(message, data) {
         console.log(`[MainApp] ${message}`, data || '');
       }
       
@@ -26,8 +26,8 @@
         
         let basePath = '/';
         
-        // If we're on GitHub Pages (github.io domain)
-        if (hostname.includes('github.io')) {
+        // If we're on GitHub Pages (github.io domain) or Lovable preview
+        if (hostname.includes('github.io') || hostname.includes('lovable.app')) {
           // Get the repository name from the pathname
           const pathSegments = pathname.split('/');
           debugLog("Path segments:", pathSegments);
@@ -35,7 +35,7 @@
           if (pathSegments.length > 1 && pathSegments[1] !== '') {
             // Format: /<repo-name>/
             basePath = '/' + pathSegments[1] + '/';
-            debugLog('GitHub Pages detected. Setting base path:', basePath);
+            debugLog('GitHub Pages or Preview detected. Setting base path:', basePath);
             document.write('<base href="' + basePath + '">');
           }
         } else {
@@ -76,7 +76,7 @@
     <script type="module">
       // This ensures our module paths respect the base path
       const base = window.basePath || document.querySelector('base')?.getAttribute('href') || '/';
-      debugLog('Loading main.tsx from:', base + 'src/main.tsx');
+      window.debugLog('Loading application from:', base);
       
       // Add a loading indicator while waiting for the app
       const root = document.getElementById('root');
@@ -96,34 +96,37 @@
       // Check for available resources
       fetch(base)
         .then(response => {
-          debugLog('Base directory fetch status:', response.status);
+          window.debugLog('Base directory fetch status:', response.status);
           return response.text();
         })
         .then(html => {
-          debugLog('Available resources:', html.match(/href="[^"]+"/g));
+          window.debugLog('Available resources:', html.match(/href="[^"]+"/g));
         })
         .catch(e => {
           console.error('Failed to check available resources:', e);
         });
       
-      // Import main.tsx with error handling
-      import(base + 'src/main.tsx')
-        .catch(e => {
-          console.error('Failed to load main.tsx:', e);
-          root.innerHTML = `
-            <div style="color:red;padding:20px;max-width:600px;margin:0 auto;text-align:center;margin-top:50px;">
-              <h2>Error loading application</h2>
-              <p>The application failed to initialize. This could be due to path issues on GitHub Pages.</p>
-              <p style="font-family:monospace;background:#f5f5f5;padding:10px;text-align:left;overflow-x:auto;">Error: ${e.message}</p>
-              <button onclick="location.reload()" style="padding:10px 20px;background:#4f46e5;color:white;border:none;border-radius:5px;margin-top:20px;cursor:pointer;">
-                Try Again
-              </button>
-              <div style="margin-top:20px;font-size:12px;color:#666;">
-                Technical info: Base path = ${base}
-              </div>
+      // Use a script tag instead of dynamic import to help with path resolution
+      const script = document.createElement('script');
+      script.type = 'module';
+      script.src = base + 'src/main.tsx';
+      script.onerror = function(e) {
+        console.error('Failed to load main.tsx via script tag:', e);
+        root.innerHTML = `
+          <div style="color:red;padding:20px;max-width:600px;margin:0 auto;text-align:center;margin-top:50px;">
+            <h2>Error loading application</h2>
+            <p>The application failed to initialize. This could be due to path issues on GitHub Pages.</p>
+            <p style="font-family:monospace;background:#f5f5f5;padding:10px;text-align:left;overflow-x:auto;">Error: ${e}</p>
+            <button onclick="location.reload()" style="padding:10px 20px;background:#4f46e5;color:white;border:none;border-radius:5px;margin-top:20px;cursor:pointer;">
+              Try Again
+            </button>
+            <div style="margin-top:20px;font-size:12px;color:#666;">
+              Technical info: Base path = ${base}
             </div>
-          `;
-        });
+          </div>
+        `;
+      };
+      document.body.appendChild(script);
     </script>
     
     <style>

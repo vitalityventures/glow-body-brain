@@ -10,8 +10,8 @@ import defaultSiteConfig from '../config/siteConfig';
 function detectBasePath() {
   const { hostname, pathname } = window.location;
   
-  // For GitHub Pages
-  if (hostname.includes('github.io')) {
+  // For GitHub Pages or Lovable preview sites
+  if (hostname.includes('github.io') || hostname.includes('lovable.app')) {
     const pathSegments = pathname.split('/');
     if (pathSegments.length > 1 && pathSegments[1] !== '') {
       return `/${pathSegments[1]}/`;

@@ -15,10 +15,10 @@ function detectBasePath() {
   });
   
   // Set up base path for GitHub Pages if needed
-  if (hostname.includes('github.io')) {
+  if (hostname.includes('github.io') || hostname.includes('lovable.app')) {
     const pathSegments = pathname.split('/');
     if (pathSegments.length > 1 && pathSegments[1] !== '') {
-      console.log(`GitHub Pages detected. Repo name: ${pathSegments[1]}`);
+      console.log(`GitHub Pages or Preview detected. Path prefix: ${pathSegments[1]}`);
       return `/${pathSegments[1]}/`;
     }
   }
@@ -30,6 +30,9 @@ function detectBasePath() {
 // Make the base path available globally
 window.BASE_PATH = detectBasePath();
 console.log("Application base path set to:", window.BASE_PATH);
+
+// Export the App component for possible direct imports
+export { App };
 
 // Create the root element and render the App
 const rootElement = document.getElementById("root");
