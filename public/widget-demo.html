@@ -55,8 +55,8 @@
 &lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin&gt;&lt;/script&gt;
 
 &lt;!-- Include the widget script --&gt;
-&lt;script src="./assets/treatment-recommender.umd.js"&gt;&lt;/script&gt;
-&lt;link rel="stylesheet" href="./assets/style.css"&gt;
+&lt;script src="../dist/treatment-recommender.umd.cjs"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="../dist/assets/style.css"&gt;
 
 &lt;!-- Create a container for the widget --&gt;
 &lt;div id="treatment-recommender-container"&gt;&lt;/div&gt;
@@ -93,8 +93,10 @@
   <!-- Actual widget integration for the demo -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="./assets/treatment-recommender.umd.js"></script>
-  <link rel="stylesheet" href="./assets/style.css">
+  
+  <!-- Update these paths to point directly to the built files -->
+  <script src="../dist/treatment-recommender.umd.cjs"></script>
+  <link rel="stylesheet" href="../dist/assets/style.css">
   
   <script>
     document.addEventListener('DOMContentLoaded', () => {
