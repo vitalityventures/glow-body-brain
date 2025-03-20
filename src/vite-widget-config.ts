@@ -17,7 +17,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, './exports/TreatmentRecommenderExport.tsx'),
       name: 'TreatmentRecommender',
-      fileName: 'treatment-recommender',
+      fileName: (format) => `treatment-recommender.${format}.js`,
       formats: ['umd'], // Only generate UMD format for browser compatibility
     },
     rollupOptions: {

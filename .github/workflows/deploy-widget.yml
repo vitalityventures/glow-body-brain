@@ -39,12 +39,18 @@ jobs:
           echo "BASE_URL will be: /${{ env.REPO_NAME }}/"
 
       - name: Build Widget 🔨
-        run: npx vite build --config src/vite-widget-config.ts --debug
+        run: npx vite build --config src/vite-widget-config.ts
         env:
           BASE_URL: /${{ env.REPO_NAME }}/
 
+      - name: Debug Widget Build Output
+        run: |
+          echo "Contents of dist directory after widget build:"
+          ls -la dist
+          find dist -name "*.js" -o -name "*.css" | sort
+
       - name: Build Main App 🏗️
-        run: npm run build --debug
+        run: npm run build
         env:
           BASE_URL: /${{ env.REPO_NAME }}/
 
@@ -55,16 +61,34 @@ jobs:
           cp public/iframe-integration-example.html dist/
           cp public/integration-example.html dist/
           cp public/index.html dist/
+          cp public/widget-demo.html dist/ || echo "Widget demo file not found, skipping"
+          cp public/widget-integration-guide.html dist/ || echo "Integration guide file not found, skipping"
 
       - name: Create 404.html 🔍
         run: |
           cp dist/index.html dist/404.html
 
-      - name: Add Debug File
+      # Copy widget files to root level for easier access
+      - name: Copy Widget Files to Root Level
         run: |
+          # Find the treatment-recommender files and copy to root level
+          find dist -name "treatment-recommender*.js" -exec cp {} dist/ \;
+          find dist -name "style*.css" -exec cp {} dist/ \;
+          echo "Root level files after copying:"
+          ls -la dist/*.js dist/*.css || echo "No files found"
+
+      - name: Create Debug Info Files
+        run: |
+          # Create a file listing all assets
+          echo "Asset listing for debugging:" > dist/asset-list.txt
+          find dist -type f | sort >> dist/asset-list.txt
+          
+          # Create config debug file
           echo "BASE_URL: /${{ env.REPO_NAME }}/" > dist/debug-info.txt
           echo "Build timestamp: $(date)" >> dist/debug-info.txt
           echo "Repository: $GITHUB_REPOSITORY" >> dist/debug-info.txt
+          echo "Files in dist directory:" >> dist/debug-info.txt
+          ls -la dist >> dist/debug-info.txt
 
       - name: Debug Build Output
         run: |
@@ -81,3 +105,4 @@ jobs:
           folder: dist
           branch: gh-pages
           clean: true
+

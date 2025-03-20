@@ -75,43 +75,120 @@
     document.addEventListener('DOMContentLoaded', function() {
       const base = window.basePath || '/';
       
-      debugLog('Loading scripts with base path:', base);
+      debugLog('Dynamically loaded widget from:', base);
       
-      // Add widget script
-      const scriptElement = document.createElement('script');
-      scriptElement.src = base + 'treatment-recommender.umd.js?v=' + new Date().getTime();
-      scriptElement.onerror = function(error) {
-        console.error('Failed to load widget script from:', this.src, error);
-        document.getElementById('treatment-recommender-container').innerHTML = 
-          '<div style="color:red;padding:20px;">Error loading widget script. Check console for details.</div>' +
-          '<div style="font-size:12px;margin-top:10px;">Attempted to load from: ' + this.src + '</div>';
+      // Try multiple possible paths to find the widget script
+      const possibleScriptPaths = [
+        base + 'treatment-recommender.umd.js',
+        base + 'assets/treatment-recommender.umd.js',
+        base + 'treatment-recommender.umd.cjs',
+        base + 'assets/treatment-recommender.umd.cjs',
+        base + 'assets/treatment-recommender-*.js' // For wildcard matching if possible
+      ];
+      
+      // Try to load the first script, with fallbacks
+      function loadScript(paths, index = 0) {
+        if (index >= paths.length) {
+          console.error('Failed to load widget script after trying all paths:', paths);
+          document.getElementById('treatment-recommender-container').innerHTML = 
+            '<div style="color:red;padding:20px;">Error loading widget script. Tried all possible paths without success.</div>' +
+            '<div style="font-size:12px;margin-top:10px;">Attempted paths: ' + paths.join(', ') + '</div>';
+          
+          // Show available resources
+          checkAvailableResources();
+          return;
+        }
         
-        // Show available resources
-        debugLog('Checking for available resources...');
-        const resourceCheck = document.createElement('script');
-        resourceCheck.textContent = `
-          fetch('./')
-            .then(response => response.text())
-            .then(html => {
-              console.log('Available files:', html.match(/href="[^"]+"/g));
-            })
-            .catch(err => console.error('Resource check failed:', err));
-        `;
-        document.head.appendChild(resourceCheck);
-      };
-      scriptElement.onload = function() {
-        debugLog('Widget script loaded successfully');
-      };
-      document.head.appendChild(scriptElement);
+        const path = paths[index] + '?v=' + new Date().getTime();
+        debugLog('Trying to load script from:', path);
+        
+        const scriptElement = document.createElement('script');
+        scriptElement.src = path;
+        scriptElement.onerror = function() {
+          console.warn('Failed to load widget script from:', path, '- trying next path');
+          loadScript(paths, index + 1);
+        };
+        scriptElement.onload = function() {
+          debugLog('Widget script loaded successfully from:', path);
+          
+          // Now try to load the CSS
+          loadCSS();
+        };
+        document.head.appendChild(scriptElement);
+      }
       
-      // Add widget styles
-      const styleElement = document.createElement('link');
-      styleElement.rel = 'stylesheet';
-      styleElement.href = base + 'style.css?v=' + new Date().getTime();
-      styleElement.onerror = function() {
-        console.error('Failed to load widget styles from:', this.href);
-      };
-      document.head.appendChild(styleElement);
+      // Similarly, try multiple possible paths for the CSS
+      function loadCSS() {
+        const possibleCSSPaths = [
+          base + 'style.css',
+          base + 'assets/style.css',
+          base + 'assets/index.css'
+        ];
+        
+        function tryNextCSS(cssIndex = 0) {
+          if (cssIndex >= possibleCSSPaths.length) {
+            console.warn('Could not load CSS from any path, but continuing without it');
+            return;
+          }
+          
+          const cssPath = possibleCSSPaths[cssIndex] + '?v=' + new Date().getTime();
+          debugLog('Trying to load CSS from:', cssPath);
+          
+          const styleElement = document.createElement('link');
+          styleElement.rel = 'stylesheet';
+          styleElement.href = cssPath;
+          styleElement.onerror = function() {
+            console.warn('Failed to load widget styles from:', cssPath, '- trying next path');
+            tryNextCSS(cssIndex + 1);
+          };
+          styleElement.onload = function() {
+            debugLog('Widget styles loaded successfully from:', cssPath);
+          };
+          document.head.appendChild(styleElement);
+        }
+        
+        tryNextCSS();
+      }
+      
+      // Check for available resources to help with debugging
+      function checkAvailableResources() {
+        debugLog('Checking for available resources...');
+        
+        // Try to list files in the current directory
+        fetch(base)
+          .then(response => response.text())
+          .then(html => {
+            debugLog('Directory listing:', html.match(/href="[^"]+"/g));
+            
+            // Try to list files in the assets directory
+            return fetch(base + 'assets/');
+          })
+          .then(response => response.text())
+          .then(html => {
+            debugLog('Assets directory listing:', html.match(/href="[^"]+"/g));
+          })
+          .catch(err => {
+            console.error('Resource check failed:', err);
+            
+            // Create a more detailed error message with diagnostic info
+            const container = document.getElementById('treatment-recommender-container');
+            if (container) {
+              container.innerHTML += `
+                <div style="margin-top:20px;border:1px solid #f0f0f0;padding:15px;font-family:monospace;font-size:12px;">
+                  <h3>Diagnostic Information</h3>
+                  <p>URL: ${window.location.href}</p>
+                  <p>Base Path: ${base}</p>
+                  <p>Attempted Script Paths: ${possibleScriptPaths.join(', ')}</p>
+                  <p>Resource check error: ${err.message}</p>
+                  <button onclick="location.reload()">Reload Page</button>
+                </div>
+              `;
+            }
+          });
+      }
+      
+      // Start loading the script
+      loadScript(possibleScriptPaths);
     });
   </script>
   
