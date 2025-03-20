@@ -19,7 +19,7 @@ let emailConfig: EmailServiceConfig | null = null;
 /**
  * Configures the EmailJS service for sending treatment results
  */
-export const configureEmailService = (config: EmailServiceConfig) => {
+const configureEmailService = (config: EmailServiceConfig) => {
   emailConfig = config;
   
   // Update the configuration in localStorage so it persists
@@ -33,7 +33,7 @@ export const configureEmailService = (config: EmailServiceConfig) => {
 };
 
 // Retrieves the current email configuration
-export const getEmailServiceConfig = (): EmailServiceConfig | null => {
+const getEmailServiceConfig = (): EmailServiceConfig | null => {
   if (emailConfig) return emailConfig;
   
   // Try to load from localStorage if not set
@@ -56,7 +56,7 @@ let siteConfig: SiteConfig = defaultSiteConfig;
 /**
  * Configure site settings for the widget
  */
-export const configureSiteSettings = (config: Partial<SiteConfig>) => {
+const configureSiteSettings = (config: Partial<SiteConfig>) => {
   // For embedded widgets, default to hiding header and footer
   const isEmbedded = window !== window.top; // Check if running in an iframe
   
@@ -89,7 +89,7 @@ export const configureSiteSettings = (config: Partial<SiteConfig>) => {
 };
 
 // Get current site config
-export const getSiteConfig = (): SiteConfig => {
+const getSiteConfig = (): SiteConfig => {
   // Try to load from localStorage
   try {
     const savedConfig = localStorage.getItem('siteConfig');
@@ -105,7 +105,7 @@ export const getSiteConfig = (): SiteConfig => {
 };
 
 // Main Widget Component
-export const TreatmentRecommenderWidget = () => {
+const TreatmentRecommenderWidget = () => {
   return (
     <div className="treatment-recommender-widget">
       <TreatmentRecommender />
@@ -115,7 +115,7 @@ export const TreatmentRecommenderWidget = () => {
 };
 
 // Alias Widget to TreatmentRecommenderWidget for simplicity
-export const Widget = TreatmentRecommenderWidget;
+const Widget = TreatmentRecommenderWidget;
 
 // Create a clear exports object with all widget functionality
 const TreatmentRecommenderExport = {
@@ -153,5 +153,15 @@ export function render(container: HTMLElement) {
   }
 }
 
-// Export the complete widget object as default
+// Export everything the widget needs through the default export
 export default TreatmentRecommenderExport;
+
+// Also export named exports for direct imports
+export {
+  Widget,
+  TreatmentRecommenderWidget,
+  configureEmailService,
+  configureSiteSettings,
+  getSiteConfig,
+  getEmailServiceConfig
+};
