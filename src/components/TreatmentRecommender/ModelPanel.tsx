@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/resizable';
 import FaceModel from './FaceModel';
 import HumanModel from './HumanModel';
@@ -37,12 +37,21 @@ const ModelPanel: React.FC<ModelPanelProps> = ({
     exit: { opacity: 0, x: -100 }
   };
 
-  // Debug to check what's happening
-  console.log("ModelPanel rendering with:", { stage, selectedArea, treatmentPlan });
+  // Debug to check component props and state
+  useEffect(() => {
+    console.log("ModelPanel rendered with:", { 
+      stage, 
+      selectedArea, 
+      hasAreaConcerns: selectedArea && 
+        Object.keys(AREA_CONCERNS).includes(selectedArea) && 
+        AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS]?.length > 0
+    });
+  }, [stage, selectedArea]);
   
-  // Check if the selected area has concerns defined
+  // Check if the selected area has concerns defined - safely
   const hasAreaConcerns = selectedArea && 
     Object.keys(AREA_CONCERNS).includes(selectedArea) && 
+    Array.isArray(AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS]) &&
     AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS]?.length > 0;
 
   // Helper function to determine if we're looking at a facial area
@@ -69,78 +78,111 @@ const ModelPanel: React.FC<ModelPanelProps> = ({
       
       <ResizablePanel defaultSize={60}>
         <div className="h-full p-6 overflow-y-auto">
-          {stage === 'CONCERN_SELECTOR' && (
-            <motion.div
-              key="concern-selector"
-              variants={pageVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              transition={{ duration: 0.3 }}
-              className="h-full"
-            >
-              {hasAreaConcerns ? (
-                <ConcernSelector
-                  area={selectedArea}
-                  concerns={AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS] || []}
-                  selectedConcerns={treatmentPlan
-                    .filter(item => item.area === selectedArea)
-                    .map(item => item.concernId)}
-                  onSelectConcern={onSelectConcern}
-                  onBack={onBack}
-                  onContinue={onContinue}
-                />
-              ) : (
+          <AnimatePresence mode="wait">
+            {stage === 'CONCERN_SELECTOR' && (
+              <motion.div
+                key="concern-selector"
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="h-full"
+              >
+                {hasAreaConcerns ? (
+                  <ConcernSelector
+                    key={`concern-${selectedArea}`}
+                    area={selectedArea}
+                    concerns={AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS] || []}
+                    selectedConcerns={treatmentPlan
+                      .filter(item => item.area === selectedArea)
+                      .map(item => item.concernId)}
+                    onSelectConcern={onSelectConcern}
+                    onBack={onBack}
+                    onContinue={onContinue}
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center">
+                    <div className="glass-panel rounded-xl px-8 py-6 text-center max-w-sm mx-auto">
+                      <h3 className="text-spa-dark font-display text-xl mb-3">Area Not Found</h3>
+                      <p className="text-spa-accent">
+                        No concerns found for this area. Please go back and try another area.
+                      </p>
+                      <button 
+                        onClick={onBack}
+                        className="mt-4 px-4 py-2 bg-spa-accent text-white rounded-lg hover:bg-spa-dark transition-colors"
+                      >
+                        Go Back
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            )}
+            
+            {stage === 'FACE_MODEL' && selectedArea === 'face' && (
+              <motion.div
+                key="face-info"
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="h-full"
+              >
                 <div className="flex h-full items-center justify-center">
                   <div className="glass-panel rounded-xl px-8 py-6 text-center max-w-sm mx-auto">
-                    <h3 className="text-spa-dark font-display text-xl mb-3">Area Not Found</h3>
+                    <h3 className="text-spa-dark font-display text-xl mb-3">Select a Facial Region</h3>
                     <p className="text-spa-accent">
-                      No concerns found for this area. Please go back and try another area.
+                      Click on specific areas of the face on the left panel to view treatment options for those regions.
                     </p>
-                    <button 
-                      onClick={onBack}
-                      className="mt-4 px-4 py-2 bg-spa-accent text-white rounded-lg hover:bg-spa-dark transition-colors"
-                    >
-                      Go Back
-                    </button>
                   </div>
                 </div>
-              )}
-            </motion.div>
-          )}
-          
-          {stage === 'FACE_MODEL' && selectedArea === 'face' && (
-            <div className="flex h-full items-center justify-center">
-              <div className="glass-panel rounded-xl px-8 py-6 text-center max-w-sm mx-auto">
-                <h3 className="text-spa-dark font-display text-xl mb-3">Select a Facial Region</h3>
-                <p className="text-spa-accent">
-                  Click on specific areas of the face on the left panel to view treatment options for those regions.
-                </p>
-              </div>
-            </div>
-          )}
-          
-          {stage === 'FACE_MODEL' && selectedArea !== 'face' && selectedArea !== '' && (
-            <div className="flex h-full items-center justify-center">
-              <div className="glass-panel rounded-xl px-8 py-6 text-center max-w-sm mx-auto">
-                <h3 className="text-spa-dark font-display text-xl mb-3">Loading Concerns</h3>
-                <p className="text-spa-accent">
-                  Loading treatment options for {selectedArea}...
-                </p>
-              </div>
-            </div>
-          )}
-          
-          {(!selectedArea || (stage === 'FACE_MODEL' && selectedArea === '')) && (
-            <div className="flex h-full items-center justify-center">
-              <div className="glass-panel rounded-xl px-8 py-6 text-center max-w-sm mx-auto">
-                <h3 className="text-spa-dark font-display text-xl mb-3">Select a Body Region</h3>
-                <p className="text-spa-accent">
-                  Click on specific areas of the body on the left panel to view treatment options for those regions.
-                </p>
-              </div>
-            </div>
-          )}
+              </motion.div>
+            )}
+            
+            {stage === 'FACE_MODEL' && selectedArea !== 'face' && selectedArea !== '' && (
+              <motion.div
+                key="face-area-info"
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="h-full"
+              >
+                <div className="flex h-full items-center justify-center">
+                  <div className="glass-panel rounded-xl px-8 py-6 text-center max-w-sm mx-auto">
+                    <h3 className="text-spa-dark font-display text-xl mb-3">Loading Concerns</h3>
+                    <p className="text-spa-accent">
+                      Loading treatment options for {selectedArea}...
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+            
+            {(!selectedArea || (stage === 'FACE_MODEL' && selectedArea === '')) && (
+              <motion.div
+                key="select-body-region"
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="h-full"
+              >
+                <div className="flex h-full items-center justify-center">
+                  <div className="glass-panel rounded-xl px-8 py-6 text-center max-w-sm mx-auto">
+                    <h3 className="text-spa-dark font-display text-xl mb-3">Select a Body Region</h3>
+                    <p className="text-spa-accent">
+                      Click on specific areas of the body on the left panel to view treatment options for those regions.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </ResizablePanel>
     </ResizablePanelGroup>

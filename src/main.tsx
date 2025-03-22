@@ -34,7 +34,7 @@ console.log("Application base path set to:", window.BASE_PATH);
 // Export the App component for possible direct imports
 export { App };
 
-// Create the root element and render the App
+// Create the root element and render the App - using StrictMode to help catch issues
 const rootElement = document.getElementById("root");
 if (rootElement) {
   createRoot(rootElement).render(<App />);
