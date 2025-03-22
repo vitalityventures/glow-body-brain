@@ -38,7 +38,17 @@ const ModelPanel: React.FC<ModelPanelProps> = ({
   };
 
   // Debug to check what's happening
-  console.log("ModelPanel rendering with:", { stage, selectedArea });
+  console.log("ModelPanel rendering with:", { stage, selectedArea, treatmentPlan });
+  
+  // Check if the selected area has concerns defined
+  const hasAreaConcerns = selectedArea && 
+    Object.keys(AREA_CONCERNS).includes(selectedArea) && 
+    AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS]?.length > 0;
+
+  // Helper function to determine if we're looking at a facial area
+  const isFacialArea = () => {
+    return ['face', 'forehead', 'eyes', 'nose', 'cheeks', 'mouth', 'jaw', 'neck'].includes(selectedArea);
+  };
 
   return (
     <ResizablePanelGroup
@@ -47,14 +57,7 @@ const ModelPanel: React.FC<ModelPanelProps> = ({
     >
       <ResizablePanel defaultSize={40} minSize={30}>
         <div className="h-full p-4 flex flex-col justify-center items-center">
-          {selectedArea === 'face' || 
-            selectedArea === 'forehead' || 
-            selectedArea === 'eyes' || 
-            selectedArea === 'nose' || 
-            selectedArea === 'cheeks' || 
-            selectedArea === 'mouth' || 
-            selectedArea === 'jaw' || 
-            selectedArea === 'neck' ? (
+          {isFacialArea() ? (
             <FaceModel onSelectArea={onSelectFacialArea} onBack={() => onSelectArea('body')} />
           ) : (
             <HumanModel onSelectArea={onSelectArea} isFemale={isFemale} />
@@ -76,7 +79,7 @@ const ModelPanel: React.FC<ModelPanelProps> = ({
               transition={{ duration: 0.3 }}
               className="h-full"
             >
-              {selectedArea && AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS] ? (
+              {hasAreaConcerns ? (
                 <ConcernSelector
                   area={selectedArea}
                   concerns={AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS] || []}
