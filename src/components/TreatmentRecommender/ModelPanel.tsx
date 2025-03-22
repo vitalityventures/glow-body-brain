@@ -37,6 +37,9 @@ const ModelPanel: React.FC<ModelPanelProps> = ({
     exit: { opacity: 0, x: -100 }
   };
 
+  // Debug to check what's happening
+  console.log("ModelPanel rendering with:", { stage, selectedArea });
+
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -71,17 +74,35 @@ const ModelPanel: React.FC<ModelPanelProps> = ({
               animate="animate"
               exit="exit"
               transition={{ duration: 0.3 }}
+              className="h-full"
             >
-              <ConcernSelector
-                area={selectedArea}
-                concerns={AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS] || []}
-                selectedConcerns={treatmentPlan
-                  .filter(item => item.area === selectedArea)
-                  .map(item => item.concernId)}
-                onSelectConcern={onSelectConcern}
-                onBack={onBack}
-                onContinue={onContinue}
-              />
+              {selectedArea && AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS] ? (
+                <ConcernSelector
+                  area={selectedArea}
+                  concerns={AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS] || []}
+                  selectedConcerns={treatmentPlan
+                    .filter(item => item.area === selectedArea)
+                    .map(item => item.concernId)}
+                  onSelectConcern={onSelectConcern}
+                  onBack={onBack}
+                  onContinue={onContinue}
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center">
+                  <div className="glass-panel rounded-xl px-8 py-6 text-center max-w-sm mx-auto">
+                    <h3 className="text-spa-dark font-display text-xl mb-3">Area Not Found</h3>
+                    <p className="text-spa-accent">
+                      No concerns found for this area. Please go back and try another area.
+                    </p>
+                    <button 
+                      onClick={onBack}
+                      className="mt-4 px-4 py-2 bg-spa-accent text-white rounded-lg hover:bg-spa-dark transition-colors"
+                    >
+                      Go Back
+                    </button>
+                  </div>
+                </div>
+              )}
             </motion.div>
           )}
           
@@ -96,7 +117,18 @@ const ModelPanel: React.FC<ModelPanelProps> = ({
             </div>
           )}
           
-          {(!selectedArea || (stage === 'FACE_MODEL' && selectedArea !== 'face')) && (
+          {stage === 'FACE_MODEL' && selectedArea !== 'face' && selectedArea !== '' && (
+            <div className="flex h-full items-center justify-center">
+              <div className="glass-panel rounded-xl px-8 py-6 text-center max-w-sm mx-auto">
+                <h3 className="text-spa-dark font-display text-xl mb-3">Loading Concerns</h3>
+                <p className="text-spa-accent">
+                  Loading treatment options for {selectedArea}...
+                </p>
+              </div>
+            </div>
+          )}
+          
+          {(!selectedArea || (stage === 'FACE_MODEL' && selectedArea === '')) && (
             <div className="flex h-full items-center justify-center">
               <div className="glass-panel rounded-xl px-8 py-6 text-center max-w-sm mx-auto">
                 <h3 className="text-spa-dark font-display text-xl mb-3">Select a Body Region</h3>

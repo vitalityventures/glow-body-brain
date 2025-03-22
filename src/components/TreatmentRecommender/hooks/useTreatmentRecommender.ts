@@ -21,20 +21,43 @@ export const useTreatmentRecommender = () => {
     if (area === 'face') {
       setStage('FACE_MODEL');
     } else {
-      setStage('CONCERN_SELECTOR');
+      // Ensure we have concerns for this area before showing concern selector
+      if (AREA_CONCERNS[area as keyof typeof AREA_CONCERNS]) {
+        setStage('CONCERN_SELECTOR');
+      } else {
+        console.warn(`No concerns found for area: ${area}`);
+        toast.error(`No treatment options available for this area yet`);
+      }
     }
   };
 
   const handleSelectFacialArea = (area: string) => {
     setSelectedArea(area);
-    setStage('CONCERN_SELECTOR');
+    // Ensure we have concerns for this area
+    if (AREA_CONCERNS[area as keyof typeof AREA_CONCERNS]) {
+      setStage('CONCERN_SELECTOR');
+    } else {
+      console.warn(`No concerns found for facial area: ${area}`);
+      toast.error(`No treatment options available for this area yet`);
+      // Stay in face model if no concerns are found
+      setStage('FACE_MODEL');
+    }
   };
 
   const handleSelectConcern = (concernId: string) => {
+    // Check if the selected area exists in AREA_CONCERNS
+    if (!AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS]) {
+      console.error(`Attempted to select concern for invalid area: ${selectedArea}`);
+      return;
+    }
+    
     const areaData = AREA_CONCERNS[selectedArea as keyof typeof AREA_CONCERNS] || [];
     const concernItem = areaData.find(c => c.id === concernId);
     
-    if (!concernItem) return;
+    if (!concernItem) {
+      console.error(`Concern not found: ${concernId} for area ${selectedArea}`);
+      return;
+    }
     
     const isAlreadySelected = treatmentPlan.some(
       item => item.area === selectedArea && item.concernId === concernId
@@ -83,14 +106,25 @@ export const useTreatmentRecommender = () => {
 
   const handleBack = () => {
     if (stage === 'FACE_MODEL') {
-      // No action for back from the main face model
+      // If in a facial region, go back to the main face view
+      if (selectedArea !== 'face' && selectedArea !== '') {
+        setSelectedArea('face');
+      }
     } else if (stage === 'CONCERN_SELECTOR') {
+      // If in a facial sub-area, go back to the face model
       if (selectedArea === 'forehead' || selectedArea === 'eyes' || selectedArea === 'nose' || 
           selectedArea === 'cheeks' || selectedArea === 'mouth' || selectedArea === 'jaw' || 
           selectedArea === 'neck') {
+        setSelectedArea('face');
+        setStage('FACE_MODEL');
+      } else {
+        // For body areas, go back to body selection
+        setSelectedArea('');
         setStage('FACE_MODEL');
       }
     } else if (stage === 'RESULTS_FORM') {
+      // Go back to body selection from results form
+      setSelectedArea('');
       setStage('FACE_MODEL');
     }
   };
